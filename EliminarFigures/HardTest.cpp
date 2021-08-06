@@ -7,19 +7,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "VertexArray.h"
-#include "VertexArrayLayout.h"
-#include "Shader.h"
-#include "Renderer.h"
-#include "CollisionDetector.h"
-
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_opengl3.h"
-#include "imgui/imgui_impl_glfw.h"
-
-
 Test::HardTest::HardTest()
 	: m_Proj(glm::ortho(-640.0f, 640.0f, -360.0f, 360.0f)), 
 	m_View(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f))),

@@ -1,8 +1,14 @@
 #pragma once
-#include "Shader.h"
-#include "VertexArray.h"
+#include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "VertexArrayLayout.h"
+#include "Shader.h"
+#include "CollisionDetector.h"
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_glfw.h"
 
 class Renderer 
 {

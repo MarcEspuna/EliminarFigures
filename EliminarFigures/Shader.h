@@ -9,8 +9,6 @@ class Shader
 {
 public:
 	Shader(const char* filePath);
-
-
 	~Shader();
 
 	void Bind() const;

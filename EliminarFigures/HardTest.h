@@ -1,8 +1,7 @@
 #include "Test.h"
 #include "PositionsBuffers.h"
 
-
-
+#include "Renderer.h"
 
 namespace Test {
 
@@ -45,10 +44,10 @@ namespace Test {
 		IndexBuffer iboQuad;
 		IndexBuffer iboStar;
 
-		Shader shader;
+		//Shader shader;
 
-		CollisionDetector collision;
-		CollisionDetector collision2;
+		//CollisionDetector collision;
+		//CollisionDetector collision2;
 
 		float x = 1.0f;
 		float y = 1.0f;
