@@ -1,7 +1,7 @@
 #include "Test.h"
 #include "PositionsBuffers.h"
-
-
+#include "VertexArray.h"
+#include "VertexBuffer.h"
 
 
 namespace Test {
@@ -22,16 +22,16 @@ namespace Test {
 	private:
 		Figures m_Figures;
 		ControlLines m_ControlLines;
-
 		VertexArray vaoH;                   //Vertex Array for the Horizontal Line
 		VertexArray vaoV;                   //Vertex Array for the Vertical Line
 		VertexArray vaoC;                   //Vertex Array for the Contral Quad
 
 		VertexArray vaoQuad;                    //Vertex Array for a random Quad
 		VertexArray vaoStar;                    //Vertex Array for a random Star
-
+		
 		VertexBuffer vboH;
 		VertexBuffer vboV;
+		/*
 		VertexBuffer vboC;
 		VertexBuffer vboQuad;
 		VertexBuffer vboStar;
@@ -49,7 +49,7 @@ namespace Test {
 
 		CollisionDetector collision;
 		CollisionDetector collision2;
-
+		*/
 		float x = 1.0f;
 		float y = 1.0f;
 
