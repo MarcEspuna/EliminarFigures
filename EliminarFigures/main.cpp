@@ -8,10 +8,20 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "VertexArrayLayout.h"
+#include "Shader.h"
 #include "Renderer.h"
-#include "PositionsBuffers.h"
+#include "CollisionDetector.h"
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_glfw.h"
 
+#include "HardTest.h"
 
 enum class Difficulty {
     EASY = 1,
@@ -62,6 +72,8 @@ float deltaTime()
 
 int main(void)
 {
+
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
@@ -240,6 +252,7 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
+    Test::HardTest myFirstTest;
 
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
