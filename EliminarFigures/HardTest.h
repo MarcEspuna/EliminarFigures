@@ -2,7 +2,10 @@
 #include "PositionsBuffers.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
-
+#include "IndexBuffer.h"
+#include "CollisionDetector.h"
+#include "Shader.h"
+#include "Renderer.h"
 
 namespace Test {
 
@@ -31,10 +34,10 @@ namespace Test {
 		
 		VertexBuffer vboH;
 		VertexBuffer vboV;
-		/*
 		VertexBuffer vboC;
 		VertexBuffer vboQuad;
 		VertexBuffer vboStar;
+
 
 		VertexArrayLayout layout;
 
@@ -49,12 +52,15 @@ namespace Test {
 
 		CollisionDetector collision;
 		CollisionDetector collision2;
-		*/
+
+		Renderer renderer;
+
 		float x = 1.0f;
 		float y = 1.0f;
 
 		glm::mat4 m_Proj;
 		glm::mat4 m_View;
+		glm::mat4 m_Model;
 		glm::mat4 u_MVP;
 
 	};
