@@ -29,37 +29,6 @@ enum class Difficulty {
 
 ControlLines controlLines;
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-
-
-    if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) 
-    {
-        controlLines.modelH = glm::translate(controlLines.modelH, glm::vec3(0.0f, 20.0f, 0.0f));
-        controlLines.modelC = glm::translate(controlLines.modelC, glm::vec3(0.0f, 20.0f, 0.0f));
-    }
-
-    if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    {
-        controlLines.modelH = glm::translate(controlLines.modelH, glm::vec3(0.0f, -20.0f, 0.0f));
-        controlLines.modelC = glm::translate(controlLines.modelC, glm::vec3(0.0f, -20.0f, 0.0f));
-    }
-
-    if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    {
-        controlLines.modelV = glm::translate(controlLines.modelV, glm::vec3(20.0f, 00.0f, 0.0f));
-        controlLines.modelC = glm::translate(controlLines.modelC, glm::vec3(20.0f, 00.0f, 0.0f));
-    }
-    
-    if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    {
-        controlLines.modelV = glm::translate(controlLines.modelV, glm::vec3(-20.0f, 0.0f, 0.0f));
-        controlLines.modelC = glm::translate(controlLines.modelC, glm::vec3(-20.0f, 0.0f, 0.0f));
-    }
-
-
-}
-
 float deltaTime()
 {
     return 0;
@@ -107,7 +76,7 @@ int main(void)
 
     std::cout << "[GLEW]: Context succesfully created" << std::endl;
 
-    Test::HardTest myFirstTest;
+    Test::HardTest myFirstTest(window);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -118,7 +87,6 @@ int main(void)
         
         myFirstTest.OnRender();
 
-        glfwSetKeyCallback(window, key_callback);
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();

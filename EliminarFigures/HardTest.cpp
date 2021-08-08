@@ -20,7 +20,7 @@
 #include "imgui/imgui_impl_glfw.h"
 
 
-Test::HardTest::HardTest()
+Test::HardTest::HardTest(GLFWwindow* window)
 	: m_Proj(glm::ortho(-640.0f, 640.0f, -360.0f, 360.0f)), 
 	m_View(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f))),
     m_Model(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f))),
@@ -37,7 +37,8 @@ Test::HardTest::HardTest()
 	iboStar(m_Figures.indexStar, sizeof(m_Figures.indexStar)),
 	shader("res/Basic.shader"),
 	collision(m_ControlLines.GetPositionsC(), m_Figures.Square, m_Figures.indexQuad, 6),
-	collision2(m_ControlLines.GetPositionsC(), m_Figures.Star, m_Figures.indexStar, 18)
+	collision2(m_ControlLines.GetPositionsC(), m_Figures.Star, m_Figures.indexStar, 18),
+    window(window)
 {
 	shader.Bind();
 	layout.Push<float>(2);
@@ -59,7 +60,33 @@ Test::HardTest::~HardTest()
 
 void Test::HardTest::OnUpdate(float deltaTime)
 {
-    //glfwSetKeyCallback(window, key_callback);
+    int state = glfwGetKey(window, GLFW_KEY_W);
+    if (state == GLFW_PRESS)
+    {
+        m_ControlLines.modelH = glm::translate(m_ControlLines.modelH, glm::vec3(0.0f, 1.0f, 0.0f));
+        m_ControlLines.modelC = glm::translate(m_ControlLines.modelC, glm::vec3(0.0f, 1.0f, 0.0f));
+    }
+
+    int state1 = glfwGetKey(window, GLFW_KEY_S);
+    if (state1 == GLFW_PRESS)
+    {
+        m_ControlLines.modelH = glm::translate(m_ControlLines.modelH, glm::vec3(0.0f, -1.0f, 0.0f));
+        m_ControlLines.modelC = glm::translate(m_ControlLines.modelC, glm::vec3(0.0f, -1.0f, 0.0f));
+    }
+
+    int state2 = glfwGetKey(window, GLFW_KEY_RIGHT);
+    if (state2 == GLFW_PRESS)
+    {
+        m_ControlLines.modelV = glm::translate(m_ControlLines.modelV, glm::vec3(1.0f, 00.0f, 0.0f));
+        m_ControlLines.modelC = glm::translate(m_ControlLines.modelC, glm::vec3(1.0f, 00.0f, 0.0f));
+    }
+
+    int state3 = glfwGetKey(window, GLFW_KEY_LEFT);
+    if (state3 == GLFW_PRESS)
+    {
+        m_ControlLines.modelV = glm::translate(m_ControlLines.modelV, glm::vec3(-1.0f, 0.0f, 0.0f));
+        m_ControlLines.modelC = glm::translate(m_ControlLines.modelC, glm::vec3(-1.0f, 0.0f, 0.0f));
+    }
 
 }
 

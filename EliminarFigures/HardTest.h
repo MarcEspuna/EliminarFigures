@@ -13,13 +13,15 @@ namespace Test {
 
 	{
 	public:
-		HardTest();
+		HardTest(GLFWwindow* window);
 		~HardTest();
 
 
 		void OnUpdate(float deltaTime) override;
 		void OnRender() override;
 		void OnImGuiRender() override;
+
+		
 
 
 	private:
@@ -63,7 +65,10 @@ namespace Test {
 		glm::mat4 m_Model;
 		glm::mat4 u_MVP;
 
-	};
+		GLFWwindow* window;
+	
 
+	};
+	
 
 }
