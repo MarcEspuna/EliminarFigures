@@ -119,13 +119,18 @@ struct Figures
 
     };
 
-    float V[6] =
+    float V[8] =
     {
-
+        255.0f, 350.0f,
+        255.0f, 243.0f,
+        355.0f, 153.0f,
+        161.0f, 143.0f
     };
 
     float TreeWay[16] =
     {
+
+
 
     };
 
@@ -143,6 +148,12 @@ struct Figures
         3,5,6,
         2,5,7,
         2,3,5
+    };
+
+    unsigned int indexV[6] =
+    {
+        0,1,2,
+        0,1,3
     };
 
 };

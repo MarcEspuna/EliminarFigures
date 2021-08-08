@@ -31,15 +31,16 @@ namespace Test {
 		VertexArray vaoV;                   //Vertex Array for the Vertical Line
 		VertexArray vaoC;                   //Vertex Array for the Contral Quad
 
-		VertexArray vaoQuad;                    //Vertex Array for a random Quad
-		VertexArray vaoStar;                    //Vertex Array for a random Star
-		
-		VertexBuffer vboH;
+		VertexArray vaoQuad;                //Vertex Array for a random Quad
+		VertexArray vaoStar;                //Vertex Array for a random Star
+		VertexArray vaoVFigure;					//Vertex Array for a random V type figure;	
+
+		VertexBuffer vboH;					
 		VertexBuffer vboV;
 		VertexBuffer vboC;
 		VertexBuffer vboQuad;
 		VertexBuffer vboStar;
-
+		VertexBuffer vboVFigure;
 
 		VertexArrayLayout layout;
 
@@ -49,11 +50,13 @@ namespace Test {
 
 		IndexBuffer iboQuad;
 		IndexBuffer iboStar;
+		IndexBuffer iboVFigure;
 
 		Shader shader;
 
 		CollisionDetector collision;
 		CollisionDetector collision2;
+		CollisionDetector collision3;
 
 		Renderer renderer;
 

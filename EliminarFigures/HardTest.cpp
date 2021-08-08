@@ -30,14 +30,17 @@ Test::HardTest::HardTest(GLFWwindow* window)
 	vboC(m_ControlLines.GetPositionsC(), m_ControlLines.GetCountPositions() * sizeof(float)),
 	vboQuad(m_Figures.Square, sizeof(m_Figures.Square)),
 	vboStar(m_Figures.Star, sizeof(m_Figures.Star)),
+    vboVFigure(m_Figures.V, sizeof(m_Figures.V)),
 	iboH(m_ControlLines.GetIndexH(), m_ControlLines.GetCountIndexes() * sizeof(unsigned int)),
 	iboV(m_ControlLines.GetIndexV(), m_ControlLines.GetCountIndexes() * sizeof(unsigned int)),
 	iboC(m_ControlLines.GetIndexC(), m_ControlLines.GetCountIndexes() * sizeof(unsigned int)),
 	iboQuad(m_Figures.indexQuad, sizeof(m_Figures.indexQuad)),
 	iboStar(m_Figures.indexStar, sizeof(m_Figures.indexStar)),
-	shader("res/Basic.shader"),
+	iboVFigure(m_Figures.indexV, sizeof(m_Figures.indexV)),
+    shader("res/Basic.shader"),
 	collision(m_ControlLines.GetPositionsC(), m_Figures.Square, m_Figures.indexQuad, 6),
 	collision2(m_ControlLines.GetPositionsC(), m_Figures.Star, m_Figures.indexStar, 18),
+    collision3(m_ControlLines.GetPositionsC(), m_Figures.V, m_Figures.indexV, 6),
     window(window)
 {
 	shader.Bind();
@@ -47,6 +50,7 @@ Test::HardTest::HardTest(GLFWwindow* window)
 	vaoC.AddBuffer(vboC, layout);
 	vaoQuad.AddBuffer(vboQuad, layout);
 	vaoStar.AddBuffer(vboStar, layout);
+    vaoVFigure.AddBuffer(vboVFigure, layout);
 	shader.SetUniform4f("u_Color", 1.0f, 0.5f, 1.0f, 1.0f);
 
 	std::cout << "Hard Test created" << std::endl;
@@ -112,9 +116,10 @@ void Test::HardTest::OnRender()
 
     shader.SetUniform4f("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
     shader.SetUniform4Mat("u_MVP", u_MVP);
+    renderer.Draw(vaoVFigure, iboVFigure, shader);
     renderer.Draw(vaoQuad, iboQuad, shader);
     collision.Refresh(translationCenterQuad, glm::vec3(0, 0, 0));
-
+    collision3.Refresh(translationCenterQuad, glm::vec3(0.0f, 0.0f, 0.0f));
     u_MVP = m_Proj * m_View * m_ControlLines.modelH;
 
 
@@ -127,14 +132,16 @@ void Test::HardTest::OnRender()
     shader.SetUniform4f("u_Color", 0.0f, 0.3f, 0.5f, 1.0f);
     renderer.Draw(vaoV, iboV, shader);
 
+
     u_MVP = m_Proj * m_View * m_ControlLines.modelC;
     shader.SetUniform4Mat("u_MVP", u_MVP);
-    if (collision.GetStatus() || collision2.GetStatus())
+    if (collision.GetStatus() || collision2.GetStatus() || collision3.GetStatus())
         shader.SetUniform4f("u_Color", 0.0f, 1.0f, 0.0f, 1.0f);
     else
         shader.SetUniform4f("u_Color", 0.5f, 0.5f, 0.0f, 1.0f);
 
     renderer.Draw(vaoC, iboC, shader);
+  
 
 
 }
