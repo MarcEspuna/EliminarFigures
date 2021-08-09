@@ -7,6 +7,8 @@ class ObjParser
 public:
 	ObjParser(const char* filePath);
 
+	inline std::vector<glm::vec3> GetVertices() const { return temp_vertices; }
+	inline std::vector<unsigned int> GetIndexes() const { return vertexIndices; }
 
 private:
 	FILE* file;

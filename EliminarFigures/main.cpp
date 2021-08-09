@@ -74,8 +74,6 @@ int main(void)
 
     menu->RegisterTest<Test::HardTest>("Hard Difficulty");
 
-    ObjParser randomObject("res/obj/random.obj");
-
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

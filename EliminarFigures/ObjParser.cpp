@@ -59,15 +59,6 @@ ObjParser::ObjParser(const char* filePath)
         }
 
     }
-
-    for (glm::vec3 values : temp_vertices)
-    {
-        std::cout << values.x << " " << values.y << " " << values.z << std::endl;
-    }
-    
-    
-
-
 }
 
 bool ObjParser::readingFile(const char* filePath)

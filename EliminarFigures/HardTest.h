@@ -6,6 +6,7 @@
 #include "CollisionDetector.h"
 #include "Shader.h"
 #include "Renderer.h"
+#include "ObjParser.h"
 
 namespace Test {
 
@@ -31,6 +32,9 @@ namespace Test {
 	private:
 		Figures m_Figures;
 		ControlLines m_ControlLines;
+		ObjParser m_Donut;
+
+
 		VertexArray vaoH;                   //Vertex Array for the Horizontal Line
 		VertexArray vaoV;                   //Vertex Array for the Vertical Line
 		VertexArray vaoC;                   //Vertex Array for the Contral Quad
@@ -38,6 +42,7 @@ namespace Test {
 		VertexArray vaoQuad;                //Vertex Array for a random Quad
 		VertexArray vaoStar;                //Vertex Array for a random Star
 		VertexArray vaoVFigure;					//Vertex Array for a random V type figure;	
+		VertexArray vaoDonut;
 
 		VertexBuffer vboH;					
 		VertexBuffer vboV;
@@ -45,6 +50,7 @@ namespace Test {
 		VertexBuffer vboQuad;
 		VertexBuffer vboStar;
 		VertexBuffer vboVFigure;
+		VertexBuffer vboDonut;
 
 		VertexArrayLayout layout;
 
@@ -55,12 +61,14 @@ namespace Test {
 		IndexBuffer iboQuad;
 		IndexBuffer iboStar;
 		IndexBuffer iboVFigure;
+		IndexBuffer iboDonut;
 
 		Shader shader;
 
 		CollisionDetector collision;
 		CollisionDetector collision2;
 		CollisionDetector collision3;
+
 
 		Renderer renderer;
 
