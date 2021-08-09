@@ -1,8 +1,11 @@
+/*
+Fixing loading 3d objects:
+Making the correct funtions in ObjParser class for loading 3d objects in our 2d layout
+*/
+
 #include <fstream>
 #include <sstream>
 #include <string>
-
-
 
 #include "VertexBuffer.h"
 #include "VertexArray.h"

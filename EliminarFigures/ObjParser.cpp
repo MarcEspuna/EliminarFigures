@@ -68,4 +68,8 @@ bool ObjParser::readingFile(const char* filePath)
         printf("Impossible to open the file !\n");
         return false;
     }
+    else 
+    {
+        return true;
+    }
 }
