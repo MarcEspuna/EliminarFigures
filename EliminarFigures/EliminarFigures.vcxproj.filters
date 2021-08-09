@@ -63,6 +63,9 @@
     <ClCompile Include="HardTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ObjParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\GLFW\glfw3.h">
@@ -993,6 +996,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PositionsBuffers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

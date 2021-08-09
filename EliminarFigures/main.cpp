@@ -2,8 +2,6 @@
 #include <sstream>
 #include <string>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 
 #include "VertexBuffer.h"
@@ -12,6 +10,9 @@
 #include "Renderer.h"
 
 #include "HardTest.h"
+
+#include "ObjParser.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 enum class Difficulty {
     EASY = 1,
@@ -71,8 +72,10 @@ int main(void)
     Test::TestMenu* menu = new Test::TestMenu(currentTest);
     currentTest = menu; 
 
-
     menu->RegisterTest<Test::HardTest>("Hard Difficulty");
+
+    ObjParser randomObject("res/obj/random.obj");
+
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
