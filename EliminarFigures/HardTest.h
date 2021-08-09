@@ -52,8 +52,6 @@ namespace Test {
 		VertexBuffer vboVFigure;
 		VertexBuffer vboDonut;
 
-		VertexArrayLayout layout;
-
 		IndexBuffer iboH;
 		IndexBuffer iboV;
 		IndexBuffer iboC;
@@ -69,6 +67,7 @@ namespace Test {
 		CollisionDetector collision2;
 		CollisionDetector collision3;
 
+		//NEED TO FIX COLLISION DETECTION FOR OTHER LAYOUTS!
 
 		Renderer renderer;
 
