@@ -13,6 +13,7 @@ namespace Test {
 
 	{
 	public:
+		HardTest();
 		HardTest(GLFWwindow* window);
 		~HardTest();
 
@@ -21,7 +22,10 @@ namespace Test {
 		void OnRender() override;
 		void OnImGuiRender() override;
 
-		
+		void SaveWindow(GLFWwindow* window) override
+		{
+			ptr_window = window;
+		}
 
 
 	private:
@@ -68,7 +72,7 @@ namespace Test {
 		glm::mat4 m_Model;
 		glm::mat4 u_MVP;
 
-		GLFWwindow* window;
+		GLFWwindow* ptr_window;
 	
 
 	};

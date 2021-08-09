@@ -1,10 +1,7 @@
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -14,10 +11,6 @@
 #include "VertexArrayLayout.h"
 #include "Renderer.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_opengl3.h"
-#include "imgui/imgui_impl_glfw.h"
-
 #include "HardTest.h"
 
 enum class Difficulty {
@@ -25,7 +18,6 @@ enum class Difficulty {
     NORMAL = 2,
     HARD = 3
 };
-
 
 ControlLines controlLines;
 
@@ -35,10 +27,8 @@ float deltaTime()
 }
 
 
-
 int main(void)
 {
-
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -61,7 +51,8 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
-    if (GLEW_OK != glewInit()) {
+    if (GLEW_OK != glewInit()) 
+    {
         std::cout << "Glew could not create a valid context!" << std::endl;
     }
     IMGUI_CHECKVERSION();
@@ -76,23 +67,39 @@ int main(void)
 
     std::cout << "[GLEW]: Context succesfully created" << std::endl;
 
-    Test::HardTest myFirstTest(window);
+    Test::Test* currentTest = nullptr;
+    Test::TestMenu* menu = new Test::TestMenu(currentTest);
+    currentTest = menu; 
+
+
+    menu->RegisterTest<Test::HardTest>("Hard Difficulty");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         renderer.Clear();
 
-        myFirstTest.OnUpdate(0.0f);
-        
-        myFirstTest.OnRender();
-
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        myFirstTest.OnImGuiRender();
+
+        currentTest->SaveWindow(window);
+        currentTest->OnUpdate(0.0f);
+        currentTest->OnRender();
+        ImGui::Begin("HARD DIFFICULTY");
+        if (currentTest != menu && ImGui::Button("<-"))
+        {
+           delete currentTest;
+           currentTest = menu;
+        }
+        currentTest->OnImGuiRender();
+        ImGui::End();
+        
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -100,7 +107,6 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
-
 
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();

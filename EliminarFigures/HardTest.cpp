@@ -19,6 +19,43 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_glfw.h"
 
+Test::HardTest::HardTest()
+    : m_Proj(glm::ortho(-640.0f, 640.0f, -360.0f, 360.0f)),
+    m_View(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f))),
+    m_Model(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f))),
+    u_MVP(glm::mat4(1.0f)), vaoH(), vaoV(), vaoC(), vaoQuad(), vaoStar(),
+    vboH(m_ControlLines.GetPositionsH(), m_ControlLines.GetCountPositions() * sizeof(float)),
+    vboV(m_ControlLines.GetPositionsV(), m_ControlLines.GetCountPositions() * sizeof(float)),
+    vboC(m_ControlLines.GetPositionsC(), m_ControlLines.GetCountPositions() * sizeof(float)),
+    vboQuad(m_Figures.Square, sizeof(m_Figures.Square)),
+    vboStar(m_Figures.Star, sizeof(m_Figures.Star)),
+    vboVFigure(m_Figures.V, sizeof(m_Figures.V)),
+    iboH(m_ControlLines.GetIndexH(), m_ControlLines.GetCountIndexes() * sizeof(unsigned int)),
+    iboV(m_ControlLines.GetIndexV(), m_ControlLines.GetCountIndexes() * sizeof(unsigned int)),
+    iboC(m_ControlLines.GetIndexC(), m_ControlLines.GetCountIndexes() * sizeof(unsigned int)),
+    iboQuad(m_Figures.indexQuad, sizeof(m_Figures.indexQuad)),
+    iboStar(m_Figures.indexStar, sizeof(m_Figures.indexStar)),
+    iboVFigure(m_Figures.indexV, sizeof(m_Figures.indexV)),
+    shader("res/Basic.shader"),
+    collision(m_ControlLines.GetPositionsC(), m_Figures.Square, m_Figures.indexQuad, 6),
+    collision2(m_ControlLines.GetPositionsC(), m_Figures.Star, m_Figures.indexStar, 18),
+    collision3(m_ControlLines.GetPositionsC(), m_Figures.V, m_Figures.indexV, 6),
+    ptr_window(nullptr)
+{
+    shader.Bind();
+    layout.Push<float>(2);
+    vaoH.AddBuffer(vboH, layout);
+    vaoV.AddBuffer(vboV, layout);
+    vaoC.AddBuffer(vboC, layout);
+    vaoQuad.AddBuffer(vboQuad, layout);
+    vaoStar.AddBuffer(vboStar, layout);
+    vaoVFigure.AddBuffer(vboVFigure, layout);
+    shader.SetUniform4f("u_Color", 1.0f, 0.5f, 1.0f, 1.0f);
+
+    std::cout << "Hard Test created" << std::endl;
+
+}
+
 
 Test::HardTest::HardTest(GLFWwindow* window)
 	: m_Proj(glm::ortho(-640.0f, 640.0f, -360.0f, 360.0f)), 
@@ -41,7 +78,7 @@ Test::HardTest::HardTest(GLFWwindow* window)
 	collision(m_ControlLines.GetPositionsC(), m_Figures.Square, m_Figures.indexQuad, 6),
 	collision2(m_ControlLines.GetPositionsC(), m_Figures.Star, m_Figures.indexStar, 18),
     collision3(m_ControlLines.GetPositionsC(), m_Figures.V, m_Figures.indexV, 6),
-    window(window)
+    ptr_window(window)
 {
 	shader.Bind();
 	layout.Push<float>(2);
@@ -64,28 +101,28 @@ Test::HardTest::~HardTest()
 
 void Test::HardTest::OnUpdate(float deltaTime)
 {
-    int state = glfwGetKey(window, GLFW_KEY_W);
+    int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
     {
         m_ControlLines.modelH = glm::translate(m_ControlLines.modelH, glm::vec3(0.0f, 1.0f, 0.0f));
         m_ControlLines.modelC = glm::translate(m_ControlLines.modelC, glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
-    int state1 = glfwGetKey(window, GLFW_KEY_S);
+    int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
     if (state1 == GLFW_PRESS)
     {
         m_ControlLines.modelH = glm::translate(m_ControlLines.modelH, glm::vec3(0.0f, -1.0f, 0.0f));
         m_ControlLines.modelC = glm::translate(m_ControlLines.modelC, glm::vec3(0.0f, -1.0f, 0.0f));
     }
 
-    int state2 = glfwGetKey(window, GLFW_KEY_RIGHT);
+    int state2 = glfwGetKey(ptr_window, GLFW_KEY_RIGHT);
     if (state2 == GLFW_PRESS)
     {
         m_ControlLines.modelV = glm::translate(m_ControlLines.modelV, glm::vec3(1.0f, 00.0f, 0.0f));
         m_ControlLines.modelC = glm::translate(m_ControlLines.modelC, glm::vec3(1.0f, 00.0f, 0.0f));
     }
 
-    int state3 = glfwGetKey(window, GLFW_KEY_LEFT);
+    int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
     if (state3 == GLFW_PRESS)
     {
         m_ControlLines.modelV = glm::translate(m_ControlLines.modelV, glm::vec3(-1.0f, 0.0f, 0.0f));
@@ -98,7 +135,6 @@ void Test::HardTest::OnRender()
 {
     renderer.Clear();
     glm::vec3 translationCenterQuad = { m_ControlLines.modelC[3][0], m_ControlLines.modelC[3][1] , m_ControlLines.modelC[3][2] };
-
 
     m_Model = glm::translate(m_Model, glm::vec3(y, x, 0.0f));
 
@@ -142,8 +178,6 @@ void Test::HardTest::OnRender()
 
     renderer.Draw(vaoC, iboC, shader);
   
-
-
 }
 
 void Test::HardTest::OnImGuiRender()
@@ -168,7 +202,4 @@ void Test::HardTest::OnImGuiRender()
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
     }
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
