@@ -76,7 +76,8 @@ int main(void)
     currentTest = menu; 
 
     menu->RegisterTest<Test::HardTest>("Hard Difficulty");
-
+    menu->RegisterTest<Test::HardTest>("Medium Difficulty");
+    menu->RegisterTest<Test::HardTest>("Easy Difficulty");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -87,7 +88,6 @@ int main(void)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
 
         currentTest->SaveWindow(window);
         currentTest->OnUpdate(0.0f);

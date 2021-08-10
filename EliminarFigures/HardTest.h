@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
+#include <tuple>
 
 namespace Test {
 
@@ -67,8 +68,6 @@ namespace Test {
 		CollisionDetector collision2;
 		CollisionDetector collision3;
 
-		//NEED TO FIX COLLISION DETECTION FOR OTHER LAYOUTS!
-
 		Renderer renderer;
 
 		float x = 1.0f;
@@ -81,6 +80,11 @@ namespace Test {
 
 		GLFWwindow* ptr_window;
 	
+		std::vector<std::tuple<VertexArray&, IndexBuffer&, CollisionDetector*>> WorldBuffer;
+
+		void RegisterWorldBuffer(VertexArray& vao, IndexBuffer& ibo, CollisionDetector* cdo);
+		void OnVaoRender(std::vector<std::tuple<VertexArray&, IndexBuffer&, CollisionDetector*>> worldBuffer, const Shader& shader);
+		
 
 	};
 	

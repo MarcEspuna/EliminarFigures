@@ -628,6 +628,10 @@
     <Library Include="dependencies\libs\glew32s.lib" />
     <Library Include="dependencies\libs\glfw3.lib" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="res\obj\donut.obj" />
+    <Object Include="res\obj\random.obj" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

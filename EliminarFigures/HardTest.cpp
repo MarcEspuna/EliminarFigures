@@ -46,6 +46,8 @@ Test::HardTest::HardTest()
     collision3(m_ControlLines.GetPositionsC(), m_Figures.V, m_Figures.indexV, 6),
     ptr_window(nullptr)
 {
+
+
     shader.Bind();
 
     VertexArrayLayout layout;
@@ -60,6 +62,12 @@ Test::HardTest::HardTest()
     vaoVFigure.AddBuffer(vboVFigure, layout);
     vaoDonut.AddBuffer(vboDonut, layout2);
     shader.SetUniform4f("u_Color", 1.0f, 0.5f, 1.0f, 1.0f);
+
+    RegisterWorldBuffer(vaoH, iboH, nullptr);
+    RegisterWorldBuffer(vaoV, iboV, nullptr);
+    RegisterWorldBuffer(vaoC, iboC, nullptr);
+    RegisterWorldBuffer(vaoQuad, iboQuad, &collision);
+    RegisterWorldBuffer(vaoStar, iboStar, &collision2);
 
     std::cout << "Hard Test created" << std::endl;
 
@@ -92,6 +100,9 @@ Test::HardTest::HardTest(GLFWwindow* window)
     collision3(m_ControlLines.GetPositionsC(), m_Figures.V, m_Figures.indexV, 6),
     ptr_window(window)
 {
+    
+    
+    
     shader.Bind();
 
     VertexArrayLayout layout;
@@ -201,6 +212,13 @@ void Test::HardTest::OnRender()
     shader.SetUniform4Mat("u_MVP", u_MVP);
     renderer.Draw(vaoDonut, iboDonut, shader);
     
+    for (auto& object : WorldBuffer)
+    {
+        std::get<0>(object);
+        std::get<1>(object);
+        std::get<2>(object);
+    }
+
 }
 
 void Test::HardTest::OnImGuiRender()
@@ -225,4 +243,17 @@ void Test::HardTest::OnImGuiRender()
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
     }
+}
+
+void Test::HardTest::RegisterWorldBuffer(VertexArray& vao, IndexBuffer& ibo, CollisionDetector* cdo)
+{
+    WorldBuffer.push_back({ vao, ibo, cdo });
+}
+
+void Test::HardTest::OnVaoRender(std::vector<std::tuple<VertexArray&, IndexBuffer&, CollisionDetector*>> worldBuffer, const Shader& shader)
+{
+
+
+
+
 }

@@ -57,7 +57,12 @@ ObjParser::ObjParser(const char* filePath)
             }
 
         }
-
+        //Allocating a buffer for 2D
+        for (glm::vec3 vertice : temp_vertices)
+        {
+            vertex2D.push_back(vertice.x);
+            vertex2D.push_back(vertice.y);
+        }
     }
 }
 
