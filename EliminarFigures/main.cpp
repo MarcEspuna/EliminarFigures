@@ -1,6 +1,7 @@
 /*
 Fixing loading 3d objects:
 Making the correct funtions in ObjParser class for loading 3d objects in our 2d layout
+Rewritting collision detection class
 */
 
 #include <fstream>

@@ -8,11 +8,11 @@
 
 
 VertexArray::VertexArray()
-	: u_Model(glm::mat4(1.0f))
+	: u_Model(glm::mat4(1.0f)), u_Color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
 {
 	glGenVertexArrays(1, &m_RendererID);
 }
-
+	
 VertexArray::~VertexArray()
 {
 	glDeleteVertexArrays(1, &m_RendererID);
@@ -48,5 +48,5 @@ void VertexArray::AddBuffer(const VertexBuffer& vbo, const VertexArrayLayout& la
 
 void VertexArray::OnVaoUpdate()
 {
-
+	u_ModelUpdate(u_Model, u_Color);
 }

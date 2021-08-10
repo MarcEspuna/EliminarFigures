@@ -80,8 +80,9 @@ namespace Test {
 	
 		std::vector<std::tuple<VertexArray&, IndexBuffer&, CollisionDetector*>> WorldBuffer;
 
+		void LoadVaoUpdateFuntions();
 		void RegisterWorldBuffer(VertexArray& vao, IndexBuffer& ibo, CollisionDetector* cdo);
-		void OnVaoRender(std::vector<std::tuple<VertexArray&, IndexBuffer&, CollisionDetector*>> worldBuffer, const Shader& shader);
+	
 		
 
 	};

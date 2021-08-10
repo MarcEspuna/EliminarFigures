@@ -18,6 +18,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_glfw.h"
+#include <algorithm>
 
 Test::EasyTest::EasyTest()
     :   m_Donut("res/obj/donut.obj"),
@@ -60,7 +61,6 @@ Test::EasyTest::EasyTest()
     vaoStar.AddBuffer(vboStar, layout);
     vaoVFigure.AddBuffer(vboVFigure, layout);
     vaoDonut.AddBuffer(vboDonut, layout2);
-    shader.SetUniform4f("u_Color", 1.0f, 0.5f, 1.0f, 1.0f);
 
     RegisterWorldBuffer(vaoH, iboH, nullptr);
     RegisterWorldBuffer(vaoV, iboV, nullptr);
@@ -68,6 +68,8 @@ Test::EasyTest::EasyTest()
     RegisterWorldBuffer(vaoQuad, iboQuad, &collision);
     RegisterWorldBuffer(vaoStar, iboStar, &collision2);
     RegisterWorldBuffer(vaoDonut, iboDonut, nullptr);
+
+    LoadVaoUpdateFuntions();
 
     std::cout << "Easy Test created" << std::endl;
 
@@ -109,6 +111,11 @@ void Test::EasyTest::OnUpdate(float deltaTime)
         vaoC.u_Model = glm::translate(vaoC.u_Model, glm::vec3(-1.0f, 0.0f, 0.0f));
     }
 
+    int state4 = glfwGetKey(ptr_window, GLFW_KEY_K);
+    if (state4 == GLFW_PRESS)
+    {
+        WorldBuffer.erase(WorldBuffer.begin());
+    }
 }
 
 void Test::EasyTest::OnRender()
@@ -118,8 +125,9 @@ void Test::EasyTest::OnRender()
 
     for (auto& object : WorldBuffer)
     {
-        u_MVP = m_Proj * m_View * std::get<0>(object).u_Model;                                  //Update Model Matrix and MVP
-        shader.SetUniform4f("u_Color", 0.5f, 0.0f, 0.3f, 1.0f);                                 //Set the color Uniform
+        std::get<0>(object).OnVaoUpdate();
+        u_MVP = m_Proj * m_View * std::get<0>(object).u_Model;                                                                                                          //Update Model Matrix and MVP
+        shader.SetUniform4f("u_Color", std::get<0>(object).u_Color.x, std::get<0>(object).u_Color.y, std::get<0>(object).u_Color.z, std::get<0>(object).u_Color.t);     //Set the color Uniform
         shader.SetUniform4Mat("u_MVP", u_MVP);                                                  
         renderer.Draw(std::get<0>(object), std::get<1>(object), shader);
     }
@@ -149,15 +157,25 @@ void Test::EasyTest::OnImGuiRender()
     }
 }
 
+void Test::EasyTest::LoadVaoUpdateFuntions()
+{
+    vaoC.u_Color = { 0.4f, 0.2f, 0.6f, 1.0f };
+    vaoDonut.u_Color = { 1.0f, 0.4f, 0.4f, 1.0f };
+
+    vaoDonut.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color) 
+    { 
+        model = glm::translate(model, glm::vec3(0.005f, 0.0, 0.0f)); 
+  
+    };
+
+    vaoStar.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
+    {
+        model = glm::translate(model, glm::vec3(0.05f, 0.05, 0.0f));
+    };
+
+}
+
 void Test::EasyTest::RegisterWorldBuffer(VertexArray& vao, IndexBuffer& ibo, CollisionDetector* cdo)
 {
     WorldBuffer.push_back({ vao, ibo, cdo });
-}
-
-void Test::EasyTest::OnVaoRender(std::vector<std::tuple<VertexArray&, IndexBuffer&, CollisionDetector*>> worldBuffer, const Shader& shader)
-{
-
-
-
-
 }
