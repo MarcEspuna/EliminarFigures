@@ -242,10 +242,3 @@ void Test::HardTest::RegisterWorldBuffer(VertexArray& vao, IndexBuffer& ibo, Col
     WorldBuffer.push_back({ vao, ibo, cdo });
 }
 
-void Test::HardTest::OnVaoRender(std::vector<std::tuple<VertexArray&, IndexBuffer&, CollisionDetector*>> worldBuffer, const Shader& shader)
-{
-
-
-
-
-}

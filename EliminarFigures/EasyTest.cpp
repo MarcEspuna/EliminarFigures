@@ -62,14 +62,15 @@ Test::EasyTest::EasyTest()
     vaoVFigure.AddBuffer(vboVFigure, layout);
     vaoDonut.AddBuffer(vboDonut, layout2);
 
-    RegisterWorldBuffer(vaoH, iboH, nullptr);
-    RegisterWorldBuffer(vaoV, iboV, nullptr);
-    RegisterWorldBuffer(vaoC, iboC, nullptr);
+    //Order of Registerig translates to order of drawing
     RegisterWorldBuffer(vaoQuad, iboQuad, &collision);
     RegisterWorldBuffer(vaoStar, iboStar, &collision2);
     RegisterWorldBuffer(vaoDonut, iboDonut, nullptr);
+    RegisterWorldBuffer(vaoH, iboH, nullptr);
+    RegisterWorldBuffer(vaoV, iboV, nullptr);
+    RegisterWorldBuffer(vaoC, iboC, nullptr);
 
-    LoadVaoUpdateFuntions();
+    LoadVaoUpdateFuntions();                            //Loading all the lamdas that will define the behaviour of our objects
 
     std::cout << "Easy Test created" << std::endl;
 
@@ -159,8 +160,6 @@ void Test::EasyTest::OnImGuiRender()
 
 void Test::EasyTest::LoadVaoUpdateFuntions()
 {
-    vaoC.u_Color = { 0.4f, 0.2f, 0.6f, 1.0f };
-    vaoDonut.u_Color = { 1.0f, 0.4f, 0.4f, 1.0f };
 
     vaoDonut.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color) 
     { 
@@ -170,8 +169,34 @@ void Test::EasyTest::LoadVaoUpdateFuntions()
 
     vaoStar.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
     {
+        color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
         model = glm::translate(model, glm::vec3(0.05f, 0.05, 0.0f));
+        collision2.Refresh({ vaoC.u_Model[3][0], vaoC.u_Model[3][1] , vaoC.u_Model[3][2] }, { model[3][0], model[3][1], model[3][2] });
     };
+
+    vaoH.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
+    {
+        color = glm::vec4(0.8f, 0.2f, 0.1f, 1.0f);
+    };
+
+    vaoV.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
+    {
+        color = glm::vec4(0.1f, 0.2f, 0.8f, 1.0f);
+    };
+
+    vaoC.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
+    {
+        if (collision2.GetStatus())
+        {
+            color = { 0.0f, 1.0f, 0.0f, 1.0f };
+        }
+        else
+        {
+            color = { 0.5f, 0.1f, 0.4f, 1.0f };
+        }
+    };
+
+
 
 }
 
