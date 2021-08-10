@@ -8,6 +8,7 @@
 
 
 VertexArray::VertexArray()
+	: u_Model(glm::mat4(1.0f))
 {
 	glGenVertexArrays(1, &m_RendererID);
 }
@@ -40,7 +41,12 @@ void VertexArray::AddBuffer(const VertexBuffer& vbo, const VertexArrayLayout& la
 	{
 		glEnableVertexAttribArray(i);
 		glVertexAttribPointer(i, elements[i].count, elements[i].type, elements[i].normalized, layout.GetStride(), (void*)offset);
-		offset += elements[i].GetSize() * elements[i].count;
+		offset += (elements[i].GetSize() * (size_t)elements[i].count);
 
 	}
+}
+
+void VertexArray::OnVaoUpdate()
+{
+
 }

@@ -13,17 +13,14 @@ Making the correct funtions in ObjParser class for loading 3d objects in our 2d 
 #include "Renderer.h"
 
 #include "HardTest.h"
-
+#include "EasyTest.h"
 #include "ObjParser.h"
-#include <glm/gtc/matrix_transform.hpp>
 
 enum class Difficulty {
     EASY = 1,
     NORMAL = 2,
     HARD = 3
 };
-
-ControlLines controlLines;
 
 float deltaTime()
 {
@@ -77,7 +74,7 @@ int main(void)
 
     menu->RegisterTest<Test::HardTest>("Hard Difficulty");
     menu->RegisterTest<Test::HardTest>("Medium Difficulty");
-    menu->RegisterTest<Test::HardTest>("Easy Difficulty");
+    menu->RegisterTest<Test::EasyTest>("Easy Difficulty");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

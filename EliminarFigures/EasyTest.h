@@ -10,13 +10,13 @@
 
 namespace Test {
 
-	class HardTest : public Test
+
+	class EasyTest : public Test
 
 	{
 	public:
-		HardTest();
-		HardTest(GLFWwindow* window);
-		~HardTest();
+		EasyTest();
+		~EasyTest();
 
 
 		void OnUpdate(float deltaTime) override;
@@ -74,7 +74,6 @@ namespace Test {
 
 		glm::mat4 m_Proj;
 		glm::mat4 m_View;
-		glm::mat4 m_Model;
 		glm::mat4 u_MVP;
 
 		GLFWwindow* ptr_window;

@@ -211,14 +211,6 @@ void Test::HardTest::OnRender()
     shader.SetUniform4f("u_Color", 0.0f, 1.0f, 0.0f, 1.0f);
     shader.SetUniform4Mat("u_MVP", u_MVP);
     renderer.Draw(vaoDonut, iboDonut, shader);
-    
-    for (auto& object : WorldBuffer)
-    {
-        std::get<0>(object);
-        std::get<1>(object);
-        std::get<2>(object);
-    }
-
 }
 
 void Test::HardTest::OnImGuiRender()

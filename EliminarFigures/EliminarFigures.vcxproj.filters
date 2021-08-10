@@ -66,6 +66,9 @@
     <ClCompile Include="ObjParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EasyTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\GLFW\glfw3.h">
@@ -1001,6 +1004,9 @@
     <ClInclude Include="ObjParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EasyTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\vendor\glm\detail\func_common.inl">
@@ -1425,9 +1431,5 @@
   <ItemGroup>
     <Library Include="dependencies\libs\glew32s.lib" />
     <Library Include="dependencies\libs\glfw3.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="res\obj\donut.obj" />
-    <Object Include="res\obj\random.obj" />
   </ItemGroup>
 </Project>

@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetector.cpp" />
+    <ClCompile Include="EasyTest.cpp" />
     <ClCompile Include="HardTest.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionDetector.h" />
+    <ClInclude Include="EasyTest.h" />
     <ClInclude Include="ObjParser.h" />
     <ClInclude Include="PositionsBuffers.h" />
     <ClInclude Include="dependencies\GLFW\glfw3.h" />
@@ -627,10 +629,6 @@
   <ItemGroup>
     <Library Include="dependencies\libs\glew32s.lib" />
     <Library Include="dependencies\libs\glfw3.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="res\obj\donut.obj" />
-    <Object Include="res\obj\random.obj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
