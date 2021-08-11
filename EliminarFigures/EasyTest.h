@@ -7,6 +7,7 @@
 #include "Renderer.h"
 #include "ObjParser.h"
 #include <tuple>
+#include <unordered_map>
 
 namespace Test {
 
@@ -84,7 +85,18 @@ namespace Test {
 		void LoadVaoUpdateFuntions();
 		void RegisterWorldBuffer(VertexArray& vao, IndexBuffer& ibo, CollisionDetector* cdo);
 	
-		
+
+		unsigned int IndexTracking;
+		std::unordered_map<unsigned int, bool> DeletedObjects =
+		{
+			{0, true},
+			{1, true},
+			{2, true},
+			{3, true},
+			{4, true},
+			{5, true},
+
+		};
 
 	};
 	

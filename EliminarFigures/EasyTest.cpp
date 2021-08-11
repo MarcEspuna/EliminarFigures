@@ -20,6 +20,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include <algorithm>
 
+
 Test::EasyTest::EasyTest()
     :   m_Donut("res/obj/donut.obj"),
     m_Proj(glm::ortho(-640.0f, 640.0f, -360.0f, 360.0f)),
@@ -44,7 +45,8 @@ Test::EasyTest::EasyTest()
     collision2(m_ControlLines.GetPositionsC(), m_Figures.Star, m_Figures.indexStar, 18),
     collision3(m_ControlLines.GetPositionsC(), m_Figures.V, m_Figures.indexV, 6),
     collision4(m_ControlLines.GetPositionsC(), m_Donut.GetVerticesIn2D(), m_Donut.GetIndexes(), (unsigned int)m_Donut.GetIndexes().size()),
-    ptr_window(nullptr)
+    ptr_window(nullptr),
+    IndexTracking(0)
 {
     vaoDonut.u_Model = glm::translate(vaoDonut.u_Model, glm::vec3(-300.0f, 100.0f, 0.0f));
     vaoDonut.u_Model = glm::scale(vaoDonut.u_Model, glm::vec3(120.0f, 120.0f, 0.0f));
@@ -110,26 +112,24 @@ void Test::EasyTest::OnUpdate(float deltaTime)
         vaoV.u_Model = glm::translate(vaoV.u_Model, glm::vec3(-1.0f, 0.0f, 0.0f));
         vaoC.u_Model = glm::translate(vaoC.u_Model, glm::vec3(-1.0f, 0.0f, 0.0f));
     }
-
-    int state4 = glfwGetKey(ptr_window, GLFW_KEY_K);
-    if (state4 == GLFW_PRESS)
-    {
-        WorldBuffer.erase(WorldBuffer.begin());
-    }
 }
 
 void Test::EasyTest::OnRender()
 {
     renderer.Clear();
     glm::vec3 translationCenterQuad = { m_ControlLines.modelC[3][0], m_ControlLines.modelC[3][1] , m_ControlLines.modelC[3][2] };
-
+    
+    IndexTracking = 0;
     for (auto& object : WorldBuffer)
     {
-        std::get<0>(object).OnVaoUpdate();
-        u_MVP = m_Proj * m_View * std::get<0>(object).u_Model;                                                                                                          //Update Model Matrix and MVP
-        shader.SetUniform4f("u_Color", std::get<0>(object).u_Color.x, std::get<0>(object).u_Color.y, std::get<0>(object).u_Color.z, std::get<0>(object).u_Color.t);     //Set the color Uniform
-        shader.SetUniform4Mat("u_MVP", u_MVP);                                                  
-        renderer.Draw(std::get<0>(object), std::get<1>(object), shader);
+        if (DeletedObjects[IndexTracking]) {
+            std::get<0>(object).OnVaoUpdate();
+            u_MVP = m_Proj * m_View * std::get<0>(object).u_Model;                                                                                                          //Update Model Matrix and MVP
+            shader.SetUniform4f("u_Color", std::get<0>(object).u_Color.x, std::get<0>(object).u_Color.y, std::get<0>(object).u_Color.z, std::get<0>(object).u_Color.t);     //Set the color Uniform
+            shader.SetUniform4Mat("u_MVP", u_MVP);
+            renderer.Draw(std::get<0>(object), std::get<1>(object), shader);
+        }
+        IndexTracking++;
     }
 }
 
@@ -138,14 +138,14 @@ void Test::EasyTest::OnImGuiRender()
     {
         static int counter = 0;
 
-        ImGui::Begin("Statistics Window!");                          // Create a window called "Hello, world!" and append into it.
+        ImGui::Begin("Statistics Window!");                         // Create a window called "Hello, world!" and append into it.
         ImGui::SetWindowSize(ImVec2(320, 180), 0);
 
 
-        ImGui::Text("Cached objects: %d", 0);               // Display some text (you can use a format strings too)
-        ImGui::Text("Objects left: %d", 7);               // Display some text (you can use a format strings too)
+        ImGui::Text("Cached objects: %d", 0);                       // Display some text (you can use a format strings too)
+        ImGui::Text("Objects left: %d", 7);                         // Display some text (you can use a format strings too)
 
-        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+        if (ImGui::Button("Button"))                                // Buttons return true when clicked (most widgets return true when edited/activated)
             counter++;
         ImGui::SameLine();
         ImGui::Text("counter = %d", counter);
@@ -163,6 +163,11 @@ void Test::EasyTest::LoadVaoUpdateFuntions()
         model = glm::translate(model, glm::vec3(0.001f, 0.0, 0.0f));
         collision4.UpdateVerticiesObj(model);
         collision4.RefreshObj({ vaoC.u_Model[3][0], vaoC.u_Model[3][1] ,vaoC.u_Model[3][2] });
+        if (collision4.GetStatus())
+        {
+            DeletedObjects[IndexTracking] = false;
+        }
+    
     };
 
     vaoStar.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
@@ -172,6 +177,12 @@ void Test::EasyTest::LoadVaoUpdateFuntions()
         model = glm::rotate(model, 0.01f, glm::vec3(0.0f, 0.0f, 1.0f));
         collision2.UpdateVerticies(vaoStar.u_Model, sizeof(m_Figures.Star) / sizeof(float));
         collision2.Refresh({ vaoC.u_Model[3][0], vaoC.u_Model[3][1] , vaoC.u_Model[3][2] });
+        if (collision2.GetStatus())
+        {
+            DeletedObjects[IndexTracking] = false;
+        }
+
+
     };
 
     vaoH.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
@@ -186,6 +197,8 @@ void Test::EasyTest::LoadVaoUpdateFuntions()
 
     vaoC.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
     {
+        color = { 0.5f, 0.1f, 0.4f, 1.0f };
+        /*
         if (collision2.GetStatus() || collision4.GetStatus())
         {
             color = { 0.0f, 1.0f, 0.0f, 1.0f };
@@ -194,9 +207,19 @@ void Test::EasyTest::LoadVaoUpdateFuntions()
         {
             color = { 0.5f, 0.1f, 0.4f, 1.0f };
         }
+        */
     };
 
-
+    vaoQuad.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
+    {
+        color = glm::vec4(0.8f, 0.3f, 0.6f, 1.0f);
+        collision.UpdateVerticies(model, sizeof(m_Figures.Square) / sizeof(float));
+        collision.Refresh({ vaoC.u_Model[3][0], vaoC.u_Model[3][1] , vaoC.u_Model[3][2] });
+        if (collision.GetStatus())
+        {
+            DeletedObjects[IndexTracking] = false;
+        }
+    };
 
 }
 
