@@ -7,15 +7,16 @@
 #include "Renderer.h"
 #include "ObjParser.h"
 #include <tuple>
+#include <unordered_map>
 
 namespace Test {
+
 
 	class HardTest : public Test
 
 	{
 	public:
 		HardTest();
-		HardTest(GLFWwindow* window);
 		~HardTest();
 
 
@@ -75,15 +76,28 @@ namespace Test {
 
 		glm::mat4 m_Proj;
 		glm::mat4 m_View;
-		glm::mat4 m_Model;
 		glm::mat4 u_MVP;
 
 		GLFWwindow* ptr_window;
 	
 		std::vector<std::tuple<VertexArray&, IndexBuffer&, CollisionDetector*>> WorldBuffer;
 
+		void LoadVaoUpdateFuntions();
 		void RegisterWorldBuffer(VertexArray& vao, IndexBuffer& ibo, CollisionDetector* cdo);
-		
+	
+		bool CatchingObject;
+
+		unsigned int IndexTracking;
+		std::unordered_map<unsigned int, bool> DeletedObjects =
+		{
+			{0, true},
+			{1, true},
+			{2, true},
+			{3, true},
+			{4, true},
+			{5, true},
+
+		};
 
 	};
 	

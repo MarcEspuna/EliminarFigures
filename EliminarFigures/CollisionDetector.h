@@ -15,6 +15,8 @@ public:
 	inline bool GetStatus() const { return CollisionCheck; }
 	void UpdateVerticies(glm::mat4 u_Model, const unsigned int& size);
 	void UpdateVerticiesObj(glm::mat4 u_Model);
+	void End() { CollisionCheck = false; }
+
 
 private:
 

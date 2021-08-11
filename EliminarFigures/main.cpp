@@ -1,5 +1,6 @@
 /*
-Timer class, Deleating objects with time(?)
+Timer class, Deleating objects with time(?) No with key
+vector of model matrices so we can duplicate same object
 */
 
 #include <fstream>
