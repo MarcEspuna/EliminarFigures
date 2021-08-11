@@ -5,7 +5,9 @@
 ObjParser::ObjParser(const char* filePath)
     :file(nullptr)
 {
-    if (readingFile(filePath))
+
+    fopen_s(&file, filePath, "r");
+    if (file != NULL)
     {
         while (1) {
 
@@ -17,19 +19,19 @@ ObjParser::ObjParser(const char* filePath)
 
             // else : parse lineHeader
 
-            if (strcmp(lineHeader, "v") == 0) 
+            if (strcmp(lineHeader, "v") == 0)
             {
                 glm::vec3 vertex;
                 fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
                 temp_vertices.push_back(vertex);
             }
-            else if (strcmp(lineHeader, "vt") == 0) 
+            else if (strcmp(lineHeader, "vt") == 0)
             {
                 glm::vec2 uv;
                 fscanf_s(file, "%f %f\n", &uv.x, &uv.y);
                 temp_uvs.push_back(uv);
             }
-            else if (strcmp(lineHeader, "vn") == 0) 
+            else if (strcmp(lineHeader, "vn") == 0)
             {
                 glm::vec3 normal;
                 fscanf_s(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
@@ -45,36 +47,40 @@ ObjParser::ObjParser(const char* filePath)
                     printf("File can't be read by our simple parser : ( Try exporting with other options\n");
                     break;
                 }
-                vertexIndices.push_back(vertexIndex[0]-1);
-                vertexIndices.push_back(vertexIndex[1]-1);
-                vertexIndices.push_back(vertexIndex[2]-1);
-                uvIndices.push_back(uvIndex[0]-1);
-                uvIndices.push_back(uvIndex[1]-1);
-                uvIndices.push_back(uvIndex[2]-1);
-                normalIndices.push_back(normalIndex[0]-1);
-                normalIndices.push_back(normalIndex[1]-1);
-                normalIndices.push_back(normalIndex[2]-1);
+                vertexIndices.push_back(vertexIndex[0] - 1);
+                vertexIndices.push_back(vertexIndex[1] - 1);
+                vertexIndices.push_back(vertexIndex[2] - 1);
+                uvIndices.push_back(uvIndex[0] - 1);
+                uvIndices.push_back(uvIndex[1] - 1);
+                uvIndices.push_back(uvIndex[2] - 1);
+                normalIndices.push_back(normalIndex[0] - 1);
+                normalIndices.push_back(normalIndex[1] - 1);
+                normalIndices.push_back(normalIndex[2] - 1);
             }
 
         }
-        //Allocating a buffer for 2D
-        for (glm::vec3 vertice : temp_vertices)
-        {
-            vertex2D.push_back(vertice.x);
-            vertex2D.push_back(vertice.y);
-        }
-    }
-}
-
-bool ObjParser::readingFile(const char* filePath)
-{
-    fopen_s(&file, filePath, "r");
-    if (file == NULL) {
-        printf("Impossible to open the file !\n");
-        return false;
+        fclose(file);
     }
     else 
     {
-        return true;
+        std::cout << "Couldn't Load: " << filePath << std::endl;
     }
+        //Allocating a buffer for 2D
+    for (glm::vec3 vertice : temp_vertices)
+    {
+        vertex2D.push_back(vertice.x);
+        vertex2D.push_back(vertice.y);
+        //std::cout << "X: " << vertice.x << " Y: " << vertice.y << std::endl;
+    
+    }
+    /*
+    for (unsigned int x : vertexIndices)
+    {
+        std::cout << "Index: "  << x << std::endl;
+    }
+    std::cout << "size indexes: " << vertexIndices.size() << std::endl;
+    std::cout << "size vertices: " << temp_vertices.size() << std::endl;
+    */
 }
+
+

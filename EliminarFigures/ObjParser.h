@@ -7,14 +7,22 @@ class ObjParser
 public:
 	ObjParser(const char* filePath);
 
-	inline std::vector<glm::vec3> GetVertices() const { return temp_vertices; }
-	inline std::vector<unsigned int> GetIndexes() const { return vertexIndices; }
-
-	inline float* GetVerticesIn2D() { return &vertex2D[0]; }
+	inline std::vector<float> GetVertices() 
+	{ 
+		std::vector<float> vertices;
+		for (glm::vec3 vector : temp_vertices)
+		{
+			vertices.push_back(vector.x);
+			vertices.push_back(vector.y);
+			vertices.push_back(vector.z);
+		}
+		return vertices;
+	}
+	inline std::vector<unsigned int>& GetIndexes() { return vertexIndices; }
+	inline std::vector<float>& GetVerticesIn2D() { return vertex2D; }
 
 private:
 	FILE* file;
-	bool readingFile(const char* filePath);
 	std::vector<float> vertex2D;
 
 	std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;

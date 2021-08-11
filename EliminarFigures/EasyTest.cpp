@@ -31,36 +31,35 @@ Test::EasyTest::EasyTest()
     vboQuad(m_Figures.Square, sizeof(m_Figures.Square)),
     vboStar(m_Figures.Star, sizeof(m_Figures.Star)),
     vboVFigure(m_Figures.V, sizeof(m_Figures.V)),
-    vboDonut((float*)&m_Donut.GetVertices()[0], m_Donut.GetVertices().size() * sizeof(glm::vec3)),
+    vboDonut( &m_Donut.GetVerticesIn2D()[0], m_Donut.GetVerticesIn2D().size() * sizeof(float)),
     iboH(m_ControlLines.GetIndexH(), m_ControlLines.GetCountIndexes() * sizeof(unsigned int)),
     iboV(m_ControlLines.GetIndexV(), m_ControlLines.GetCountIndexes() * sizeof(unsigned int)),
     iboC(m_ControlLines.GetIndexC(), m_ControlLines.GetCountIndexes() * sizeof(unsigned int)),
     iboQuad(m_Figures.indexQuad, sizeof(m_Figures.indexQuad)),
     iboStar(m_Figures.indexStar, sizeof(m_Figures.indexStar)),
     iboVFigure(m_Figures.indexV, sizeof(m_Figures.indexV)),
-    iboDonut((unsigned int*)(&m_Donut.GetIndexes()[0]), m_Donut.GetIndexes().size() * sizeof(unsigned int)),
+    iboDonut((&m_Donut.GetIndexes()[0]), m_Donut.GetIndexes().size() * sizeof(unsigned int)),
     shader("res/Basic.shader"),
     collision(m_ControlLines.GetPositionsC(), m_Figures.Square, m_Figures.indexQuad, 6),
     collision2(m_ControlLines.GetPositionsC(), m_Figures.Star, m_Figures.indexStar, 18),
     collision3(m_ControlLines.GetPositionsC(), m_Figures.V, m_Figures.indexV, 6),
+    collision4(m_ControlLines.GetPositionsC(), m_Donut.GetVerticesIn2D(), m_Donut.GetIndexes(), (unsigned int)m_Donut.GetIndexes().size()),
     ptr_window(nullptr)
 {
-    vaoDonut.u_Model = glm::translate(vaoDonut.u_Model, glm::vec3(-200.0f, 100.0f, 0.0f));
-    vaoDonut.u_Model = glm::scale(vaoDonut.u_Model, glm::vec3(60.0f, 60.0f, 0.0f));
+    vaoDonut.u_Model = glm::translate(vaoDonut.u_Model, glm::vec3(-300.0f, 100.0f, 0.0f));
+    vaoDonut.u_Model = glm::scale(vaoDonut.u_Model, glm::vec3(120.0f, 120.0f, 0.0f));
 
     shader.Bind();
 
     VertexArrayLayout layout;
-    VertexArrayLayout layout2;
     layout.Push<float>(2);
-    layout2.Push<float>(3);
     vaoH.AddBuffer(vboH, layout);
     vaoV.AddBuffer(vboV, layout);
     vaoC.AddBuffer(vboC, layout);
     vaoQuad.AddBuffer(vboQuad, layout);
     vaoStar.AddBuffer(vboStar, layout);
     vaoVFigure.AddBuffer(vboVFigure, layout);
-    vaoDonut.AddBuffer(vboDonut, layout2);
+    vaoDonut.AddBuffer(vboDonut, layout);
 
     //Order of Registerig translates to order of drawing
     RegisterWorldBuffer(vaoQuad, iboQuad, &collision);
@@ -137,16 +136,14 @@ void Test::EasyTest::OnRender()
 void Test::EasyTest::OnImGuiRender()
 {
     {
-        static float f = 0.0f;
         static int counter = 0;
 
-        ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+        ImGui::Begin("Statistics Window!");                          // Create a window called "Hello, world!" and append into it.
         ImGui::SetWindowSize(ImVec2(320, 180), 0);
 
 
-        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+        ImGui::Text("Cached objects: %d", 0);               // Display some text (you can use a format strings too)
+        ImGui::Text("Objects left: %d", 7);               // Display some text (you can use a format strings too)
 
         if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
             counter++;
@@ -163,15 +160,18 @@ void Test::EasyTest::LoadVaoUpdateFuntions()
 
     vaoDonut.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color) 
     { 
-        model = glm::translate(model, glm::vec3(0.005f, 0.0, 0.0f)); 
-  
+        model = glm::translate(model, glm::vec3(0.001f, 0.0, 0.0f));
+        collision4.UpdateVerticiesObj(model);
+        collision4.RefreshObj({ vaoC.u_Model[3][0], vaoC.u_Model[3][1] ,vaoC.u_Model[3][2] });
     };
 
     vaoStar.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
     {
         color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
         model = glm::translate(model, glm::vec3(0.05f, 0.05, 0.0f));
-        collision2.Refresh({ vaoC.u_Model[3][0], vaoC.u_Model[3][1] , vaoC.u_Model[3][2] }, { model[3][0], model[3][1], model[3][2] });
+        model = glm::rotate(model, 0.01f, glm::vec3(0.0f, 0.0f, 1.0f));
+        collision2.UpdateVerticies(vaoStar.u_Model, sizeof(m_Figures.Star) / sizeof(float));
+        collision2.Refresh({ vaoC.u_Model[3][0], vaoC.u_Model[3][1] , vaoC.u_Model[3][2] });
     };
 
     vaoH.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
@@ -186,7 +186,7 @@ void Test::EasyTest::LoadVaoUpdateFuntions()
 
     vaoC.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
     {
-        if (collision2.GetStatus())
+        if (collision2.GetStatus() || collision4.GetStatus())
         {
             color = { 0.0f, 1.0f, 0.0f, 1.0f };
         }

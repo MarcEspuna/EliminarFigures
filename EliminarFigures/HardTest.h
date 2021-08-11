@@ -66,6 +66,7 @@ namespace Test {
 		CollisionDetector collision;
 		CollisionDetector collision2;
 		CollisionDetector collision3;
+		CollisionDetector collision4;
 
 		Renderer renderer;
 
