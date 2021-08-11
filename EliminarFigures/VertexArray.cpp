@@ -8,7 +8,7 @@
 
 
 VertexArray::VertexArray()
-	: u_Model(glm::mat4(1.0f)), u_Color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
+	: u_Model(glm::mat4(1.0f)), u_Color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), translationX(1.0f), translationY(1.0f)
 {
 	glGenVertexArrays(1, &m_RendererID);
 }

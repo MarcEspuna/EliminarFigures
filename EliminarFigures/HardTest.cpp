@@ -50,7 +50,8 @@ Test::HardTest::HardTest()
     CatchingObject(false)
 {
     vaoDonut.u_Model = glm::translate(vaoDonut.u_Model, glm::vec3(-300.0f, 100.0f, 0.0f));
-    vaoDonut.u_Model = glm::scale(vaoDonut.u_Model, glm::vec3(120.0f, 120.0f, 0.0f));
+    vaoDonut.u_Model = glm::scale(vaoDonut.u_Model, glm::vec3(40.0f, 40.0f, 0.0f));
+    vaoDonut.u_Color = glm::vec4(0.909f, 0.776f, 0.188f, 1.0f);
 
     shader.Bind();
 
@@ -124,6 +125,11 @@ void Test::HardTest::OnUpdate(float deltaTime)
         CatchingObject = false;
     }
 
+    int state5 = glfwGetKey(ptr_window, GLFW_KEY_R);
+    if (state5 == GLFW_PRESS)
+    {
+        DeletedObjects[1] = true;
+    }
 
 
 }
@@ -187,9 +193,13 @@ void Test::HardTest::LoadVaoUpdateFuntions()
 
     vaoStar.u_ModelUpdate = [&](glm::mat4& model, glm::vec4& color)
     {
-        color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-        model = glm::translate(model, glm::vec3(0.05f, 0.05, 0.0f));
-        model = glm::rotate(model, 0.01f, glm::vec3(0.0f, 0.0f, 1.0f));
+        vaoStar.rotationAngle = 0.005f;
+        if (model[3][0] > 200) vaoStar.translationX = -1.0f;
+        if (model[3][0] < -200) vaoStar.translationX = 1.0f;
+        color = glm::vec4(0.0f, 0.2f, 0.8f, 1.0f);
+        model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime()/2, glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::translate(model, glm::vec3(400.0f, 0, 0.0f));
+        model = glm::rotate(model, -(float)glfwGetTime()*1.5f, glm::vec3(0.0f, 0.0f, 1.0f));
         collision2.UpdateVerticies(vaoStar.u_Model, sizeof(m_Figures.Star) / sizeof(float));
         collision2.Refresh({ vaoC.u_Model[3][0], vaoC.u_Model[3][1] , vaoC.u_Model[3][2] });
         if (collision2.GetStatus() && CatchingObject)
