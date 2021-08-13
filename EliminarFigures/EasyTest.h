@@ -1,12 +1,8 @@
 #include "Test.h"
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "CollisionDetector.h"
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
-#include <tuple>
+#include "Object.h"
 #include <unordered_map>
 
 namespace Test {
@@ -31,62 +27,33 @@ namespace Test {
 
 
 	private:
-		Figures m_Figures;
-		ControlLines m_ControlLines;
-		ObjParser m_Donut;
 
-
-		VertexArray vaoH;                   //Vertex Array for the Horizontal Line
-		VertexArray vaoV;                   //Vertex Array for the Vertical Line
-		VertexArray vaoC;                   //Vertex Array for the Contral Quad
-
-		VertexArray vaoQuad;                //Vertex Array for a random Quad
-		VertexArray vaoStar;                //Vertex Array for a random Star
-		VertexArray vaoVFigure;					//Vertex Array for a random V type figure;	
-		VertexArray vaoDonut;
-
-		VertexBuffer vboH;					
-		VertexBuffer vboV;
-		VertexBuffer vboC;
-		VertexBuffer vboQuad;
-		VertexBuffer vboStar;
-		VertexBuffer vboVFigure;
-		VertexBuffer vboDonut;
-
-		IndexBuffer iboH;
-		IndexBuffer iboV;
-		IndexBuffer iboC;
-
-		IndexBuffer iboQuad;
-		IndexBuffer iboStar;
-		IndexBuffer iboVFigure;
-		IndexBuffer iboDonut;
+		Object Horse;
+		Object HLine;
+		Object VLine;
+		Object CQuad;
+		Object Star;
 
 		Shader shader;
-
-		CollisionDetector collision;
-		CollisionDetector collision2;
-		CollisionDetector collision3;
-		CollisionDetector collision4;
 
 		Renderer renderer;
 
 		float x = 1.0f;
 		float y = 1.0f;
 
-		glm::mat4 m_Proj;
-		glm::mat4 m_View;
-		glm::mat4 u_MVP;
+		glm::mat4 m_Proj = glm::ortho(-640.0f, 640.0f, -360.0f, 360.0f);
+		glm::mat4 m_View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		glm::mat4 u_MVP = glm::mat4(1.0f);
 
-		GLFWwindow* ptr_window;
+		GLFWwindow* ptr_window = nullptr;
 	
-		std::vector<std::tuple<VertexArray&, IndexBuffer&, CollisionDetector*>> WorldBuffer;
+		std::vector<Object*> WorldBuffer;
 
 		void LoadVaoUpdateFuntions();
-		void RegisterWorldBuffer(VertexArray& vao, IndexBuffer& ibo, CollisionDetector* cdo);
 	
+		bool CatchingObject = false;
 
-		unsigned int IndexTracking;
+		unsigned int IndexTracking = 0;
 		std::unordered_map<unsigned int, bool> DeletedObjects =
 		{
 			{0, true},

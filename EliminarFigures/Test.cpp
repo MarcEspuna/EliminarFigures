@@ -24,7 +24,6 @@ void Test::TestMenu::OnImGuiRender()
 	{
 		if (ImGui::Button(test.first.c_str())) 
 		{
-			std::cout << "button pressed" << std::endl;
 			m_CurrentTest = test.second();
 		}
 	}

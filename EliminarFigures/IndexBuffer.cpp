@@ -6,6 +6,7 @@
 IndexBuffer::IndexBuffer()
 	:m_RendererID(0), m_Count(0)
 {
+	glGenBuffers(1, &m_RendererID);
 }
 
 IndexBuffer::IndexBuffer(const void* data, size_t size)
@@ -34,7 +35,6 @@ void IndexBuffer::Unbind() const
 
 void IndexBuffer::LoadData(const void* data, size_t size)
 {
-	glGenBuffers(1, &m_RendererID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	m_Count = size / sizeof(unsigned int);

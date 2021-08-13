@@ -14,6 +14,7 @@ Timer class, Deleating objects with time(?) No with key
 
 #include "HardTest.h"
 #include "EasyTest.h"
+#include "MediumTest.h"
 #include "ObjParser.h"
 
 enum class Difficulty {
@@ -33,7 +34,6 @@ int main(void)
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-
 
     GLFWwindow* window;
     Renderer renderer;
@@ -73,7 +73,7 @@ int main(void)
     currentTest = menu; 
 
     menu->RegisterTest<Test::HardTest>("Hard Difficulty");
-    menu->RegisterTest<Test::HardTest>("Medium Difficulty");
+    menu->RegisterTest<Test::MediumTest>("Medium Difficulty");
     menu->RegisterTest<Test::EasyTest>("Easy Difficulty");
 
     /* Loop until the user closes the window */

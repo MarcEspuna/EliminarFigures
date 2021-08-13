@@ -24,6 +24,8 @@ ObjParser::ObjParser(const char* filePath)
                 glm::vec3 vertex;
                 fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
                 temp_vertices.push_back(vertex);
+                vertex2D.push_back(vertex.x);
+                vertex2D.push_back(vertex.y);
             }
             else if (strcmp(lineHeader, "vt") == 0)
             {
@@ -56,6 +58,7 @@ ObjParser::ObjParser(const char* filePath)
                 normalIndices.push_back(normalIndex[0] - 1);
                 normalIndices.push_back(normalIndex[1] - 1);
                 normalIndices.push_back(normalIndex[2] - 1);
+
             }
 
         }
@@ -65,22 +68,23 @@ ObjParser::ObjParser(const char* filePath)
     {
         std::cout << "Couldn't Load: " << filePath << std::endl;
     }
-        //Allocating a buffer for 2D
-    for (glm::vec3 vertice : temp_vertices)
+}
+
+void ObjParser::SetVertexScale(glm::vec3 scale)
+{
+    for (size_t i = 0; i < vertex2D.size()-1; i++)
     {
-        vertex2D.push_back(vertice.x);
-        vertex2D.push_back(vertice.y);
-        //std::cout << "X: " << vertice.x << " Y: " << vertice.y << std::endl;
-    
+        vertex2D[i] = vertex2D[i] * scale.x;
+        vertex2D[i+1] = vertex2D[i + 1] * scale.y;
+        i++;
     }
-    /*
-    for (unsigned int x : vertexIndices)
+
+    for (auto& value : temp_vertices)
     {
-        std::cout << "Index: "  << x << std::endl;
+        value.x = value.x * scale.x;
+        value.y = value.y * scale.y;
     }
-    std::cout << "size indexes: " << vertexIndices.size() << std::endl;
-    std::cout << "size vertices: " << temp_vertices.size() << std::endl;
-    */
+
 }
 
 

@@ -135,9 +135,9 @@ ShaderSourceCode Shader::parseShader(const char* filePath)
      return location;
  }
 
-void Shader::SetUniform4f(std::string uniformName, float v0, float v1, float v2, float v3)
+void Shader::SetUniform4f(std::string uniformName, const glm::vec4& values)
 {
-    glUniform4f(GetUniformLocation(uniformName), v0, v1, v2, v3);
+    glUniform4f(GetUniformLocation(uniformName), values.x, values.y, values.z, values.t);
 }
 
 void Shader::SetUniform1i(std::string uniformName, int value)

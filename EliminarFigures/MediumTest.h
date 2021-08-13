@@ -8,12 +8,12 @@
 namespace Test {
 
 
-	class HardTest : public Test
+	class MediumTest : public Test
 
 	{
 	public:
-		HardTest();
-		~HardTest();
+		MediumTest();
+		~MediumTest();
 
 
 		void OnUpdate(float deltaTime) override;
@@ -67,5 +67,6 @@ namespace Test {
 
 	};
 	
+	float GetDeltaTime();
 
 }

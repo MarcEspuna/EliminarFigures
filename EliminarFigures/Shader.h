@@ -14,7 +14,7 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
-	void SetUniform4f(std::string uniformName, float v0, float v1, float v2, float v3);
+	void SetUniform4f(std::string uniformName, const glm::vec4& values);
 	void SetUniform1i(std::string uniformName, int value);
 	void SetUniform4Mat(std::string uniformName, glm::mat4 u_MVP);
 

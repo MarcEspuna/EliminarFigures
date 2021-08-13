@@ -156,6 +156,8 @@
     <ClCompile Include="HardTest.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MediumTest.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjParser.cpp" />
     <ClCompile Include="res\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui.cpp" />
@@ -173,6 +175,8 @@
   <ItemGroup>
     <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="EasyTest.h" />
+    <ClInclude Include="MediumTest.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="ObjParser.h" />
     <ClInclude Include="PositionsBuffers.h" />
     <ClInclude Include="dependencies\GLFW\glfw3.h" />

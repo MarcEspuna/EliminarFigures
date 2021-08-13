@@ -1,5 +1,5 @@
 #include "Test.h"
-#include "HardTest.h"
+#include "MediumTest.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -16,11 +16,11 @@
 #include "imgui/imgui_impl_glfw.h"
 
 
-Test::HardTest::HardTest()
+Test::MediumTest::MediumTest()
     : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 60.0f),
-    HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.5f, 1.0f) ),
-    VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.5f, 1.0f, 1.0f)),
-    CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.5f, 0.5f, 1.0f)),
+    HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.75f, 1.0f) ),
+    VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.75f, 1.0f, 1.0f)),
+    CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.75f, 0.75f, 1.0f)),
     Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}),
     shader("res/Basic.shader")
 {
@@ -44,12 +44,12 @@ Test::HardTest::HardTest()
 }
 
 
-Test::HardTest::~HardTest()
+Test::MediumTest::~MediumTest()
 {
 	std::cout << "Hard test destroyed\n";
 }
 
-void Test::HardTest::OnUpdate(float deltaTime)
+void Test::MediumTest::OnUpdate(float deltaTime)
 {
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
@@ -90,7 +90,7 @@ void Test::HardTest::OnUpdate(float deltaTime)
     }
 }
 
-void Test::HardTest::OnRender()
+void Test::MediumTest::OnRender()
 {
     renderer.Clear();
     
@@ -110,7 +110,7 @@ void Test::HardTest::OnRender()
     }
 }
 
-void Test::HardTest::OnImGuiRender()
+void Test::MediumTest::OnImGuiRender()
 {
     {
         static int counter = 0;
@@ -132,7 +132,7 @@ void Test::HardTest::OnImGuiRender()
     }
 }
 
-void Test::HardTest::LoadVaoUpdateFuntions()
+void Test::MediumTest::LoadVaoUpdateFuntions()
 {
 
     Horse.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
@@ -162,4 +162,7 @@ void Test::HardTest::LoadVaoUpdateFuntions()
 
 }
 
-
+float Test::GetDeltaTime()
+{
+    return 0.0f;
+}
