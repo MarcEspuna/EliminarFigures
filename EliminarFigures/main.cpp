@@ -1,6 +1,9 @@
 /*
-Timer class, Deleating objects with time(?) No with key
--------------vector of model matrices so we can duplicate same object---------------------
+Delta time function,
+movement based on delta time
+
+
+Deleting only the object we touch, not all the objects with that shape
 */
 
 #include <fstream>
@@ -17,18 +20,6 @@ Timer class, Deleating objects with time(?) No with key
 #include "MediumTest.h"
 #include "ObjParser.h"
 
-enum class Difficulty {
-    EASY = 1,
-    NORMAL = 2,
-    HARD = 3
-};
-
-float deltaTime()
-{
-    return 0;
-}
-
-
 int main(void)
 {
 
@@ -43,7 +34,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1280, 720, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(1920, 1080, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();

@@ -15,22 +15,27 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_glfw.h"
 
-
 Test::HardTest::HardTest()
-    : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 60.0f),
-    HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.5f, 1.0f) ),
-    VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.5f, 1.0f, 1.0f)),
-    CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.5f, 0.5f, 1.0f)),
-    Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}),
+    : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 30.0f),
+    HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.4f, 1.0f) ),
+    VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.4f, 1.0f, 1.0f)),
+    CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.4f, 0.4f, 1.0f)),
+    Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}, 0.5f),
+    Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 40.0f),
+    Pointy("res/obj/Pointy.obj",{ 1.0f, 0.6, 0.3, 1.0f }, 40.0f),
     shader("res/Basic.shader")
 {
     //Registering all the objects
-    WorldBuffer.push_back(&Horse);
-    WorldBuffer.push_back(&Star);
-    WorldBuffer.push_back(&HLine);
-    WorldBuffer.push_back(&VLine);
-    WorldBuffer.push_back(&CQuad);
+    RegisterObject(&Pointy);
+    RegisterObject(&Rings);
+    RegisterObject(&Horse);
+    RegisterObject(&Star);
+    RegisterObject(&HLine);
+    RegisterObject(&VLine);
+    RegisterObject(&CQuad);
     Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
+    Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, -100.0f, 0.0f)));
+    Pointy.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, -100.0f, 0.0f)));
 
     //Loading all the lamdas that will define the behaviour of our objects
     LoadVaoUpdateFuntions();                            
@@ -38,6 +43,8 @@ Test::HardTest::HardTest()
     //Setting collision relations:
     Star.TrackCollisionWith(&CQuad);
     Horse.TrackCollisionWith(&CQuad);
+    Rings.TrackCollisionWith(&CQuad);
+    Pointy.TrackCollisionWith(&CQuad);
 
     std::cout << "Hard Test created" << std::endl;
 
@@ -134,9 +141,35 @@ void Test::HardTest::OnImGuiRender()
 
 void Test::HardTest::LoadVaoUpdateFuntions()
 {
+    Pointy.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
+    {
+        model = glm::translate(model, glm::vec3(-0.05f, 0.0f, 0.0f));
+        if (CatchingObject && Pointy.GetCollisionStatus())
+        {
+            DeletedObjects[IndexTracking] = false;
+            Pointy.CollisionEnd();
+        }
+    };
+
+
+    Rings.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
+    {
+        model = glm::translate(model, glm::vec3(-0.1f, -0.1f, 0.0f));
+        if (CatchingObject && Rings.GetCollisionStatus())
+        {
+            DeletedObjects[IndexTracking] = false;
+            Rings.CollisionEnd();
+        }
+    };
+
 
     Horse.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
     {
+        if (CatchingObject && Horse.GetCollisionStatus())
+        {
+            DeletedObjects[IndexTracking] = false;
+            Horse.CollisionEnd();
+        }
         //model = glm::translate(glm::mat4(1.0f), glm::vec3((float)glfwGetTime()*20, 0.0f, 0.0f));
     };
 
@@ -145,11 +178,18 @@ void Test::HardTest::LoadVaoUpdateFuntions()
         model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime()/2, glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::translate(model, glm::vec3(450.0f, 0.0f, 0.0f));
         model = glm::rotate(model, -(float)glfwGetTime()*1.5f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+        if (CatchingObject && Star.GetCollisionStatus())
+        {
+            DeletedObjects[IndexTracking] = false;
+            Star.CollisionEnd();
+        }
+
     };
 
     CQuad.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
     {
-        if (Star.GetCollisionStatus() || Horse.GetCollisionStatus())
+        if (Star.GetCollisionStatus() || Horse.GetCollisionStatus() || Rings.GetCollisionStatus() || Pointy.GetCollisionStatus())
         {
             color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
         }
@@ -160,6 +200,13 @@ void Test::HardTest::LoadVaoUpdateFuntions()
 
     };
 
+}
+
+void Test::HardTest::RegisterObject(Object* object)
+{
+    WorldBuffer.push_back(object);
+    std::pair<unsigned int, bool> objectTrack((unsigned int)(WorldBuffer.size() - 1), true);
+    DeletedObjects.insert(objectTrack);
 }
 
 

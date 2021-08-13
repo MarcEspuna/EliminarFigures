@@ -32,6 +32,7 @@ public:
 	inline std::vector<unsigned int>& GetIndex() { return m_Data.GetIndexes(); }
 	inline std::vector<float>& GetVertex() { return m_Data.GetVerticesIn2D(); }
 	inline bool GetCollisionStatus() { return collision.GetStatus(); }
+	inline void CollisionEnd() { collision.End(); }
 
 private:
 
@@ -44,6 +45,6 @@ private:
 	std::vector<glm::mat4> vec_Model;					//Canviar a vector per si volem renderitzar el mateix vao en varios llocs
 	glm::vec4 u_Color;									//Fixed color for all the objects
 	
-
+	std::function<void()> f_CheckCollision = [&]() { collision.RefreshStatus(); };
 };
 

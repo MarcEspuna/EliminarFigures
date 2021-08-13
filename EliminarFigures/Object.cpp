@@ -71,10 +71,13 @@ Object::~Object()
 
 void Object::OnObjectUpdate()
 {
+	f_CheckCollision();									//Important!: we first Refresh the collision, then do the model color update
 	for (auto& u_Model : vec_Model)
 	{
 		f_ModelColorUpdate(u_Model, u_Color);
 	}
+	
+
 }
 
 void Object::TrackCollisionWith(Object* otherObject)

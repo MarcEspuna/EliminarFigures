@@ -19,7 +19,6 @@ namespace Test {
 		void OnUpdate(float deltaTime) override;
 		void OnRender() override;
 		void OnImGuiRender() override;
-
 		void SaveWindow(GLFWwindow* window) override
 		{
 			ptr_window = window;
@@ -33,6 +32,8 @@ namespace Test {
 		Object VLine;
 		Object CQuad;
 		Object Star;
+		Object Rings;
+		Object Pointy;
 
 		Shader shader;
 
@@ -53,17 +54,11 @@ namespace Test {
 	
 		bool CatchingObject = false;
 
-		unsigned int IndexTracking = 0;
-		std::unordered_map<unsigned int, bool> DeletedObjects =
-		{
-			{0, true},
-			{1, true},
-			{2, true},
-			{3, true},
-			{4, true},
-			{5, true},
 
-		};
+		unsigned int IndexTracking = 0;
+		std::unordered_map<unsigned int, bool> DeletedObjects;
+
+		void RegisterObject(Object* object);
 
 	};
 	

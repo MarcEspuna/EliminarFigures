@@ -27,6 +27,7 @@ namespace Test
 		*/
 	private:
 
+
 	};
 
 
@@ -48,5 +49,6 @@ namespace Test
 	private:
 		Test*& m_CurrentTest;
 		std::vector < std::pair < std::string, std::function<Test* () >>> m_Tests;
+
 	};
 }

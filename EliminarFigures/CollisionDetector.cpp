@@ -17,18 +17,15 @@ void CollisionDetector::SetOtherObject(Object* otherObject)
 	OtherObject = otherObject;
 }
 
-bool CollisionDetector::GetStatus()
+unsigned int CollisionDetector::RefreshStatus()				//Retornar index de la colisio!
 {
 	for (size_t i = 0; i < MainObject->GetModels().size(); i++)
 	{
 		if (Refresh(i))
-			break;
+			return i;
 	}
-	return CollisionCheck;
+	return 0;
 }
-
-
-
 
 unsigned int CollisionDetector::Refresh(size_t index)
 {
