@@ -69,14 +69,22 @@ Object::~Object()
 
 }
 
-void Object::OnObjectUpdate()
+void Object::OnObjectUpdate(bool deleteObject)
 {
-	f_CheckCollision();									//Important!: we first Refresh the collision, then do the model color update
-	for (auto& u_Model : vec_Model)
+	//Important!: we first Refresh the collision, then do the model color update
+	int indexModel = f_CheckCollision();
+	if (indexModel > -1 && deleteObject == true)
 	{
-		f_ModelColorUpdate(u_Model, u_Color);
+		vec_Model.erase(vec_Model.begin() + indexModel);
+		collision.End();
 	}
-	
+	else
+	{
+		for (auto& u_Model : vec_Model)
+		{
+			f_ModelColorUpdate(u_Model, u_Color);
+		}
+	}
 
 }
 

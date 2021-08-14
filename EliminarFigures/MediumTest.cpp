@@ -98,7 +98,7 @@ void Test::MediumTest::OnRender()
     for (auto& object : WorldBuffer)
     {
         if (DeletedObjects[IndexTracking]) {
-            object->OnObjectUpdate();
+            object->OnObjectUpdate(CatchingObject);
             for (auto& u_Model : object->GetModels()) {
                 u_MVP = m_Proj * m_View * u_Model;                                                                                                          //Update Model Matrix and MVP
                 shader.SetUniform4f("u_Color", object->GetColor());     //Set the color Uniform

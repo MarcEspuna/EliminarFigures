@@ -100,20 +100,15 @@ void Test::HardTest::OnUpdate(float deltaTime)
 void Test::HardTest::OnRender()
 {
     renderer.Clear();
-    
-    IndexTracking = 0;
     for (auto& object : WorldBuffer)
     {
-        if (DeletedObjects[IndexTracking]) {
-            object->OnObjectUpdate();
-            for (auto& u_Model : object->GetModels()) {
-                u_MVP = m_Proj * m_View * u_Model;                                                                                                          //Update Model Matrix and MVP
-                shader.SetUniform4f("u_Color", object->GetColor());     //Set the color Uniform
-                shader.SetUniform4Mat("u_MVP", u_MVP);
-                renderer.Draw(object->GetVao(), object->GetIbo(), shader);
-            }
+        object->OnObjectUpdate(CatchingObject);
+        for (auto& u_Model : object->GetModels()) {
+            u_MVP = m_Proj * m_View * u_Model;                                                                                                          //Update Model Matrix and MVP
+            shader.SetUniform4f("u_Color", object->GetColor());     //Set the color Uniform
+            shader.SetUniform4Mat("u_MVP", u_MVP);
+            renderer.Draw(object->GetVao(), object->GetIbo(), shader);
         }
-        IndexTracking++;
     }
 }
 
@@ -144,32 +139,17 @@ void Test::HardTest::LoadVaoUpdateFuntions()
     Pointy.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
     {
         model = glm::translate(model, glm::vec3(-0.05f, 0.0f, 0.0f));
-        if (CatchingObject && Pointy.GetCollisionStatus())
-        {
-            DeletedObjects[IndexTracking] = false;
-            Pointy.CollisionEnd();
-        }
     };
 
 
     Rings.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
     {
         model = glm::translate(model, glm::vec3(-0.1f, -0.1f, 0.0f));
-        if (CatchingObject && Rings.GetCollisionStatus())
-        {
-            DeletedObjects[IndexTracking] = false;
-            Rings.CollisionEnd();
-        }
     };
 
 
     Horse.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
     {
-        if (CatchingObject && Horse.GetCollisionStatus())
-        {
-            DeletedObjects[IndexTracking] = false;
-            Horse.CollisionEnd();
-        }
         //model = glm::translate(glm::mat4(1.0f), glm::vec3((float)glfwGetTime()*20, 0.0f, 0.0f));
     };
 
@@ -178,12 +158,6 @@ void Test::HardTest::LoadVaoUpdateFuntions()
         model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime()/2, glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::translate(model, glm::vec3(450.0f, 0.0f, 0.0f));
         model = glm::rotate(model, -(float)glfwGetTime()*1.5f, glm::vec3(0.0f, 0.0f, 1.0f));
-
-        if (CatchingObject && Star.GetCollisionStatus())
-        {
-            DeletedObjects[IndexTracking] = false;
-            Star.CollisionEnd();
-        }
 
     };
 
@@ -206,7 +180,6 @@ void Test::HardTest::RegisterObject(Object* object)
 {
     WorldBuffer.push_back(object);
     std::pair<unsigned int, bool> objectTrack((unsigned int)(WorldBuffer.size() - 1), true);
-    DeletedObjects.insert(objectTrack);
 }
 
 

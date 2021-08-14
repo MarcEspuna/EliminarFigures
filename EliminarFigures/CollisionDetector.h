@@ -13,7 +13,7 @@ public:
 
 	void SetOtherObject(Object* otherObject);
 
-	unsigned int RefreshStatus();
+	int RefreshStatus();
 	bool GetStatus() { return CollisionCheck; }
 	void End() { CollisionCheck = false; }
 

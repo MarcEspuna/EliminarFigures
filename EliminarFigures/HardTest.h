@@ -51,14 +51,10 @@ namespace Test {
 		std::vector<Object*> WorldBuffer;
 
 		void LoadVaoUpdateFuntions();
-	
+		void RegisterObject(Object* object);
+		
 		bool CatchingObject = false;
 
-
-		unsigned int IndexTracking = 0;
-		std::unordered_map<unsigned int, bool> DeletedObjects;
-
-		void RegisterObject(Object* object);
 
 	};
 	

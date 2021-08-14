@@ -18,7 +18,7 @@ public:
 
 	std::function<void(glm::mat4&, glm::vec4&)> f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color) {};
 
-	void OnObjectUpdate();
+	void OnObjectUpdate(bool deleteObject);
 	void TrackCollisionWith(Object* otherObject);
 	void New(glm::mat4 u_NewModel);
 
@@ -45,6 +45,6 @@ private:
 	std::vector<glm::mat4> vec_Model;					//Canviar a vector per si volem renderitzar el mateix vao en varios llocs
 	glm::vec4 u_Color;									//Fixed color for all the objects
 	
-	std::function<void()> f_CheckCollision = [&]() { collision.RefreshStatus(); };
+	std::function<int()> f_CheckCollision = [&]() {return collision.RefreshStatus(); };
 };
 
