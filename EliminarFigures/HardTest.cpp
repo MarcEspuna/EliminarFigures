@@ -23,6 +23,7 @@ Test::HardTest::HardTest()
     Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 40.0f),
     shader("res/Basic.shader")
 {
+    Rings.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(400.0f, -50.0f, 0.0f));
     //Registering all the objects
     RegisterObject(&Rings);
     RegisterObject(&Horse);
@@ -31,8 +32,7 @@ Test::HardTest::HardTest()
     RegisterObject(&VLine);
     RegisterObject(&CQuad);
     Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
-    Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, -100.0f, 0.0f)));
-
+    Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, -300.0f, 0.0f)));
     //Loading all the lamdas that will define the behaviour of our objects
     LoadObjectUpdateFuntions();                            
 
@@ -149,33 +149,39 @@ void Test::HardTest::LoadObjectUpdateFuntions()
 {
 
 
-    Rings.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime)
+    Rings.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        model = glm::translate(model, glm::vec3(-deltaTime, -deltaTime, 0.0f));
+        glm::vec4 pos(oneVertex[0], oneVertex[1], 0.0f, 1.0f);
+        glm::vec4 updatedOnePos = model * pos;
+        if (updatedOnePos[0] < -600.0f) movement.x = 1.0f;
+        else if (updatedOnePos[0] > 600.0f) movement.x = -1.0f;
+        if (updatedOnePos[1] < -320.0f) movement.y = 1.0f;
+        else if (updatedOnePos[1] > 320.0f) movement.y = -1.0f;
+        model = glm::translate(model, glm::vec3(deltaTime * movement.x * 2, deltaTime * movement.y * 2, 0.0f));
     };
 
 
-    Horse.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime)
+    Horse.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        //Get the actual positions
-        static float signX = 1.0f;
-        static float signY = 1.0f;
-        if (model[3][0] < -200.0f) signX = 1.0f;
-        else if (model[3][0] > 200.0f) signX = -1.0f;
-        if (model[3][1] < -200.0f) signY = 1.0f;
-        else if (model[3][1] > 200.0f) signY = -1.0f;
-        model = glm::translate(model, glm::vec3(deltaTime* signX * 2, deltaTime * signY * 2, 0.0f));
+        glm::vec4 pos(oneVertex[0], oneVertex[1], 0.0f, 1.0f);
+        glm::vec4 updatedOnePos = model * pos;
+        if (updatedOnePos[0] < -600.0f) movement.x = 1.0f;
+        else if (updatedOnePos[0] > 600.0f) movement.x = -1.0f;
+        if (updatedOnePos[1] < -320.0f) movement.y = 1.0f;
+        else if (updatedOnePos[1] > 320.0f) movement.y = -1.0f;
+        model = glm::translate(model, glm::vec3(deltaTime* movement.x * 2, deltaTime * movement.y * 2, 0.0f));
     };
 
-    Star.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime)
+    Star.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime()/2, glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::translate(model, glm::vec3(450.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, -(float)glfwGetTime()*1.5f, glm::vec3(0.0f, 0.0f, 1.0f));
+        movement.z += deltaTime/25;
+        model = glm::rotate(glm::mat4(1.0f), movement.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::translate(model, glm::vec3(450.f, 0.0f, 0.0f));
+        model = glm::rotate(model, movement.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
     };
 
-    CQuad.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime)
+    CQuad.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
         if (Star.GetCollisionStatus() || Horse.GetCollisionStatus() || Rings.GetCollisionStatus())
         {

@@ -66,7 +66,5 @@ namespace Test {
 		};
 
 	};
-	
-	float GetDeltaTime();
 
 }

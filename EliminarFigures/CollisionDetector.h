@@ -17,8 +17,6 @@ public:
 	bool GetStatus() { return CollisionCheck; }
 	void End() { CollisionCheck = false; }
 
-	inline const std::vector<glm::vec2>& GetUpdatedVertices() { return updatedVerticesObject; }
-
 private:
 	void UpdateVerticies(const std::vector<float>& originalVertex2D, const glm::mat4& u_Model, std::vector<glm::vec2>& vectorToUpdate);
 
@@ -27,6 +25,7 @@ private:
 
 	std::vector<glm::vec2> updatedVerticesObject;
 	std::vector<glm::vec2> updatedVerticesQuad;
+
 
 	bool CollisionCheck;
 

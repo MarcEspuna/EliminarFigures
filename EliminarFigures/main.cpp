@@ -64,6 +64,8 @@ int main(void)
 
     float deltaTime = 0;
 
+    glfwSwapInterval(0);                                                                                    //Remove the FPV cap
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {

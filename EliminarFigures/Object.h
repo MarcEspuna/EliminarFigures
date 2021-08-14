@@ -16,7 +16,8 @@ public:
 	Object(const char* filePath, glm::vec4 color, glm::vec3 scale);
 	~Object();
 
-	std::function<void(glm::mat4&, glm::vec4&, const float& deltaTime)> f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime) {};
+	std::function<void(glm::mat4&, const glm::vec2& ,glm::vec4&, const float&, glm::vec3& movement)> f_ModelColorUpdate =
+		[&](glm::mat4& model, const glm::vec2& oneVertex ,glm::vec4& color, const float& deltaTime, glm::vec3& movement) {};
 
 	void OnObjectUpdate(bool deleteObject,const float& deltaTime);
 	void TrackCollisionWith(Object* otherObject);
@@ -43,8 +44,11 @@ private:
 	CollisionDetector collision;
 
 	std::vector<glm::mat4> vec_Model;					//Canviar a vector per si volem renderitzar el mateix vao en varios llocs
+	std::vector<glm::vec3> movementValues;				//Xsing, Ysign, Angle
 	glm::vec4 u_Color;									//Fixed color for all the objects
 	
-	std::function<int()> f_CheckCollision = [&]() {return collision.RefreshStatus(); };
+	inline int f_CheckCollision() {return collision.RefreshStatus(); };
+
+
 };
 

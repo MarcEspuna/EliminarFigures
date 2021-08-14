@@ -141,19 +141,19 @@ void Test::EasyTest::OnImGuiRender()
 void Test::EasyTest::LoadVaoUpdateFuntions()
 {
 
-    Horse.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime)
+    Horse.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& updatedVertices, glm::vec4& color, const float& deltaTime, glm::vec3 movement)
     {
         //model = glm::translate(glm::mat4(1.0f), glm::vec3((float)glfwGetTime()*20, 0.0f, 0.0f));
     };
 
-    Star.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime)
+    Star.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& updatedVertices, glm::vec4& color, const float& deltaTime, glm::vec3 movement)
     {
         model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime()/2, glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::translate(model, glm::vec3(450.0f, 0.0f, 0.0f));
         model = glm::rotate(model, -(float)glfwGetTime()*1.5f, glm::vec3(0.0f, 0.0f, 1.0f));
     };
 
-    CQuad.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime)
+    CQuad.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& updatedVertices, glm::vec4& color, const float& deltaTime, glm::vec3 movement)
     {
         if (Star.GetCollisionStatus() || Horse.GetCollisionStatus())
         {
