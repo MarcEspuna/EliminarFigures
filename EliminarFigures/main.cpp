@@ -1,9 +1,7 @@
 /*
-Delta time function,
-movement based on delta time
 
 
-Deleting only the object we touch, not all the objects with that shape
+
 */
 
 #include <fstream>
@@ -23,8 +21,6 @@ Deleting only the object we touch, not all the objects with that shape
 int main(void)
 {
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     GLFWwindow* window;
     Renderer renderer;
@@ -50,7 +46,6 @@ int main(void)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.DisplaySize = ImVec2(100, 600);
     ImGui::StyleColorsDark();
 
     // Setup Platform/Renderer backends
@@ -67,18 +62,20 @@ int main(void)
     menu->RegisterTest<Test::MediumTest>("Medium Difficulty");
     menu->RegisterTest<Test::EasyTest>("Easy Difficulty");
 
+    float deltaTime = 0;
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        Timer dTime(deltaTime);
         renderer.Clear();
-
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
         currentTest->SaveWindow(window);
-        currentTest->OnUpdate(0.0f);
+        currentTest->OnUpdate(deltaTime);
         currentTest->OnRender();
         ImGui::Begin("HARD DIFFICULTY");
         if (currentTest != menu && ImGui::Button("<-"))

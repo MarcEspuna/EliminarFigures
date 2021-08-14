@@ -88,6 +88,13 @@ void Test::EasyTest::OnUpdate(float deltaTime)
     {
         CatchingObject = false;
     }
+
+    for (auto& object : WorldBuffer)
+    {
+        object->OnObjectUpdate(CatchingObject, deltaTime);
+    }
+
+
 }
 
 void Test::EasyTest::OnRender()
@@ -98,7 +105,6 @@ void Test::EasyTest::OnRender()
     for (auto& object : WorldBuffer)
     {
         if (DeletedObjects[IndexTracking]) {
-            object->OnObjectUpdate(CatchingObject);
             for (auto& u_Model : object->GetModels()) {
                 u_MVP = m_Proj * m_View * u_Model;                                                                                                          //Update Model Matrix and MVP
                 shader.SetUniform4f("u_Color", object->GetColor());     //Set the color Uniform
@@ -135,19 +141,19 @@ void Test::EasyTest::OnImGuiRender()
 void Test::EasyTest::LoadVaoUpdateFuntions()
 {
 
-    Horse.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
+    Horse.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime)
     {
         //model = glm::translate(glm::mat4(1.0f), glm::vec3((float)glfwGetTime()*20, 0.0f, 0.0f));
     };
 
-    Star.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
+    Star.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime)
     {
         model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime()/2, glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::translate(model, glm::vec3(450.0f, 0.0f, 0.0f));
         model = glm::rotate(model, -(float)glfwGetTime()*1.5f, glm::vec3(0.0f, 0.0f, 1.0f));
     };
 
-    CQuad.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color)
+    CQuad.f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime)
     {
         if (Star.GetCollisionStatus() || Horse.GetCollisionStatus())
         {

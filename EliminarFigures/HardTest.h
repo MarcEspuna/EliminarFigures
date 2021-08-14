@@ -33,7 +33,6 @@ namespace Test {
 		Object CQuad;
 		Object Star;
 		Object Rings;
-		Object Pointy;
 
 		Shader shader;
 
@@ -50,11 +49,10 @@ namespace Test {
 	
 		std::vector<Object*> WorldBuffer;
 
-		void LoadVaoUpdateFuntions();
+		void LoadObjectUpdateFuntions();
 		void RegisterObject(Object* object);
 		
 		bool CatchingObject = false;
-
 
 	};
 	

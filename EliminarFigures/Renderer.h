@@ -39,3 +39,22 @@ private:
 
 
 };
+
+
+class Timer
+{
+public:
+	Timer(float& deltaTime)
+	: startingTime((float)glfwGetTime()), deltaTime(deltaTime){
+
+	}
+	~Timer() {
+		deltaTime = ((float)glfwGetTime() - startingTime)*20;
+	}
+
+
+private:
+	float startingTime;
+	float& deltaTime;
+
+};

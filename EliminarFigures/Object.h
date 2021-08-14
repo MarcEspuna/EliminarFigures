@@ -16,9 +16,9 @@ public:
 	Object(const char* filePath, glm::vec4 color, glm::vec3 scale);
 	~Object();
 
-	std::function<void(glm::mat4&, glm::vec4&)> f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color) {};
+	std::function<void(glm::mat4&, glm::vec4&, const float& deltaTime)> f_ModelColorUpdate = [&](glm::mat4& model, glm::vec4& color, const float& deltaTime) {};
 
-	void OnObjectUpdate(bool deleteObject);
+	void OnObjectUpdate(bool deleteObject,const float& deltaTime);
 	void TrackCollisionWith(Object* otherObject);
 	void New(glm::mat4 u_NewModel);
 
