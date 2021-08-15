@@ -3,7 +3,11 @@
 #include "Renderer.h"
 #include "ObjParser.h"
 #include "Object.h"
-#include <unordered_map>
+#include <future>
+#include <mutex>
+#include <algorithm>
+#include <numeric>
+
 
 namespace Test {
 
@@ -48,11 +52,13 @@ namespace Test {
 		GLFWwindow* ptr_window = nullptr;
 	
 		std::vector<Object*> WorldBuffer;
+		std::vector<std::future<void>> m_Futures;
 
 		void LoadObjectUpdateFuntions();
 		void RegisterObject(Object* object);
-		
+
 		bool CatchingObject = false;
+
 
 	};
 	

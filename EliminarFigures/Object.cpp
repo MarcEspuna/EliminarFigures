@@ -1,6 +1,8 @@
 #include "Object.h"
 #include "ObjParser.h"
 #include "VertexArrayLayout.h"
+#include <future>
+
 
 Object::Object(const char* filePath)
 	: m_Data(filePath), u_Color(1.0f, 1.0f, 1.0f, 1.0f), collision(this)
@@ -88,7 +90,6 @@ void Object::OnObjectUpdate(bool deleteObject,const float& deltaTime)
 	{
 		for (size_t i = 0; i < vec_Model.size(); i++)
 		{
-			
 			f_ModelColorUpdate(vec_Model[i], { m_Data.GetVerticesIn2D()[i], m_Data.GetVerticesIn2D()[i+1]}, u_Color, deltaTime, movementValues[i]);
 		}
 

@@ -14,6 +14,7 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_glfw.h"
 
+
 Test::HardTest::HardTest()
     : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 30.0f),
     HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.4f, 1.0f) ),
@@ -45,6 +46,11 @@ Test::HardTest::HardTest()
 
 }
 
+
+static void ayncObjectUpdate(Object* object, float deltaTime, bool CatchingObject)
+{
+    object->OnObjectUpdate(CatchingObject, deltaTime);
+}
 
 Test::HardTest::~HardTest()
 {
@@ -90,14 +96,20 @@ void Test::HardTest::OnUpdate(float deltaTime)
     {
         CatchingObject = false;
     }
+#define ASYNC 1
+#if ASYNC
+    m_Futures.clear();
+    for (auto& object : WorldBuffer)
+    {
+        m_Futures.push_back(std::async(std::launch::async, ayncObjectUpdate, object, deltaTime, CatchingObject));
+    }
+#else
 
-
-    //Updating Object Matrices
     for (auto& object : WorldBuffer)
     {
         object->OnObjectUpdate(CatchingObject, deltaTime);
     }
-
+#endif
     int state7 = glfwGetKey(ptr_window, GLFW_KEY_R);
     if (state7 == GLFW_PRESS)
     {
