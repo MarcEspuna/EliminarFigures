@@ -4,6 +4,7 @@
 #include "IndexBuffer.h"
 #include "ObjParser.h"
 #include "CollisionDetector.h"
+#include "Renderer.h"
 #include <functional>
 
 class Object
@@ -19,7 +20,7 @@ public:
 	std::function<void(glm::mat4&, const glm::vec2& ,glm::vec4&, const float&, glm::vec3& movement)> f_ModelColorUpdate =
 		[&](glm::mat4& model, const glm::vec2& oneVertex ,glm::vec4& color, const float& deltaTime, glm::vec3& movement) {};
 
-	void OnObjectUpdate(bool deleteObject,const float& deltaTime);
+	void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar);
 	void TrackCollisionWith(Object* otherObject);
 	void New(glm::mat4 u_NewModel);
 

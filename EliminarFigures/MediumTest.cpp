@@ -90,7 +90,7 @@ void Test::MediumTest::OnUpdate(float deltaTime)
     }
     for (auto& object : WorldBuffer)
     {
-        object->OnObjectUpdate(CatchingObject, deltaTime);
+        object->OnObjectUpdate(CatchingObject, deltaTime, m_Imgui);
     }
 
 }

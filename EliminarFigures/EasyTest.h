@@ -65,6 +65,8 @@ namespace Test {
 
 		};
 
+		ImguiVariables m_Imgui = { 0 , 20, 0.0f };
+
 	};
 	
 

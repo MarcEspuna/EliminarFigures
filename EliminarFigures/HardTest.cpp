@@ -34,6 +34,8 @@ Test::HardTest::HardTest()
     RegisterObject(&CQuad);
     Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
     Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, -300.0f, 0.0f)));
+    Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 0.0f, 0.0f)));
+    Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
     //Loading all the lamdas that will define the behaviour of our objects
     LoadObjectUpdateFuntions();                            
 
@@ -47,9 +49,9 @@ Test::HardTest::HardTest()
 }
 
 
-static void ayncObjectUpdate(Object* object, float deltaTime, bool CatchingObject)
+static void ayncObjectUpdate(Object* object, float deltaTime, bool CatchingObject, ImguiVariables* imguiVar)
 {
-    object->OnObjectUpdate(CatchingObject, deltaTime);
+    object->OnObjectUpdate(CatchingObject, deltaTime, *imguiVar);
 }
 
 Test::HardTest::~HardTest()
@@ -59,6 +61,9 @@ Test::HardTest::~HardTest()
 
 void Test::HardTest::OnUpdate(float deltaTime)
 {
+    Time += deltaTime / 20;                                                                                  //We keep track of the time passed during this test                             
+    TimeLeft -= deltaTime / 20;
+
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
     {
@@ -96,18 +101,19 @@ void Test::HardTest::OnUpdate(float deltaTime)
     {
         CatchingObject = false;
     }
+
 #define ASYNC 1
 #if ASYNC
     m_Futures.clear();
     for (auto& object : WorldBuffer)
     {
-        m_Futures.push_back(std::async(std::launch::async, ayncObjectUpdate, object, deltaTime, CatchingObject));
+        m_Futures.push_back(std::async(std::launch::async, ayncObjectUpdate, object, deltaTime, CatchingObject, &m_Imgui));
     }
 #else
 
     for (auto& object : WorldBuffer)
     {
-        object->OnObjectUpdate(CatchingObject, deltaTime);
+        object->OnObjectUpdate(CatchingObject, deltaTime, m_Imgui);
     }
 #endif
     int state7 = glfwGetKey(ptr_window, GLFW_KEY_R);
@@ -136,21 +142,15 @@ void Test::HardTest::OnRender()
 void Test::HardTest::OnImGuiRender()
 {
     {
-        static int counter = 0;
 
         ImGui::Begin("Statistics Window!");                         // Create a window called "Hello, world!" and append into it.
         ImGui::SetWindowSize(ImVec2(320, 180), 0);
 
+        ImGui::Text("Cached objects: %d", m_Imgui.CachedObjects);                       // Display some text (you can use a format strings too)
+        ImGui::Text("Objects left: %d", m_Imgui.RemainingObjects);                      // Display some text (you can use a format strings too)
+        ImGui::Text("Time left: %.0f sec", TimeLeft);
 
-        ImGui::Text("Cached objects: %d", 0);                       // Display some text (you can use a format strings too)
-        ImGui::Text("Objects left: %d", 7);                         // Display some text (you can use a format strings too)
-
-        if (ImGui::Button("Button"))                                // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::Text("\n\n\n\n\n\nApplication average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
 
 
@@ -177,19 +177,18 @@ void Test::HardTest::LoadObjectUpdateFuntions()
     {
         glm::vec4 pos(oneVertex[0], oneVertex[1], 0.0f, 1.0f);
         glm::vec4 updatedOnePos = model * pos;
-        if (updatedOnePos[0] < -600.0f) movement.x = 1.0f;
-        else if (updatedOnePos[0] > 600.0f) movement.x = -1.0f;
-        if (updatedOnePos[1] < -320.0f) movement.y = 1.0f;
-        else if (updatedOnePos[1] > 320.0f) movement.y = -1.0f;
+        if (updatedOnePos[0] < -580.0f) movement.x = 1.0f;
+        else if (updatedOnePos[0] > 580.0f) movement.x = -1.0f;
+        if (updatedOnePos[1] < -300.0f) movement.y = 1.0f;
+        else if (updatedOnePos[1] > 300.0f) movement.y = -1.0f;
         model = glm::translate(model, glm::vec3(deltaTime* movement.x * 2, deltaTime * movement.y * 2, 0.0f));
     };
 
     Star.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        movement.z += deltaTime/25;
-        model = glm::rotate(glm::mat4(1.0f), movement.z, glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::translate(model, glm::vec3(450.f, 0.0f, 0.0f));
-        model = glm::rotate(model, movement.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        //movement.z += deltaTime/25;
+        model = glm::translate(model, glm::vec3(0.0f, movement.y/2, 0.0f));
+        model = glm::rotate(model, deltaTime/25, glm::vec3(0.0f, 0.0f, 1.0f));
 
     };
 

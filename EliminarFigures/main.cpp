@@ -1,7 +1,5 @@
 /*
 
-
-
 */
 
 #include <fstream>
@@ -79,7 +77,7 @@ int main(void)
         currentTest->SaveWindow(window);
         currentTest->OnUpdate(deltaTime);
         currentTest->OnRender();
-        ImGui::Begin("HARD DIFFICULTY");
+        ImGui::Begin("DIFFICULTY");
         if (currentTest != menu && ImGui::Button("<-"))
         {
            delete currentTest;

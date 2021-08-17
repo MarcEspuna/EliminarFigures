@@ -76,12 +76,14 @@ Object::~Object()
 
 }
 
-void Object::OnObjectUpdate(bool deleteObject,const float& deltaTime)
+void Object::OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar)
 {
 	//Important!: we first Refresh the collision, then do the model color update
 	int indexModel = f_CheckCollision();
 	if (indexModel > -1 && deleteObject == true)
 	{
+		ImGuiVar.CachedObjects += 1;
+		ImGuiVar.RemainingObjects -= 1;
 		vec_Model.erase(vec_Model.begin() + indexModel);
 		movementValues.erase(movementValues.begin() + indexModel);
 		collision.End();

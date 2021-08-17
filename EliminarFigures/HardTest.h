@@ -42,9 +42,6 @@ namespace Test {
 
 		Renderer renderer;
 
-		float x = 1.0f;
-		float y = 1.0f;
-
 		glm::mat4 m_Proj = glm::ortho(-640.0f, 640.0f, -360.0f, 360.0f);
 		glm::mat4 m_View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 		glm::mat4 u_MVP = glm::mat4(1.0f);
@@ -58,8 +55,9 @@ namespace Test {
 		void RegisterObject(Object* object);
 
 		bool CatchingObject = false;
-
-
+		ImguiVariables m_Imgui = { 0, 20, 0.0f};
+		float Time = 0;
+		float TimeLeft = 120;
 	};
 	
 
