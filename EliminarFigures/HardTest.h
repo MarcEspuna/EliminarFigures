@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "ObjParser.h"
 #include "Object.h"
+#include "Texture.h"
 #include <future>
 #include <mutex>
 #include <algorithm>
@@ -37,6 +38,8 @@ namespace Test {
 		Object CQuad;
 		Object Star;
 		Object Rings;
+
+		Texture texture;
 
 		Shader shader;
 

@@ -23,6 +23,7 @@ Test::HardTest::HardTest()
     CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.4f, 0.4f, 1.0f)),
     Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}, 0.5f),
     Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 40.0f),
+    texture("res/tex/TheEnd.png"),
     shader("res/Basic.shader")
 {
     Rings.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(400.0f, -50.0f, 0.0f));
@@ -37,6 +38,7 @@ Test::HardTest::HardTest()
     Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, -300.0f, 0.0f)));
     Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 0.0f, 0.0f)));
     Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
+    Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(600.0f, 0.0f, 0.0f)));
     //Loading all the lamdas that will define the behaviour of our objects
     LoadObjectUpdateFuntions();                            
 
@@ -188,7 +190,7 @@ void Test::HardTest::LoadObjectUpdateFuntions()
     Star.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
         //movement.z += deltaTime/25;
-        model = glm::translate(model, glm::vec3(0.0f, movement.y/2, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, deltaTime * 7, 0.0f));
         model = glm::rotate(model, deltaTime/25, glm::vec3(0.0f, 0.0f, 1.0f));
 
     };

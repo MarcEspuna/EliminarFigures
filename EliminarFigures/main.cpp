@@ -2,9 +2,6 @@
 
 */
 
-#include <fstream>
-#include <sstream>
-#include <string>
 
 #include "Renderer.h"
 
