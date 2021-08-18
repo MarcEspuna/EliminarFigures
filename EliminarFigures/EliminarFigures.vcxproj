@@ -167,8 +167,10 @@
     <ClCompile Include="res\vendor\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="res\vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Test.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
@@ -482,8 +484,10 @@
     <ClInclude Include="res\vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="res\vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="res\vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="res\vendor\stb_image\stb_image.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Test.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexArrayLayout.h" />
     <ClInclude Include="VertexBuffer.h" />
