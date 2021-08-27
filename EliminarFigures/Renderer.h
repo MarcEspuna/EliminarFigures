@@ -65,4 +65,3 @@ struct ImguiVariables
 	unsigned int RemainingObjects;
 	float TimeLeft;
 };
-

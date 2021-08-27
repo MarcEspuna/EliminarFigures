@@ -23,8 +23,9 @@ Test::HardTest::HardTest()
     CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.4f, 0.4f, 1.0f)),
     Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}, 0.5f),
     Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 40.0f),
-    texture("res/tex/TheEnd.png"),
-    shader("res/Basic.shader")
+    tex_GameOver("res/textures/GameOver.png"),
+    shader("res/Basic.shader"),
+    TexShader("res/TexBasic.shader")
 {
     Rings.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(400.0f, -50.0f, 0.0f));
     //Registering all the objects
@@ -119,11 +120,16 @@ void Test::HardTest::OnUpdate(float deltaTime)
         object->OnObjectUpdate(CatchingObject, deltaTime, m_Imgui);
     }
 #endif
-    int state7 = glfwGetKey(ptr_window, GLFW_KEY_R);
-    if (state7 == GLFW_PRESS)
+
+
+
+    if (Time > 10 && !newTest)
     {
         Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 100.0f, 0.0f)));
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
+        newTest = 1;
     }
+
 
 
 }
@@ -140,6 +146,10 @@ void Test::HardTest::OnRender()
             renderer.Draw(object->GetVao(), object->GetIbo(), shader);
         }
     }
+
+    //A for loop for rendering the texture objects:
+
+
 }
 
 void Test::HardTest::OnImGuiRender()

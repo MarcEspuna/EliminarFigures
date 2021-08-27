@@ -81,6 +81,9 @@
     <ClCompile Include="res\vendor\stb_image\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TextureObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\GLFW\glfw3.h">
@@ -1031,6 +1034,9 @@
     <ClInclude Include="res\vendor\stb_image\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TextureObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\vendor\glm\detail\func_common.inl">
@@ -1451,6 +1457,7 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="res\Basic.shader" />
+    <None Include="res\TexBasic.shader" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\libs\glew32s.lib" />

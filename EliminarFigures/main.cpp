@@ -1,8 +1,4 @@
-/*
-
-*/
-
-
+//Draw the texture
 #include "Renderer.h"
 
 #include "HardTest.h"
@@ -12,8 +8,6 @@
 
 int main(void)
 {
-
-
     GLFWwindow* window;
     Renderer renderer;
 

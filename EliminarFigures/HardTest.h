@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "ObjParser.h"
 #include "Object.h"
-#include "Texture.h"
+#include "TextureObject.h"
 #include <future>
 #include <mutex>
 #include <algorithm>
@@ -39,9 +39,11 @@ namespace Test {
 		Object Star;
 		Object Rings;
 
-		Texture texture;
+		TextureObject tex_GameOver;
 
 		Shader shader;
+		Shader TexShader;
+
 
 		Renderer renderer;
 
@@ -61,6 +63,10 @@ namespace Test {
 		ImguiVariables m_Imgui = { 0, 20, 0.0f};
 		float Time = 0;
 		float TimeLeft = 120;
+
+
+		unsigned int newTest = 0;
+
 	};
 	
 
