@@ -49,6 +49,7 @@ int main(void)
     menu->RegisterTest<Test::EasyTest>("Easy Difficulty");
 
     float deltaTime = 0;
+    bool testExit = false;
 
     glfwSwapInterval(0);                                                                                    //Remove the FPS cap
 
@@ -63,13 +64,14 @@ int main(void)
         ImGui::NewFrame();
 
         currentTest->SaveWindow(window);
-        currentTest->OnUpdate(deltaTime);
+        currentTest->OnUpdate(deltaTime, testExit);
         currentTest->OnRender();
         ImGui::Begin("DIFFICULTY");
-        if (currentTest != menu && ImGui::Button("<-"))
+        if ((currentTest != menu && ImGui::Button("<-")) || (currentTest != menu && testExit))
         {
            delete currentTest;
            currentTest = menu;
+           testExit = false;
         }
         currentTest->OnImGuiRender();
         ImGui::End();

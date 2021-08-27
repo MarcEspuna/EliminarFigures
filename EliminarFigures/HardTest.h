@@ -21,7 +21,7 @@ namespace Test {
 		~HardTest();
 
 
-		void OnUpdate(float deltaTime) override;
+		void OnUpdate(float deltaTime, bool& testExit) override;
 		void OnRender() override;
 		void OnImGuiRender() override;
 		void SaveWindow(GLFWwindow* window) override
@@ -40,6 +40,7 @@ namespace Test {
 		Object Rings;
 
 		TextureObject tex_GameOver;
+		TextureObject tex_YouLose;
 
 		Shader shader;
 		Shader TexShader;
@@ -54,15 +55,17 @@ namespace Test {
 		GLFWwindow* ptr_window = nullptr;
 	
 		std::vector<Object*> WorldBuffer;
+		std::vector<TextureObject*> TextureBuffer;
 		std::vector<std::future<void>> m_Futures;
 
 		void LoadObjectUpdateFuntions();
 		void RegisterObject(Object* object);
+		void RegisterTexture(TextureObject* texture);
 
 		bool CatchingObject = false;
 		ImguiVariables m_Imgui = { 0, 20, 0.0f};
 		float Time = 0;
-		float TimeLeft = 120;
+		float TimeLeft = 75;
 
 
 		unsigned int newTest = 0;

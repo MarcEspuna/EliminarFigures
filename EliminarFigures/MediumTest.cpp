@@ -49,7 +49,7 @@ Test::MediumTest::~MediumTest()
 	std::cout << "Hard test destroyed\n";
 }
 
-void Test::MediumTest::OnUpdate(float deltaTime)
+void Test::MediumTest::OnUpdate(float deltaTime, bool& testExit)
 {
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)

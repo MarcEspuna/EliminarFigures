@@ -16,7 +16,7 @@ namespace Test {
 		~EasyTest();
 
 
-		void OnUpdate(float deltaTime) override;
+		void OnUpdate(float deltaTime, bool& testExit) override;
 		void OnRender() override;
 		void OnImGuiRender() override;
 

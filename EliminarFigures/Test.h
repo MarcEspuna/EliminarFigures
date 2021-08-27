@@ -17,7 +17,7 @@ namespace Test
 		virtual ~Test() {}
 
 
-		virtual void OnUpdate(float deltaTime) {}	
+		virtual void OnUpdate(float deltaTime, bool& testExit) {}
 		virtual void OnRender() {}
 		virtual void OnImGuiRender() {}
 

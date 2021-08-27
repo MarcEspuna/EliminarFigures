@@ -23,7 +23,8 @@ Test::HardTest::HardTest()
     CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.4f, 0.4f, 1.0f)),
     Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}, 0.5f),
     Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 40.0f),
-    tex_GameOver("res/textures/GameOver.png"),
+    tex_GameOver("res/textures/GameOverTransparent.png"),
+    tex_YouLose("res/textures/YouLoseTransparent.png", 0.45f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
     shader("res/Basic.shader"),
     TexShader("res/TexBasic.shader")
 {
@@ -35,6 +36,8 @@ Test::HardTest::HardTest()
     RegisterObject(&HLine);
     RegisterObject(&VLine);
     RegisterObject(&CQuad);
+    RegisterTexture(&tex_GameOver);
+    RegisterTexture(&tex_YouLose);
     Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
     Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, -300.0f, 0.0f)));
     Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 0.0f, 0.0f)));
@@ -47,6 +50,9 @@ Test::HardTest::HardTest()
     Star.TrackCollisionWith(&CQuad);
     Horse.TrackCollisionWith(&CQuad);
     Rings.TrackCollisionWith(&CQuad);
+
+    glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     std::cout << "Hard Test created" << std::endl;
 
@@ -63,7 +69,7 @@ Test::HardTest::~HardTest()
 	std::cout << "Hard test destroyed\n";
 }
 
-void Test::HardTest::OnUpdate(float deltaTime)
+void Test::HardTest::OnUpdate(float deltaTime, bool& testExit)
 {
     Time += deltaTime / 20;                                                                                  //We keep track of the time passed during this test                             
     TimeLeft -= deltaTime / 20;
@@ -106,13 +112,15 @@ void Test::HardTest::OnUpdate(float deltaTime)
         CatchingObject = false;
     }
 
-#define ASYNC 1
+#define ASYNC 0
 #if ASYNC
     m_Futures.clear();
     for (auto& object : WorldBuffer)
     {
         m_Futures.push_back(std::async(std::launch::async, ayncObjectUpdate, object, deltaTime, CatchingObject, &m_Imgui));
     }
+    //We shoud make the main thred to wait for the small threads to finish or OnRender make the main thread to check if the object has been updated
+
 #else
 
     for (auto& object : WorldBuffer)
@@ -130,13 +138,18 @@ void Test::HardTest::OnUpdate(float deltaTime)
         newTest = 1;
     }
 
-
+    if (TimeLeft <= -5.0f)
+    {
+        testExit = true;
+    }
 
 }
 
 void Test::HardTest::OnRender()
 {
     renderer.Clear();
+    //A for loop for rendering the texture objects:
+
     for (auto& object : WorldBuffer)
     {
         for (auto& u_Model : object->GetModels()) {
@@ -146,9 +159,22 @@ void Test::HardTest::OnRender()
             renderer.Draw(object->GetVao(), object->GetIbo(), shader);
         }
     }
-
-    //A for loop for rendering the texture objects:
-
+    if (TimeLeft <= 0.0f)
+    {
+        u_MVP = m_Proj * m_View * glm::mat4(1.0f);                                                                                                          //Update Model Matrix and MVP
+        TexShader.SetUniform4Mat("u_MVP", u_MVP);
+        TexShader.SetUniform1i("u_Texture", 0);     //Set the color Uniform
+        TextureBuffer[0]->Bind();
+        renderer.Draw(TextureBuffer[0]->GetVao(), TextureBuffer[0]->GetIbo(), TexShader);
+    }
+    if (TimeLeft <= -2.0f)
+    {
+        u_MVP = m_Proj * m_View * TextureBuffer[1]->GetModel();                                                                                                          //Update Model Matrix and MVP
+        TexShader.SetUniform4Mat("u_MVP", u_MVP);
+        TexShader.SetUniform1i("u_Texture", 0);     //Set the color Uniform
+        TextureBuffer[1]->Bind();
+        renderer.Draw(TextureBuffer[1]->GetVao(), TextureBuffer[1]->GetIbo(), TexShader);
+    }
 
 }
 
@@ -165,8 +191,6 @@ void Test::HardTest::OnImGuiRender()
 
         ImGui::Text("\n\n\n\n\n\nApplication average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
-
-
     }
 }
 
@@ -226,3 +250,7 @@ void Test::HardTest::RegisterObject(Object* object)
 }
 
 
+void Test::HardTest::RegisterTexture(TextureObject* Texture)
+{
+    TextureBuffer.push_back(Texture);
+}

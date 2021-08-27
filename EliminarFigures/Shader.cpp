@@ -137,17 +137,20 @@ ShaderSourceCode Shader::parseShader(const char* filePath)
 
 void Shader::SetUniform4f(std::string uniformName, const glm::vec4& values)
 {
+    Bind();
     glUniform4f(GetUniformLocation(uniformName), values.x, values.y, values.z, values.t);
 }
 
 void Shader::SetUniform1i(std::string uniformName, int value)
 {
+    Bind();
     glUniform1i(GetUniformLocation(uniformName), value);
 
 }
 
 void Shader::SetUniform4Mat(std::string uniformName, glm::mat4 u_MVP)
 {
+    Bind();
     glUniformMatrix4fv(GetUniformLocation(uniformName), 1, GL_FALSE, (float*)&u_MVP[0]);
 
 }

@@ -49,7 +49,7 @@ Test::EasyTest::~EasyTest()
 	std::cout << "Hard test destroyed\n";
 }
 
-void Test::EasyTest::OnUpdate(float deltaTime)
+void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
 {
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
