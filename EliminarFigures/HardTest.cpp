@@ -25,6 +25,7 @@ Test::HardTest::HardTest()
     Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 40.0f),
     tex_GameOver("res/textures/GameOverTransparent.png"),
     tex_YouLose("res/textures/YouLoseTransparent.png", 0.45f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
+    tex_YouWin("res/textures/YouWinTransparent.png", 0.30f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -150.0f, 0.0f))),
     shader("res/Basic.shader"),
     TexShader("res/TexBasic.shader")
 {
@@ -38,6 +39,7 @@ Test::HardTest::HardTest()
     RegisterObject(&CQuad);
     RegisterTexture(&tex_GameOver);
     RegisterTexture(&tex_YouLose);
+    RegisterTexture(&tex_YouWin);
     Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
     Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, -300.0f, 0.0f)));
     Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 0.0f, 0.0f)));
@@ -172,8 +174,8 @@ void Test::HardTest::OnRender()
         u_MVP = m_Proj * m_View * TextureBuffer[1]->GetModel();                                                                                                          //Update Model Matrix and MVP
         TexShader.SetUniform4Mat("u_MVP", u_MVP);
         TexShader.SetUniform1i("u_Texture", 0);     //Set the color Uniform
-        TextureBuffer[1]->Bind();
-        renderer.Draw(TextureBuffer[1]->GetVao(), TextureBuffer[1]->GetIbo(), TexShader);
+        TextureBuffer[2]->Bind();
+        renderer.Draw(TextureBuffer[2]->GetVao(), TextureBuffer[2]->GetIbo(), TexShader);
     }
 
 }

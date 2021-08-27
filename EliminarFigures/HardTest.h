@@ -41,6 +41,7 @@ namespace Test {
 
 		TextureObject tex_GameOver;
 		TextureObject tex_YouLose;
+		TextureObject tex_YouWin;
 
 		Shader shader;
 		Shader TexShader;
@@ -65,7 +66,7 @@ namespace Test {
 		bool CatchingObject = false;
 		ImguiVariables m_Imgui = { 0, 20, 0.0f};
 		float Time = 0;
-		float TimeLeft = 75;
+		float TimeLeft = 70;
 
 
 		unsigned int newTest = 0;
