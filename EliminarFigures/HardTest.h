@@ -4,6 +4,7 @@
 #include "ObjParser.h"
 #include "Object.h"
 #include "TextureObject.h"
+#include <unordered_map>
 #include <future>
 #include <mutex>
 #include <algorithm>
@@ -11,6 +12,11 @@
 
 
 namespace Test {
+	enum class WinOrLose 
+	{
+		LOST = 1,
+		WON = 2
+	};
 
 
 	class HardTest : public Test
@@ -62,14 +68,19 @@ namespace Test {
 		void LoadObjectUpdateFuntions();
 		void RegisterObject(Object* object);
 		void RegisterTexture(TextureObject* texture);
+		void LoadNewObjects(const float& TimeLeft);
+
 
 		bool CatchingObject = false;
 		ImguiVariables m_Imgui = { 0, 20, 0.0f};
 		float Time = 0;
-		float TimeLeft = 70;
+		float TimeLeft = 75;
 
 
 		unsigned int newTest = 0;
+
+		std::unordered_map<unsigned int, bool> newObjectsSelector = { {0, true}, {1, true},{2, true},{3, true},{4, true},{5, true}};
+		WinOrLose winOrLose = WinOrLose::LOST;
 
 	};
 	
