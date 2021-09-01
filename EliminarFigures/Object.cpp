@@ -105,9 +105,9 @@ void Object::TrackCollisionWith(Object* otherObject)
 
 }
 
-void Object::New(glm::mat4 u_NewModel)
+void Object::New(const glm::mat4& u_NewModel, const glm::vec3& movement)
 {
 	vec_Model.push_back(u_NewModel);
-	movementValues.push_back({ 1.0f,1.0f,1.0f });
+	movementValues.push_back(movement);
 }
 

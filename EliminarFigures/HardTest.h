@@ -12,6 +12,7 @@
 
 
 namespace Test {
+
 	enum class WinOrLose 
 	{
 		LOST = 1,
@@ -52,7 +53,6 @@ namespace Test {
 		Shader shader;
 		Shader TexShader;
 
-
 		Renderer renderer;
 
 		glm::mat4 m_Proj = glm::ortho(-640.0f, 640.0f, -360.0f, 360.0f);
@@ -69,7 +69,6 @@ namespace Test {
 		void RegisterObject(Object* object);
 		void RegisterTexture(TextureObject* texture);
 		void LoadNewObjects(const float& TimeLeft);
-
 
 		bool CatchingObject = false;
 		ImguiVariables m_Imgui = { 0, 20, 0.0f};

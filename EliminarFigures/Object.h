@@ -22,8 +22,7 @@ public:
 
 	void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar);
 	void TrackCollisionWith(Object* otherObject);
-	void New(glm::mat4 u_NewModel);
-
+	void New(const glm::mat4& u_NewModel, const glm::vec3& movement = { 1.0f,1.0f,1.0f });
 
 	inline std::vector<glm::mat4>& GetModels() { return vec_Model; }
 	inline glm::vec4& GetColor() { return u_Color; }

@@ -270,21 +270,21 @@ void Test::HardTest::LoadNewObjects(const float& TimeLeft)
 {
     if (TimeLeft < 55.0f && newObjectsSelector[0])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, -100.0f, 0.0f)), {-1.0f, -1.0f, 1.0f});
         newObjectsSelector[0] = false;
     }
 
     if (TimeLeft < 45.0f && newObjectsSelector[1])
     {
         Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -200.0f, 0.0f)));
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -200.0f, 0.0f)),{ -1.0f, 1.0f, 1.0f });
         newObjectsSelector[1] = false;
     }
 
     if (TimeLeft < 35.0f && newObjectsSelector[2])
     {
         Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
+        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
         newObjectsSelector[2] = false;
     }
 
