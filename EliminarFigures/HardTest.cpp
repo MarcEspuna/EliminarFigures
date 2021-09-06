@@ -146,7 +146,7 @@ void Test::HardTest::OnUpdate(float deltaTime, bool& testExit)
 
     LoadNewObjects(TimeLeft);
 
-    if (TimeLeft < 1)
+    if (TimeLeft < 1.0f && TimeLeft > -1.0f)
     {
         if (m_Imgui.RemainingObjects == 0)
         {
@@ -284,27 +284,29 @@ void Test::HardTest::LoadNewObjects(const float& TimeLeft)
     if (TimeLeft < 35.0f && newObjectsSelector[2])
     {
         Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, -100.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
         newObjectsSelector[2] = false;
     }
 
     if (TimeLeft < 25.0f && newObjectsSelector[3])
     {
         Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 300.0f, -200.0f)));
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 000.0f, 200.0f)));
+        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
         newObjectsSelector[3] = false;
     }
 
     if (TimeLeft < 15.0f && newObjectsSelector[4])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
         newObjectsSelector[4] = false;
     }
 
-    if (TimeLeft < 8.0f && newObjectsSelector[5])
+    if (TimeLeft < 13.0f && newObjectsSelector[5])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -200.0f, 0.0f)));
         newObjectsSelector[5] = false;
     }
 
