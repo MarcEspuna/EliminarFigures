@@ -8,41 +8,63 @@
 
 #include "Object.h"
 #include "Shader.h"
-#include "Renderer.h"
 #include "VertexArrayLayout.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_glfw.h"
 
+#include "Texture.h"
 
 Test::EasyTest::EasyTest()
-    : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 60.0f),
-    HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }),
-    VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }),
-    CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }),
-    Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}),
-    shader("res/Basic.shader")
+    : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 30.0f),
+    HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.9f, 1.0f) ),
+    VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.9f, 1.0f, 1.0f)),
+    CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.9f, 0.9f, 1.0f)),
+    Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}, 0.5f),
+    Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 40.0f),
+    tex_GameOver("res/textures/GameOverTransparent.png"),
+    tex_YouLose("res/textures/YouLoseTransparent.png", 0.45f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
+    tex_YouWin("res/textures/YouWinTransparent.png", 0.50f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
+    shader("res/Basic.shader"),
+    TexShader("res/TexBasic.shader")
 {
+    Rings.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(400.0f, -50.0f, 0.0f));
     //Registering all the objects
-    WorldBuffer.push_back(&Horse);
-    WorldBuffer.push_back(&Star);
-    WorldBuffer.push_back(&HLine);
-    WorldBuffer.push_back(&VLine);
-    WorldBuffer.push_back(&CQuad);
+    RegisterObject(&Rings);
+    RegisterObject(&Horse);
+    RegisterObject(&Star);
+    RegisterObject(&HLine);
+    RegisterObject(&VLine);
+    RegisterObject(&CQuad);
+    RegisterTexture(&tex_GameOver);
+    RegisterTexture(&tex_YouLose);
+    RegisterTexture(&tex_YouWin);
     Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
-
+    Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, -300.0f, 0.0f)));
+    Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 0.0f, 0.0f)));
+    Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
+    Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(600.0f, 0.0f, 0.0f)));
     //Loading all the lamdas that will define the behaviour of our objects
-    LoadVaoUpdateFuntions();                            
+    LoadObjectUpdateFuntions();                            
 
     //Setting collision relations:
     Star.TrackCollisionWith(&CQuad);
     Horse.TrackCollisionWith(&CQuad);
+    Rings.TrackCollisionWith(&CQuad);
+
+    glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     std::cout << "Hard Test created" << std::endl;
 
 }
 
+
+static void ayncObjectUpdate(Object* object, float deltaTime, bool CatchingObject, ImguiVariables* imguiVar)
+{
+    object->OnObjectUpdate(CatchingObject, deltaTime, *imguiVar);
+}
 
 Test::EasyTest::~EasyTest()
 {
@@ -51,32 +73,35 @@ Test::EasyTest::~EasyTest()
 
 void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
 {
+    Time += deltaTime / 20;                                                                                  //We keep track of the time passed during this test                             
+    TimeLeft -= deltaTime / 20;
+
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
     {
-        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, 1.0f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, 1.0f, 0.0f));
+        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 5, 0.0f));
+        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 5, 0.0f));
     }
 
     int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
     if (state1 == GLFW_PRESS)
     {
-        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -1.0f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -1.0f, 0.0f));
+        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5, 0.0f));
+        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5, 0.0f));
     }
 
     int state2 = glfwGetKey(ptr_window, GLFW_KEY_RIGHT);
     if (state2 == GLFW_PRESS)
     {
-        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(1.0f, 0.0f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(1.0f, 0.0f, 0.0f));
+        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(deltaTime*5, 0.0f, 0.0f));
+        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(deltaTime*5, 0.0f, 0.0f));
     }
 
     int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
     if (state3 == GLFW_PRESS)
     {
-        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(-1.0f, 0.0f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(-1.0f, 0.0f, 0.0f));
+        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(-deltaTime*5, 0.0f, 0.0f));
+        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(-deltaTime*5, 0.0f, 0.0f));
     }
 
     int state4 = glfwGetKey(ptr_window, GLFW_KEY_K);
@@ -89,73 +114,134 @@ void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
         CatchingObject = false;
     }
 
+#define ASYNC 0
+#if ASYNC
+    m_Futures.clear();
+    for (auto& object : WorldBuffer)
+    {
+        m_Futures.push_back(std::async(std::launch::async, ayncObjectUpdate, object, deltaTime, CatchingObject, &m_Imgui));
+    }
+    //We shoud make the main thred to wait for the small threads to finish or OnRender make the main thread to check if the object has been updated
+    
+#else
+
     for (auto& object : WorldBuffer)
     {
         object->OnObjectUpdate(CatchingObject, deltaTime, m_Imgui);
     }
+#endif
 
 
+    if (Time > 10 && !newTest)
+    {
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 100.0f, 0.0f)));
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
+        newTest = 1;
+    }
+
+    if (TimeLeft <= -5.0f)
+    {
+        testExit = true;
+    }
+
+    LoadNewObjects(TimeLeft);
+
+    if (TimeLeft < 1)
+    {
+        if (m_Imgui.RemainingObjects == 0)
+        {
+            winOrLose = WinOrLose::WON;
+        }
+    }
 }
 
 void Test::EasyTest::OnRender()
 {
     renderer.Clear();
-    
-    IndexTracking = 0;
+    //A for loop for rendering the texture objects:
+
     for (auto& object : WorldBuffer)
     {
-        if (DeletedObjects[IndexTracking]) {
-            for (auto& u_Model : object->GetModels()) {
-                u_MVP = m_Proj * m_View * u_Model;                                                                                                          //Update Model Matrix and MVP
-                shader.SetUniform4f("u_Color", object->GetColor());     //Set the color Uniform
-                shader.SetUniform4Mat("u_MVP", u_MVP);
-                renderer.Draw(object->GetVao(), object->GetIbo(), shader);
-            }
+        for (auto& u_Model : object->GetModels()) {
+            u_MVP = m_Proj * m_View * u_Model;                                                                                                          //Update Model Matrix and MVP
+            shader.SetUniform4f("u_Color", object->GetColor());     //Set the color Uniform
+            shader.SetUniform4Mat("u_MVP", u_MVP);
+            renderer.Draw(object->GetVao(), object->GetIbo(), shader);
         }
-        IndexTracking++;
     }
+    if (TimeLeft <= 0.0f)
+    {
+        u_MVP = m_Proj * m_View * glm::mat4(1.0f);                                                                                                          //Update Model Matrix and MVP
+        TexShader.SetUniform4Mat("u_MVP", u_MVP);
+        TexShader.SetUniform1i("u_Texture", 0);     //Set the color Uniform
+        TextureBuffer[0]->Bind();
+        renderer.Draw(TextureBuffer[0]->GetVao(), TextureBuffer[0]->GetIbo(), TexShader);
+    }
+    if (TimeLeft <= -2.0f)
+    {
+        u_MVP = m_Proj * m_View * TextureBuffer[(int)winOrLose]->GetModel();                                                                                                          //Update Model Matrix and MVP
+        TexShader.SetUniform4Mat("u_MVP", u_MVP);
+        TexShader.SetUniform1i("u_Texture", 0);     //Set the color Uniform
+        TextureBuffer[(int)winOrLose]->Bind();
+        renderer.Draw(TextureBuffer[(int)winOrLose]->GetVao(), TextureBuffer[(int)winOrLose]->GetIbo(), TexShader);
+    }
+
 }
 
 void Test::EasyTest::OnImGuiRender()
 {
     {
-        static int counter = 0;
 
         ImGui::Begin("Statistics Window!");                         // Create a window called "Hello, world!" and append into it.
         ImGui::SetWindowSize(ImVec2(320, 180), 0);
 
+        ImGui::Text("Cached objects: %d", m_Imgui.CachedObjects);                       // Display some text (you can use a format strings too)
+        ImGui::Text("Objects left: %d", m_Imgui.RemainingObjects);                      // Display some text (you can use a format strings too)
+        ImGui::Text("Time left: %.0f sec", TimeLeft);
 
-        ImGui::Text("Cached objects: %d", 0);                       // Display some text (you can use a format strings too)
-        ImGui::Text("Objects left: %d", 7);                         // Display some text (you can use a format strings too)
-
-        if (ImGui::Button("Button"))                                // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::Text("\n\n\n\n\n\nApplication average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
     }
 }
 
-void Test::EasyTest::LoadVaoUpdateFuntions()
+void Test::EasyTest::LoadObjectUpdateFuntions()
 {
 
-    Horse.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& updatedVertices, glm::vec4& color, const float& deltaTime, glm::vec3 movement)
+
+    Rings.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        //model = glm::translate(glm::mat4(1.0f), glm::vec3((float)glfwGetTime()*20, 0.0f, 0.0f));
+        glm::vec4 pos(oneVertex[0], oneVertex[1], 0.0f, 1.0f);
+        glm::vec4 updatedOnePos = model * pos;
+        if (updatedOnePos[0] < -600.0f) movement.x = 1.0f;
+        else if (updatedOnePos[0] > 600.0f) movement.x = -1.0f;
+        if (updatedOnePos[1] < -320.0f) movement.y = 1.0f;
+        else if (updatedOnePos[1] > 320.0f) movement.y = -1.0f;
+        model = glm::translate(model, glm::vec3(deltaTime * movement.x * 2, deltaTime * movement.y * 2, 0.0f));
     };
 
-    Star.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& updatedVertices, glm::vec4& color, const float& deltaTime, glm::vec3 movement)
+
+    Horse.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime()/2, glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::translate(model, glm::vec3(450.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, -(float)glfwGetTime()*1.5f, glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::vec4 pos(oneVertex[0], oneVertex[1], 0.0f, 1.0f);
+        glm::vec4 updatedOnePos = model * pos;
+        if (updatedOnePos[0] < -580.0f) movement.x = 1.0f;
+        else if (updatedOnePos[0] > 580.0f) movement.x = -1.0f;
+        if (updatedOnePos[1] < -300.0f) movement.y = 1.0f;
+        else if (updatedOnePos[1] > 300.0f) movement.y = -1.0f;
+        model = glm::translate(model, glm::vec3(deltaTime* movement.x * 2, deltaTime * movement.y * 2, 0.0f));
     };
 
-    CQuad.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& updatedVertices, glm::vec4& color, const float& deltaTime, glm::vec3 movement)
+    Star.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        if (Star.GetCollisionStatus() || Horse.GetCollisionStatus())
+        //movement.z += deltaTime/25;
+        model = glm::translate(model, glm::vec3(0.0f, deltaTime * 7, 0.0f));
+        model = glm::rotate(model, deltaTime/25, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    };
+
+    CQuad.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
+    {
+        if (Star.GetCollisionStatus() || Horse.GetCollisionStatus() || Rings.GetCollisionStatus())
         {
             color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
         }
@@ -165,5 +251,61 @@ void Test::EasyTest::LoadVaoUpdateFuntions()
         }
 
     };
+
+}
+
+void Test::EasyTest::RegisterObject(Object* object)
+{
+    WorldBuffer.push_back(object);
+}
+
+
+
+void Test::EasyTest::RegisterTexture(TextureObject* Texture)
+{
+    TextureBuffer.push_back(Texture);
+}
+
+void Test::EasyTest::LoadNewObjects(const float& TimeLeft)
+{
+    if (TimeLeft < 55.0f && newObjectsSelector[0])
+    {
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, -100.0f, 0.0f)), {-1.0f, -1.0f, 1.0f});
+        newObjectsSelector[0] = false;
+    }
+
+    if (TimeLeft < 45.0f && newObjectsSelector[1])
+    {
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -200.0f, 0.0f)),{ -1.0f, 1.0f, 1.0f });
+        newObjectsSelector[1] = false;
+    }
+
+    if (TimeLeft < 35.0f && newObjectsSelector[2])
+    {
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
+        newObjectsSelector[2] = false;
+    }
+
+    if (TimeLeft < 25.0f && newObjectsSelector[3])
+    {
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        newObjectsSelector[3] = false;
+    }
+
+    if (TimeLeft < 15.0f && newObjectsSelector[4])
+    {
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
+        newObjectsSelector[4] = false;
+    }
+
+    if (TimeLeft < 8.0f && newObjectsSelector[5])
+    {
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
+        newObjectsSelector[5] = false;
+    }
 
 }

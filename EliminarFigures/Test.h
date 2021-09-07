@@ -10,6 +10,13 @@
 
 namespace Test
 {
+	enum class WinOrLose
+	{
+		LOST = 1,
+		WON = 2
+	};
+
+
 	class Test
 	{
 	public:
