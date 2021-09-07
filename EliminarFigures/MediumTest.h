@@ -65,7 +65,7 @@ namespace Test {
 		void LoadNewObjects(const float& TimeLeft);
 
 		bool CatchingObject = false;
-		ImguiVariables m_Imgui = { 0, 20, 0.0f};
+		ImguiVariables m_Imgui = { 0, 17, 0.0f};
 		float Time = 0;
 		float TimeLeft = 75;
 

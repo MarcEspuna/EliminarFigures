@@ -17,12 +17,12 @@
 #include "Texture.h"
 
 Test::MediumTest::MediumTest()
-    : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 30.0f),
+    : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 40.0f),
     HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.65f, 1.0f) ),
     VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.65f, 1.0f, 1.0f)),
     CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.65f, 0.65f, 1.0f)),
     Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}, 0.5f),
-    Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 40.0f),
+    Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 50.0f),
     tex_GameOver("res/textures/GameOverTransparent.png"),
     tex_YouLose("res/textures/YouLoseTransparent.png", 0.45f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
     tex_YouWin("res/textures/YouWinTransparent.png", 0.50f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
@@ -74,7 +74,7 @@ static void ayncObjectUpdate(Object* object, float deltaTime, bool CatchingObjec
 
 Test::MediumTest::~MediumTest()
 {
-	std::cout << "Hard test destroyed\n";
+	std::cout << "Medium test destroyed\n";
 }
 
 void Test::MediumTest::OnUpdate(float deltaTime, bool& testExit)
@@ -303,15 +303,7 @@ void Test::MediumTest::LoadNewObjects(const float& TimeLeft)
     if (TimeLeft < 15.0f && newObjectsSelector[4])
     {
         Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
         newObjectsSelector[4] = false;
-    }
-
-    if (TimeLeft < 8.0f && newObjectsSelector[5])
-    {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
-        newObjectsSelector[5] = false;
     }
 
 }
