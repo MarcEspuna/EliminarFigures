@@ -190,13 +190,15 @@ void Test::EasyTest::OnImGuiRender()
     {
 
         ImGui::Begin("Statistics Window!");                         // Create a window called "Hello, world!" and append into it.
-        ImGui::SetWindowSize(ImVec2(320, 180), 0);
+        ImGui::SetWindowPos({ 1600.0f ,860.0f }, 0);
+        ImGui::SetWindowSize(ImVec2(320, 120), 0);
+
 
         ImGui::Text("Cached objects: %d", m_Imgui.CachedObjects);                       // Display some text (you can use a format strings too)
         ImGui::Text("Objects left: %d", m_Imgui.RemainingObjects);                      // Display some text (you can use a format strings too)
         ImGui::Text("Time left: %.0f sec", TimeLeft);
 
-        ImGui::Text("\n\n\n\n\n\nApplication average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::Text("\n\nApplication average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
     }
 }
