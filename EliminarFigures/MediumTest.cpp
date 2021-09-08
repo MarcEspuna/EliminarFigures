@@ -85,29 +85,29 @@ void Test::MediumTest::OnUpdate(float deltaTime, bool& testExit)
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
     {
-        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 5, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 5, 0.0f));
+        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 6, 0.0f));
+        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 6, 0.0f));
     }
 
     int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
     if (state1 == GLFW_PRESS)
     {
-        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5, 0.0f));
+        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -deltaTime * 6, 0.0f));
+        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -deltaTime * 6, 0.0f));
     }
 
     int state2 = glfwGetKey(ptr_window, GLFW_KEY_RIGHT);
     if (state2 == GLFW_PRESS)
     {
-        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(deltaTime*5, 0.0f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(deltaTime*5, 0.0f, 0.0f));
+        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(deltaTime*6, 0.0f, 0.0f));
+        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(deltaTime*6, 0.0f, 0.0f));
     }
 
     int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
     if (state3 == GLFW_PRESS)
     {
-        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(-deltaTime*5, 0.0f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(-deltaTime*5, 0.0f, 0.0f));
+        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(-deltaTime*6, 0.0f, 0.0f));
+        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(-deltaTime*6, 0.0f, 0.0f));
     }
 
     int state4 = glfwGetKey(ptr_window, GLFW_KEY_SPACE);
@@ -276,6 +276,8 @@ void Test::MediumTest::LoadNewObjects(const float& TimeLeft)
     if (TimeLeft < 55.0f && newObjectsSelector[0])
     {
         Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, -100.0f, 0.0f)), {-1.0f, -1.0f, 1.0f});
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3( 300.0f, 100.0f, 0.0f)), { -1.0f, -1.0f, 1.0f });
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-150.0f, -100.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
         newObjectsSelector[0] = false;
     }
 
@@ -283,6 +285,7 @@ void Test::MediumTest::LoadNewObjects(const float& TimeLeft)
     {
         Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
         Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -200.0f, 0.0f)),{ -1.0f, 1.0f, 1.0f });
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)),{ 1.0f, -1.0f, 1.0f });
         newObjectsSelector[1] = false;
     }
 
@@ -299,10 +302,17 @@ void Test::MediumTest::LoadNewObjects(const float& TimeLeft)
         newObjectsSelector[3] = false;
     }
 
-    if (TimeLeft < 15.0f && newObjectsSelector[4])
+    if (TimeLeft < 20.0f && newObjectsSelector[4])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, -200.0f, 0.0f)));
         newObjectsSelector[4] = false;
+    }
+
+    if (TimeLeft < 15.0f && newObjectsSelector[5])
+    {
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, 100.0f, 0.0f)));
+        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
+        newObjectsSelector[5] = false;
     }
 
 }
