@@ -110,7 +110,7 @@ void Test::MediumTest::OnUpdate(float deltaTime, bool& testExit)
         CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(-deltaTime*5, 0.0f, 0.0f));
     }
 
-    int state4 = glfwGetKey(ptr_window, GLFW_KEY_K);
+    int state4 = glfwGetKey(ptr_window, GLFW_KEY_SPACE);
     if (state4 == GLFW_PRESS)
     {
         CatchingObject = true;
