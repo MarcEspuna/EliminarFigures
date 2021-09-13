@@ -62,7 +62,7 @@ Test::MediumTest::MediumTest()
     glEnable(GL_BLEND);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    std::cout << "Hard Test created" << std::endl;
+    std::cout << "Medium Test created" << std::endl;
 
 }
 
@@ -85,7 +85,7 @@ void Test::MediumTest::OnUpdate(float deltaTime, bool& testExit)
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
     {
-        if (!(HLine.GetModels()[0][3][1] > 350.0f))
+        if (!(HLine.GetModels()[0][3][1] > 330.0f))
         {
             HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
             CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
@@ -95,7 +95,7 @@ void Test::MediumTest::OnUpdate(float deltaTime, bool& testExit)
     int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
     if (state1 == GLFW_PRESS)
     {
-        if (!(HLine.GetModels()[0][3][1] < -350.0f))                                                        //Not allowing the cursor to go outside of the screen
+        if (!(HLine.GetModels()[0][3][1] < -330.0f))                                                        //Not allowing the cursor to go outside of the screen
         {
             HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));
             CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));

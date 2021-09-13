@@ -1,4 +1,3 @@
-//Draw the texture
 #include "Renderer.h"
 
 #include "HardTest.h"

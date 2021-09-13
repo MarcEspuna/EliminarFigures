@@ -54,7 +54,7 @@ Test::EasyTest::EasyTest()
     glEnable(GL_BLEND);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    std::cout << "Hard Test created" << std::endl;
+    std::cout << "Easy Test created" << std::endl;
 
 }
 
@@ -66,7 +66,7 @@ static void ayncObjectUpdate(Object* object, float deltaTime, bool CatchingObjec
 
 Test::EasyTest::~EasyTest()
 {
-	std::cout << "Hard test destroyed\n";
+	std::cout << "Easy test destroyed\n";
 }
 
 void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
@@ -77,7 +77,7 @@ void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
     {
-        if (!(HLine.GetModels()[0][3][1] > 350.0f))
+        if (!(HLine.GetModels()[0][3][1] > 330.0f))
         {
             HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
             CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
@@ -87,7 +87,7 @@ void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
     int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
     if (state1 == GLFW_PRESS)
     {
-        if (!(HLine.GetModels()[0][3][1] < -350.0f))                                                        //Not allowing the cursor to go outside of the screen
+        if (!(HLine.GetModels()[0][3][1] < -330.0f))                                                        //Not allowing the cursor to go outside of the screen
         {
             HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));
             CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));

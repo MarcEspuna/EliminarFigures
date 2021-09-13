@@ -23,6 +23,7 @@ Test::HardTest::HardTest()
     CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.4f, 0.4f, 1.0f)),
     Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}, 0.5f),
     Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 40.0f),
+    Covid("res/obj/Covid.obj", { 0.6, 0.9, 0.6, 1.0f }, 25.0f),
     tex_GameOver("res/textures/GameOverTransparent.png"),
     tex_YouLose("res/textures/YouLoseTransparent.png", 0.45f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
     tex_YouWin("res/textures/YouWinTransparent.png", 0.50f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
@@ -30,13 +31,20 @@ Test::HardTest::HardTest()
     TexShader("res/TexBasic.shader")
 {
     Rings.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(400.0f, -50.0f, 0.0f));
+    Covid.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, -250.0f, 0.0f));
+
     //Registering all the objects
     RegisterObject(&Rings);
     RegisterObject(&Horse);
     RegisterObject(&Star);
+    RegisterObject(&Covid);
+
+    //After that register cursor
     RegisterObject(&HLine);
     RegisterObject(&VLine);
     RegisterObject(&CQuad);
+
+    //Register textures
     RegisterTexture(&tex_GameOver);
     RegisterTexture(&tex_YouLose);
     RegisterTexture(&tex_YouWin);
@@ -52,6 +60,7 @@ Test::HardTest::HardTest()
     Star.TrackCollisionWith(&CQuad);
     Horse.TrackCollisionWith(&CQuad);
     Rings.TrackCollisionWith(&CQuad);
+    Covid.TrackCollisionWith(&CQuad);
 
     glEnable(GL_BLEND);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -79,7 +88,7 @@ void Test::HardTest::OnUpdate(float deltaTime, bool& testExit)
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
     {
-        if (!(HLine.GetModels()[0][3][1] > 350.0f)) 
+        if (!(HLine.GetModels()[0][3][1] > 330.0f)) 
         {
             HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
             CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
@@ -89,7 +98,7 @@ void Test::HardTest::OnUpdate(float deltaTime, bool& testExit)
     int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
     if (state1 == GLFW_PRESS)
     {
-        if (!(HLine.GetModels()[0][3][1] < -350.0f))                                                        //Not allowing the cursor to go outside of the screen
+        if (!(HLine.GetModels()[0][3][1] < -330.0f))                                                        //Not allowing the cursor to go outside of the screen
         {
             HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));
             CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));
@@ -247,15 +256,27 @@ void Test::HardTest::LoadObjectUpdateFuntions()
 
     Star.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        //movement.z += deltaTime/25;
+
         model = glm::translate(model, glm::vec3(0.0f, deltaTime * 7, 0.0f));
         model = glm::rotate(model, deltaTime/25, glm::vec3(0.0f, 0.0f, 1.0f));
 
     };
 
+    Covid.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
+    {
+        glm::vec4 pos(oneVertex[0], oneVertex[1], 0.0f, 1.0f);
+        glm::vec4 updatedOnePos = model * pos;
+        if (updatedOnePos[0] < -600.0f) movement.x = 1.0f;
+        else if (updatedOnePos[0] > 600.0f) movement.x = -1.0f;
+        if (updatedOnePos[1] < -320.0f) movement.y = 1.0f;
+        else if (updatedOnePos[1] > 320.0f) movement.y = -1.0f;
+        model = glm::translate(model, glm::vec3(deltaTime * movement.x * 2, deltaTime * movement.y * 2, 0.0f));
+
+    };
+
     CQuad.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        if (Star.GetCollisionStatus() || Horse.GetCollisionStatus() || Rings.GetCollisionStatus())
+        if (Star.GetCollisionStatus() || Horse.GetCollisionStatus() || Rings.GetCollisionStatus() || Covid.GetCollisionStatus())
         {
             color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
         }
