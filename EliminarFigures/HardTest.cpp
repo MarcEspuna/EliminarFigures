@@ -79,29 +79,42 @@ void Test::HardTest::OnUpdate(float deltaTime, bool& testExit)
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
     {
-        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
+        if (!(HLine.GetModels()[0][3][1] > 350.0f)) 
+        {
+            HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
+            CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
+        }
     }
 
     int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
     if (state1 == GLFW_PRESS)
     {
-        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));
+        if (!(HLine.GetModels()[0][3][1] < -350.0f))                                                        //Not allowing the cursor to go outside of the screen
+        {
+            HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));
+            CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));
+        }
+
     }
 
     int state2 = glfwGetKey(ptr_window, GLFW_KEY_RIGHT);
     if (state2 == GLFW_PRESS)
     {
-        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(deltaTime*5.5f, 0.0f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(deltaTime*5.5f, 0.0f, 0.0f));
+        if (!(VLine.GetModels()[0][3][0] > 630.0f))
+        {
+            VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(deltaTime * 5.5f, 0.0f, 0.0f));
+            CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(deltaTime * 5.5f, 0.0f, 0.0f));
+        }
     }
 
     int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
     if (state3 == GLFW_PRESS)
     {
-        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(-deltaTime*5.5f, 0.0f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(-deltaTime*5.5f, 0.0f, 0.0f));
+        if (!(VLine.GetModels()[0][3][0] < -630.0f))
+        {
+            VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(-deltaTime * 5.5f, 0.0f, 0.0f));
+            CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(-deltaTime * 5.5f, 0.0f, 0.0f));
+        }
     }
 
     int state4 = glfwGetKey(ptr_window, GLFW_KEY_SPACE);

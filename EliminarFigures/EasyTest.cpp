@@ -77,29 +77,42 @@ void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
     int state = glfwGetKey(ptr_window, GLFW_KEY_W);
     if (state == GLFW_PRESS)
     {
-        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 6.5f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 6.5f, 0.0f));
+        if (!(HLine.GetModels()[0][3][1] > 350.0f))
+        {
+            HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
+            CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 5.5f, 0.0f));
+        }
     }
 
     int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
     if (state1 == GLFW_PRESS)
     {
-        HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -deltaTime * 6.5f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -deltaTime * 6.5f, 0.0f));
+        if (!(HLine.GetModels()[0][3][1] < -350.0f))                                                        //Not allowing the cursor to go outside of the screen
+        {
+            HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));
+            CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, -deltaTime * 5.5f, 0.0f));
+        }
+
     }
 
     int state2 = glfwGetKey(ptr_window, GLFW_KEY_RIGHT);
     if (state2 == GLFW_PRESS)
     {
-        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(deltaTime* 6.5f, 0.0f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(deltaTime* 6.5f, 0.0f, 0.0f));
+        if (!(VLine.GetModels()[0][3][0] > 630.0f))
+        {
+            VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(deltaTime * 5.5f, 0.0f, 0.0f));
+            CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(deltaTime * 5.5f, 0.0f, 0.0f));
+        }
     }
 
     int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
     if (state3 == GLFW_PRESS)
     {
-        VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(-deltaTime* 6.5f, 0.0f, 0.0f));
-        CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(-deltaTime* 6.5f, 0.0f, 0.0f));
+        if (!(VLine.GetModels()[0][3][0] < -630.0f))
+        {
+            VLine.GetModels()[0] = glm::translate(VLine.GetModels()[0], glm::vec3(-deltaTime * 5.5f, 0.0f, 0.0f));
+            CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(-deltaTime * 5.5f, 0.0f, 0.0f));
+        }
     }
 
     int state4 = glfwGetKey(ptr_window, GLFW_KEY_SPACE);
@@ -212,9 +225,11 @@ void Test::EasyTest::LoadObjectUpdateFuntions()
         glm::vec4 pos(oneVertex[0], oneVertex[1], 0.0f, 1.0f);
         glm::vec4 updatedOnePos = model * pos;
         if (updatedOnePos[0] < -600.0f) movement.x = 1.0f;
-        else if (updatedOnePos[0] > 600.0f) movement.x = -1.0f;
+        if (updatedOnePos[0] > 600.0f) movement.x = -1.0f;
+        if ((updatedOnePos[1] < 150.0f) && (updatedOnePos[1] > 0.0f)) movement.y = 1.0f;
+        if (updatedOnePos[1] > 320.0f) movement.y = -1.0f;
+        if (updatedOnePos[1] > -150.0f && updatedOnePos[1] < 0.0f) movement.y = -1.0f;
         if (updatedOnePos[1] < -320.0f) movement.y = 1.0f;
-        else if (updatedOnePos[1] > 320.0f) movement.y = -1.0f;
         model = glm::translate(model, glm::vec3(deltaTime * movement.x * 2, deltaTime * movement.y * 2, 0.0f));
     };
 
@@ -269,14 +284,14 @@ void Test::EasyTest::LoadNewObjects(const float& TimeLeft)
 {
     if (TimeLeft < 55.0f && newObjectsSelector[0])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, -100.0f, 0.0f)), {-1.0f, -1.0f, 1.0f});
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, -200.0f, 0.0f)), {-1.0f, -1.0f, 1.0f});
         newObjectsSelector[0] = false;
     }
 
     if (TimeLeft < 45.0f && newObjectsSelector[1])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -200.0f, 0.0f)),{ -1.0f, 1.0f, 1.0f });
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 300.0f, 0.0f)));
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 200.0f, 0.0f)),{ -1.0f, 1.0f, 1.0f });
         newObjectsSelector[1] = false;
     }
 
