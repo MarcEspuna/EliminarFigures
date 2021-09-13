@@ -159,6 +159,7 @@
     <ClCompile Include="MediumTest.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjParser.cpp" />
+    <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="res\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui_demo.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="dependencies\GL\wglew.h" />
     <ClInclude Include="HardTest.h" />
     <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="res\vendor\glm\common.hpp" />
     <ClInclude Include="res\vendor\glm\detail\compute_common.hpp" />

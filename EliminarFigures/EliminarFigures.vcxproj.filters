@@ -84,6 +84,9 @@
     <ClCompile Include="TextureObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RandomGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\GLFW\glfw3.h">
@@ -1035,6 +1038,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextureObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

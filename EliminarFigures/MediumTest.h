@@ -39,6 +39,8 @@ namespace Test {
 		Object CQuad;
 		Object Star;
 		Object Rings;
+		Object Satellite;
+		Object Covid;
 
 		TextureObject tex_GameOver;
 		TextureObject tex_YouLose;

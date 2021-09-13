@@ -23,6 +23,8 @@ Test::MediumTest::MediumTest()
     CQuad("res/obj/CQuad.obj", { 1.0f, 0.96f, 0.22f, 1.0f }, glm::vec3(0.65f, 0.65f, 1.0f)),
     Star("res/obj/Star.obj", {0.1f, 0.1f, 1.0f, 1.0f}, 0.5f),
     Rings("res/obj/Rings.obj", { 0.3, 0.6, 0.3, 1.0f }, 50.0f),
+    Covid("res/obj/Covid.obj", { 0.6, 0.9, 0.6, 1.0f }, 32.0f),
+    Satellite("res/obj/Satellite.obj", { 0.5, 0.6, 0.9, 1.0f }, 22.0f),
     tex_GameOver("res/textures/GameOverTransparent.png"),
     tex_YouLose("res/textures/YouLoseTransparent.png", 0.45f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
     tex_YouWin("res/textures/YouWinTransparent.png", 0.50f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
@@ -30,34 +32,42 @@ Test::MediumTest::MediumTest()
     TexShader("res/TexBasic.shader")
 {
     Rings.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(400.0f, -50.0f, 0.0f));
-    //Registering all the objects
+    Covid.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(-330.0f, -160.0f, 0.0f));
+    Satellite.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, 250.0f, 0.0f));
 
+    //Registering all the objects
     RegisterObject(&Rings);
     RegisterObject(&Horse);
     RegisterObject(&Star);
+    RegisterObject(&Satellite);
+    RegisterObject(&Covid);
+
+    //After that register cursor
     RegisterObject(&HLine);
     RegisterObject(&VLine);
     RegisterObject(&CQuad);
-    //Registering texture for the end of the game
 
+    //Register textures
     RegisterTexture(&tex_GameOver);
     RegisterTexture(&tex_YouLose);
     RegisterTexture(&tex_YouWin);
-    //Adding more of already registered objects
 
+    //Adding more of the same already registered objects
     Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
     Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, -300.0f, 0.0f)));
-    Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 0.0f, 0.0f)));
-    Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
-    Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(600.0f, 0.0f, 0.0f)));
 
     //Loading all the lamdas that will define the behaviour of our objects
-    LoadObjectUpdateFuntions();                            
+    LoadObjectUpdateFuntions();
 
     //Setting collision relations:
     Star.TrackCollisionWith(&CQuad);
     Horse.TrackCollisionWith(&CQuad);
     Rings.TrackCollisionWith(&CQuad);
+    Covid.TrackCollisionWith(&CQuad);
+    Satellite.TrackCollisionWith(&CQuad);
+
+    glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_BLEND);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -251,15 +261,33 @@ void Test::MediumTest::LoadObjectUpdateFuntions()
 
     Star.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        //movement.z += deltaTime/25;
+
         model = glm::translate(model, glm::vec3(0.0f, deltaTime * 7, 0.0f));
         model = glm::rotate(model, deltaTime/25, glm::vec3(0.0f, 0.0f, 1.0f));
 
     };
 
+    Covid.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
+    {
+
+        model = glm::rotate(model, deltaTime / 25, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    };
+
+    Satellite.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
+    {
+        glm::vec4 pos(oneVertex[0], oneVertex[1], 0.0f, 1.0f);
+        glm::vec4 updatedOnePos = model * pos;
+        if (updatedOnePos[0] < -580.0f) movement.x = 1.0f;
+        else if (updatedOnePos[0] > 580.0f) movement.x = -1.0f;
+        if (updatedOnePos[1] < -300.0f) movement.y = 1.0f;
+        else if (updatedOnePos[1] > 300.0f) movement.y = -1.0f;
+        model = glm::translate(model, glm::vec3(deltaTime * movement.x * 2, deltaTime * movement.y * 2, 0.0f));
+    };
+
     CQuad.f_ModelColorUpdate = [&](glm::mat4& model, const glm::vec2& oneVertex, glm::vec4& color, const float& deltaTime, glm::vec3& movement)
     {
-        if (Star.GetCollisionStatus() || Horse.GetCollisionStatus() || Rings.GetCollisionStatus())
+        if (Star.GetCollisionStatus() || Horse.GetCollisionStatus() || Rings.GetCollisionStatus() || Satellite.GetCollisionStatus() || Covid.GetCollisionStatus())
         {
             color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
         }

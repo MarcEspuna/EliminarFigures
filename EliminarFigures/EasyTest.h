@@ -40,6 +40,9 @@ namespace Test {
 		Object CQuad;
 		Object Star;
 		Object Rings;
+		Object Covid;
+		Object Satellite;
+
 
 		TextureObject tex_GameOver;
 		TextureObject tex_YouLose;
@@ -66,7 +69,7 @@ namespace Test {
 		void LoadNewObjects(const float& TimeLeft);
 
 		bool CatchingObject = false;
-		ImguiVariables m_Imgui = { 0, 18, 0.0f};
+		ImguiVariables m_Imgui = { 0, 20, 0.0f};
 		float Time = 0;
 		float TimeLeft = 65;
 		float EndGameTime = 0.0f;

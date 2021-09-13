@@ -39,6 +39,7 @@ namespace Test {
 		Object Star;
 		Object Rings;
 		Object Covid;
+		Object Satellite;
 
 		TextureObject tex_GameOver;
 		TextureObject tex_YouLose;
@@ -65,7 +66,7 @@ namespace Test {
 		void LoadNewObjects(const float& TimeLeft);
 
 		bool CatchingObject = false;
-		ImguiVariables m_Imgui = { 0, 21, 0.0f};
+		ImguiVariables m_Imgui = { 0, 22, 0.0f};
 		float Time = 0;
 		float TimeLeft = 75;
 
@@ -74,6 +75,7 @@ namespace Test {
 
 		std::unordered_map<unsigned int, bool> newObjectsSelector = { {0, true}, {1, true},{2, true},{3, true},{4, true},{5, true}};
 		WinOrLose winOrLose = WinOrLose::LOST;
+
 
 	};
 	
