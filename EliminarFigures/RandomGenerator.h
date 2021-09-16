@@ -8,6 +8,7 @@ public:
 	~RandomGenerator();
 
 	int GetValue(int lowValue, int HighValue);
+	void Randomize();
 
 private:
 

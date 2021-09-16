@@ -34,6 +34,7 @@ public:
 	inline std::vector<float>& GetVertex() { return m_Data.GetVerticesIn2D(); }
 	inline bool GetCollisionStatus() { return collision.GetStatus(); }
 	inline void CollisionEnd() { collision.End(); }
+	inline std::vector<glm::vec3>& GetMovementValues() { return movementValues; }
 
 private:
 

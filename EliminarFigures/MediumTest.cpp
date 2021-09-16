@@ -31,9 +31,17 @@ Test::MediumTest::MediumTest()
     shader("res/Basic.shader"),
     TexShader("res/TexBasic.shader")
 {
-    Rings.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(400.0f, -50.0f, 0.0f));
-    Covid.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(-330.0f, -160.0f, 0.0f));
-    Satellite.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, 250.0f, 0.0f));
+    Horse.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f));
+    Rings.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f));
+    Covid.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f));
+    Satellite.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f));
+    Star.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 300), 0.0f, 0.0f));
+    
+    Horse.GetMovementValues()[0] = { 0.0f, random.GetValue(1, 2), 1.0f };
+    Rings.GetMovementValues()[0] = { random.GetValue(1, 2), 0.0f , 1.0f };
+    Covid.GetMovementValues()[0] = { 0.0f, random.GetValue(1, 2), 1.0f };
+    Satellite.GetMovementValues()[0] = { random.GetValue(1, 2), 0.0f , 1.0f };
+
 
     //Registering all the objects
     RegisterObject(&Rings);
@@ -53,8 +61,8 @@ Test::MediumTest::MediumTest()
     RegisterTexture(&tex_YouWin);
 
     //Adding more of the same already registered objects
-    Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
-    Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, -300.0f, 0.0f)));
+    Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(1, 2), 0.0f , 1.0f});
+    Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { 0.0f, random.GetValue(1, 2), 1.0f });
 
     //Loading all the lamdas that will define the behaviour of our objects
     LoadObjectUpdateFuntions();
@@ -163,8 +171,8 @@ void Test::MediumTest::OnUpdate(float deltaTime, bool& testExit)
 
     if (Time > 10 && !newTest)
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 100.0f, 0.0f)));
-        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 0.0f)));
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(1, 2), random.GetValue(1, 2), 1.0f });
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 280), 0.0f)), { random.GetValue(1, 2), 0.0f, 1.0f });
         newTest = 1;
     }
 
@@ -254,8 +262,8 @@ void Test::MediumTest::LoadObjectUpdateFuntions()
         glm::vec4 updatedOnePos = model * pos;
         if (updatedOnePos[0] < -580.0f) movement.x = 1.0f;
         else if (updatedOnePos[0] > 580.0f) movement.x = -1.0f;
-        if (updatedOnePos[1] < -300.0f) movement.y = 1.0f;
-        else if (updatedOnePos[1] > 300.0f) movement.y = -1.0f;
+        if (updatedOnePos[1] < -310.0f) movement.y = 1.0f;
+        else if (updatedOnePos[1] > 310.0f) movement.y = -1.0f;
         model = glm::translate(model, glm::vec3(deltaTime* movement.x * 2, deltaTime * movement.y * 2, 0.0f));
     };
 
@@ -316,43 +324,52 @@ void Test::MediumTest::LoadNewObjects(const float& TimeLeft)
 {
     if (TimeLeft < 55.0f && newObjectsSelector[0])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, -100.0f, 0.0f)), {-1.0f, -1.0f, 1.0f});
-        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3( 300.0f, 100.0f, 0.0f)), { -1.0f, -1.0f, 1.0f });
-        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(-150.0f, -100.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
+        random.Randomize();
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), {0.0f , random.GetValue(0, 2), 1.0f });
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 280), 0.0f)), { random.GetValue(0, 2), 0.0f, 1.0f });
+        Covid.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
         newObjectsSelector[0] = false;
     }
 
     if (TimeLeft < 45.0f && newObjectsSelector[1])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -200.0f, 0.0f)),{ -1.0f, 1.0f, 1.0f });
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)),{ 1.0f, -1.0f, 1.0f });
+        random.Randomize();
+        Covid.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
+        Covid.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
+        Covid.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
+        Covid.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
         newObjectsSelector[1] = false;
     }
 
     if (TimeLeft < 35.0f && newObjectsSelector[2])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
+        random.Randomize();
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
+        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 300), 0.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
         newObjectsSelector[2] = false;
     }
 
     if (TimeLeft < 25.0f && newObjectsSelector[3])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        random.Randomize();
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
         newObjectsSelector[3] = false;
     }
 
     if (TimeLeft < 20.0f && newObjectsSelector[4])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, -200.0f, 0.0f)));
+        random.Randomize();
+        Covid.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
+        Covid.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
         newObjectsSelector[4] = false;
     }
 
     if (TimeLeft < 15.0f && newObjectsSelector[5])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, 100.0f, 0.0f)));
-        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
+        random.Randomize();
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 500), random.GetValue(0, 280), 0.0f)), { random.GetValue(0, 2),0.0f, 1.0f });
+        Covid.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f)), { random.GetValue(0, 2), random.GetValue(0, 2), 1.0f });
         newObjectsSelector[5] = false;
     }
 
