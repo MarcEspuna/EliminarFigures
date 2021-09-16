@@ -324,45 +324,49 @@ void Test::HardTest::RegisterTexture(TextureObject* Texture)
 
 void Test::HardTest::LoadNewObjects(const float& TimeLeft)
 {
-    if (TimeLeft < 55.0f && newObjectsSelector[0])
+
+    if (TimeLeft < 70.0f && newObjectsSelector[0])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, -100.0f, 0.0f)), {-1.0f, -1.0f, 1.0f});
+        int x = random.GetValue(20, 550);
+        int y = random.GetValue(20, 300);
+        std::cout << "Object appear: (" << x << " , " << y << " )" << std::endl;
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f)), {-1.0f, -1.0f, 1.0f});
         newObjectsSelector[0] = false;
     }
 
     if (TimeLeft < 45.0f && newObjectsSelector[1])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -200.0f, 0.0f)),{ -1.0f, 1.0f, 1.0f });
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), 0.0f)));
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), 0.0f)),{ -1.0f, 1.0f, 1.0f });
         newObjectsSelector[1] = false;
     }
 
     if (TimeLeft < 35.0f && newObjectsSelector[2])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, -100.0f, 0.0f)), { -1.0f, 1.0f, 1.0f });
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), 0.0f)));
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), 0.0f)));
+        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), 0.0f)), { random.GetValue(20, 550), random.GetValue(20, 300), 1.0f });
         newObjectsSelector[2] = false;
     }
 
     if (TimeLeft < 25.0f && newObjectsSelector[3])
     {
-        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
-        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 300.0f, -200.0f)));
-        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 000.0f, 200.0f)));
-        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 0.0f)));
+        Rings.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), 0.0f)));
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), -200.0f)));
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), 200.0f)));
+        Star.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), 0.0f)));
         newObjectsSelector[3] = false;
     }
 
     if (TimeLeft < 15.0f && newObjectsSelector[4])
     {
-        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -300.0f, 0.0f)));
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), 0.0f)));
         newObjectsSelector[4] = false;
     }
 
     if (TimeLeft < 13.0f && newObjectsSelector[5])
     {
-        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -200.0f, 0.0f)));
+        Horse.New(glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(20, 550), random.GetValue(20, 300), 0.0f)));
         newObjectsSelector[5] = false;
     }
 

@@ -3,6 +3,13 @@
 
 class RandomGenerator
 {
+public:
+	RandomGenerator();
+	~RandomGenerator();
+
+	int GetValue(int lowValue, int HighValue);
+
+private:
 
 };
 

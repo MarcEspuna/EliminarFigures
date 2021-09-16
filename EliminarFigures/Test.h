@@ -7,7 +7,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "PositionsBuffers.h"
-#include <random>
+#include "RandomGenerator.h"
 
 namespace Test
 {
