@@ -14,7 +14,6 @@
 namespace Test {
 
 
-
 	class EasyTest : public Test
 
 	{
@@ -40,9 +39,8 @@ namespace Test {
 		Object CQuad;
 		Object Star;
 		Object Rings;
-		Object Covid;
 		Object Satellite;
-
+		Object Covid;
 
 		TextureObject tex_GameOver;
 		TextureObject tex_YouLose;
@@ -69,17 +67,17 @@ namespace Test {
 		void LoadNewObjects(const float& TimeLeft);
 
 		bool CatchingObject = false;
-		ImguiVariables m_Imgui = { 0, 20, 0.0f};
+		ImguiVariables m_Imgui = { 0, 24, 0.0f};
 		float Time = 0;
-		float TimeLeft = 65;
-		float EndGameTime = 0.0f;
+		float TimeLeft = 75;
+
 
 		unsigned int newTest = 0;
 
 		std::unordered_map<unsigned int, bool> newObjectsSelector = { {0, true}, {1, true},{2, true},{3, true},{4, true},{5, true}};
 		WinOrLose winOrLose = WinOrLose::LOST;
 
-		bool EndGame = false;
+		RandomGenerator random;
 
 	};
 	
