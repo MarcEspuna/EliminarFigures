@@ -1,9 +1,10 @@
-#include "Test.h"
+#include "Level.h"
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
 #include "Object.h"
 #include "TextureObject.h"
+#include "AiPlayer.h"
 #include <unordered_map>
 #include <future>
 #include <mutex>
@@ -11,10 +12,10 @@
 #include <numeric>
 
 
-namespace Test {
+namespace Level {
 
 
-	class EasyTest : public Test
+	class EasyTest : public Level
 
 	{
 	public:
@@ -32,6 +33,9 @@ namespace Test {
 
 
 	private:
+
+		AiPlayer aiPlayer;
+		int playerInput;
 
 		Object Horse;
 		Object HLine;

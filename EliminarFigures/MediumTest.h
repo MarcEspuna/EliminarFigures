@@ -1,4 +1,4 @@
-#include "Test.h"
+#include "Level.h"
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
@@ -11,10 +11,10 @@
 #include <numeric>
 
 
-namespace Test {
+namespace Level {
 
 
-	class MediumTest : public Test
+	class MediumTest : public Level
 
 	{
 	public:

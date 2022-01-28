@@ -24,31 +24,32 @@
     <ProjectGuid>{1bc153e8-b056-4919-a399-046f8f0e67e5}</ProjectGuid>
     <RootNamespace>EliminarFigures</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>KASPAR</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -151,12 +152,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AiPlayer.cpp" />
     <ClCompile Include="CollisionDetector.cpp" />
     <ClCompile Include="EasyTest.cpp" />
     <ClCompile Include="HardTest.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MediumTest.cpp" />
+    <ClCompile Include="NormalLevel.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjParser.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
@@ -170,16 +173,19 @@
     <ClCompile Include="res\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="res\vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AiPlayer.h" />
     <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="EasyTest.h" />
+    <ClInclude Include="ImguiVariables.h" />
     <ClInclude Include="MediumTest.h" />
+    <ClInclude Include="NormalLevel.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjParser.h" />
     <ClInclude Include="PositionsBuffers.h" />
@@ -489,7 +495,7 @@
     <ClInclude Include="res\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="res\vendor\stb_image\stb_image.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Test.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="VertexArray.h" />
@@ -497,6 +503,7 @@
     <ClInclude Include="VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="imgui.ini" />
     <None Include="res\Basic.shader" />
     <None Include="res\TexBasic.shader" />
     <None Include="res\vendor\glm\detail\func_common.inl" />

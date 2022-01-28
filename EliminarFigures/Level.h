@@ -9,7 +9,7 @@
 #include "PositionsBuffers.h"
 #include "RandomGenerator.h"
 
-namespace Test
+namespace Level
 {
 	enum class WinOrLose
 	{
@@ -17,12 +17,12 @@ namespace Test
 		WON = 2
 	};
 
-
-	class Test
+	/*Interface for each level (window in the userspace you cold call it)*/
+	class Level
 	{
 	public:
-		Test() {}
-		virtual ~Test() {}
+		Level() {}
+		virtual ~Level() {}
 
 
 		virtual void OnUpdate(float deltaTime, bool& testExit) {}
@@ -39,11 +39,11 @@ namespace Test
 	};
 
 
-	class TestMenu : public Test
+	class Menu : public Level
 	{
 	public:
-		TestMenu(Test*& currentTest);
-		~TestMenu();
+		Menu(Level*& currentTest);
+		~Menu();
 
 		void OnImGuiRender() override;
 
@@ -52,11 +52,12 @@ namespace Test
 		{
 			std::cout << "Registering test: " << testName << std::endl;
 			m_Tests.push_back(std::make_pair(testName, []() { return new T; }));		// LAMDAS!
+
 		}
 
 	private:
-		Test*& m_CurrentTest;
-		std::vector < std::pair < std::string, std::function<Test* () >>> m_Tests;
+		Level*& m_CurrentTest;
+		std::vector < std::pair < std::string, std::function<Level* () >>> m_Tests;
 
 	};
 }

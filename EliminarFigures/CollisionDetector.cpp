@@ -27,6 +27,11 @@ int CollisionDetector::RefreshStatus()				//Retornar index de la colisio!
 	return -1;
 }
 
+const std::vector<glm::vec2>& CollisionDetector::getUpdatedVerticesQuad()
+{
+	return updatedVerticesObject;
+}
+
 unsigned int CollisionDetector::Refresh(size_t index)
 {
 	if (OtherObject)
@@ -41,7 +46,7 @@ unsigned int CollisionDetector::Refresh(size_t index)
 
 		for (const auto& updatedVertexQuad : updatedVerticesQuad)							//Each quad point 
 		{
-			for (size_t e = 0; e < MainObject->GetIndexSize(); )				//Each triangle in the object
+			for (size_t e = 0; e < MainObject->GetIndexSize(); )							//Each triangle in the object
 			{
 				unsigned int& index1 = MainObject->GetIndex()[e];
 				unsigned int& index2 = MainObject->GetIndex()[e + 1];
@@ -86,6 +91,7 @@ bool CollisionDetector::PointInTriangle(glm::vec2 pt, glm::vec2 v1, glm::vec2 v2
 	return !(has_neg && has_pos);
 }
 
+//Vector to update is each vertex of the triangle
 void CollisionDetector::UpdateVerticies(const std::vector<float>& originalVertex2D, const glm::mat4& u_Model, std::vector<glm::vec2>& vectorToUpdate)
 {
 	vectorToUpdate.clear();

@@ -1,5 +1,6 @@
-#include "Test.h"
+#include "Level.h"
 #include "EasyTest.h"
+#include "ImguiVariables.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -16,7 +17,7 @@
 
 #include "Texture.h"
 
-Test::EasyTest::EasyTest()
+Level::EasyTest::EasyTest()
     : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 40.0f),
     HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.9f, 1.0f) ),
     VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.9f, 1.0f, 1.0f)),
@@ -29,14 +30,16 @@ Test::EasyTest::EasyTest()
     tex_YouLose("res/textures/YouLoseTransparent.png", 0.45f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
     tex_YouWin("res/textures/YouWinTransparent.png", 0.50f, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -100.0f, 0.0f))),
     shader("res/Basic.shader"),
-    TexShader("res/TexBasic.shader")
+    TexShader("res/TexBasic.shader"),
+    playerInput(0),
+    aiPlayer(WorldBuffer, &playerInput, CQuad)
 {
     Horse.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f));
     Rings.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f));
     Covid.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f));
     Satellite.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 550), random.GetValue(0, 300), 0.0f));
     Star.GetModels()[0] = glm::translate(glm::mat4(1.0f), glm::vec3(random.GetValue(0, 300), 0.0f, 0.0f));
-    
+
     Horse.GetMovementValues()[0] = { 0.0f, random.GetValue(1, 2), 1.0f };
     Rings.GetMovementValues()[0] = { random.GetValue(1, 2), 0.0f , 1.0f };
     Covid.GetMovementValues()[0] = { 0.0f, random.GetValue(1, 2), 1.0f };
@@ -80,6 +83,8 @@ Test::EasyTest::EasyTest()
     glEnable(GL_BLEND);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    aiPlayer.refreshAiPlayerPosition();
+
     std::cout << "Easy Test created" << std::endl;
 
 }
@@ -90,12 +95,12 @@ static void ayncObjectUpdate(Object* object, float deltaTime, bool CatchingObjec
     object->OnObjectUpdate(CatchingObject, deltaTime, *imguiVar);
 }
 
-Test::EasyTest::~EasyTest()
+Level::EasyTest::~EasyTest()
 {
 	std::cout << "Easy test destroyed\n";
 }
 
-void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
+void Level::EasyTest::OnUpdate(float deltaTime, bool& testExit)
 {
     Time += deltaTime / 20;                                                                                  //We keep track of the time passed during this test                             
     TimeLeft -= deltaTime / 20;
@@ -107,6 +112,7 @@ void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
         {
             HLine.GetModels()[0] = glm::translate(HLine.GetModels()[0], glm::vec3(0.0f, deltaTime * 6.5f, 0.0f));
             CQuad.GetModels()[0] = glm::translate(CQuad.GetModels()[0], glm::vec3(0.0f, deltaTime * 6.5f, 0.0f));
+            aiPlayer.refreshAiPlayerPosition();
         }
     }
 
@@ -142,7 +148,8 @@ void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
     }
 
     int state4 = glfwGetKey(ptr_window, GLFW_KEY_SPACE);
-    if (state4 == GLFW_PRESS)
+    int state5 = glfwGetKey(ptr_window, GLFW_KEY_ENTER);
+    if (state4 == GLFW_PRESS && state5 == GLFW_PRESS)
     {
         CatchingObject = true;
     }
@@ -150,6 +157,7 @@ void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
     {
         CatchingObject = false;
     }
+
 
 #define ASYNC 0
 #if ASYNC
@@ -192,7 +200,7 @@ void Test::EasyTest::OnUpdate(float deltaTime, bool& testExit)
     }
 }
 
-void Test::EasyTest::OnRender()
+void Level::EasyTest::OnRender()
 {
     renderer.Clear();
     //A for loop for rendering the texture objects:
@@ -225,7 +233,7 @@ void Test::EasyTest::OnRender()
 
 }
 
-void Test::EasyTest::OnImGuiRender()
+void Level::EasyTest::OnImGuiRender()
 {
 
    ImGui::Begin("Statistics Window!");                         // Create a window called "Hello, world!" and append into it.
@@ -240,7 +248,7 @@ void Test::EasyTest::OnImGuiRender()
    ImGui::End();
 }
 
-void Test::EasyTest::LoadObjectUpdateFuntions()
+void Level::EasyTest::LoadObjectUpdateFuntions()
 {
 
 
@@ -308,19 +316,19 @@ void Test::EasyTest::LoadObjectUpdateFuntions()
 
 }
 
-void Test::EasyTest::RegisterObject(Object* object)
+void Level::EasyTest::RegisterObject(Object* object)
 {
     WorldBuffer.push_back(object);
 }
 
 
 
-void Test::EasyTest::RegisterTexture(TextureObject* Texture)
+void Level::EasyTest::RegisterTexture(TextureObject* Texture)
 {
     TextureBuffer.push_back(Texture);
 }
 
-void Test::EasyTest::LoadNewObjects(const float& TimeLeft)
+void Level::EasyTest::LoadNewObjects(const float& TimeLeft)
 {
     if (TimeLeft < 55.0f && newObjectsSelector[0])
     {

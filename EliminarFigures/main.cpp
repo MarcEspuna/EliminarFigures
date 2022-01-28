@@ -3,6 +3,7 @@
 #include "HardTest.h"
 #include "EasyTest.h"
 #include "MediumTest.h"
+#include "NormalLevel.h"
 
 
 int main(void)
@@ -39,13 +40,17 @@ int main(void)
 
     std::cout << "[GLEW]: Context succesfully created" << std::endl;
 
-    Test::Test* currentTest = nullptr;
-    Test::TestMenu* menu = new Test::TestMenu(currentTest);
+    Level::Level* currentTest = nullptr;
+    Level::Menu* menu = new Level::Menu(currentTest);
     currentTest = menu; 
 
-    menu->RegisterTest<Test::HardTest>("Hard Difficulty");
-    menu->RegisterTest<Test::MediumTest>("Medium Difficulty");
-    menu->RegisterTest<Test::EasyTest>("Easy Difficulty");
+    menu->RegisterTest<Level::HardTest>("Hard Difficulty");
+    menu->RegisterTest<Level::MediumTest>("Medium Difficulty");
+    menu->RegisterTest<Level::EasyTest>("Easy Difficulty");
+    menu->RegisterTest<Level::NormalLevel>("Default Level");
+
+    //La idea sera seleccionar la AI en una casella (un tic)
+    //També seleccionarem l'eix al qual la AI es moura
 
     float deltaTime = 0;
     bool testExit = false;
@@ -65,8 +70,8 @@ int main(void)
         currentTest->SaveWindow(window);
         currentTest->OnUpdate(deltaTime, testExit);
         currentTest->OnRender();
-        ImGui::Begin("DIFFICULTY");
-        if ((currentTest != menu && ImGui::Button("<-")) || (currentTest != menu && testExit))
+        ImGui::Begin("DIFFICULTY/PLAYERS");
+        if ((currentTest != menu && ImGui::Button("<-")) || (currentTest != menu && testExit)) // WoW! si el primer es fals el compilador ni mira la següent comprovació. Per això no apareix el boto al menu principal
         {
            delete currentTest;
            currentTest = menu;

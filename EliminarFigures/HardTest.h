@@ -1,4 +1,4 @@
-#include "Test.h"
+#include "Level.h"
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
@@ -11,9 +11,9 @@
 #include <numeric>
 
 
-namespace Test {
+namespace Level {
 
-	class HardTest : public Test
+	class HardTest : public Level
 
 	{
 	public:
@@ -31,7 +31,6 @@ namespace Test {
 
 
 	private:
-
 		Object Horse;
 		Object HLine;
 		Object VLine;

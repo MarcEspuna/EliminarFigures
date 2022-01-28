@@ -2,6 +2,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Object.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -18,6 +19,16 @@ public:
 		ibo.Bind();
 		shader.Bind();
 		glDrawElements(GL_TRIANGLES, (GLsizei)ibo.GetCount(), GL_UNSIGNED_INT, 0);
+	}
+
+	void Draw(Object& object, const glm::mat4& projection, const glm::mat4& view)
+	{
+		object.Bind();
+		for (size_t i = 0; i < object.size(); i++)
+		{
+			object.setUniform(i, projection, view);
+			glDrawElements(GL_TRIANGLES, (GLsizei)object.getIboCount(), GL_UNSIGNED_INT, 0);
+		}
 	}
 
 	void DrawQ(const VertexArray& vao, const IndexBuffer& ibo, const Shader& shader) const
@@ -59,9 +70,3 @@ private:
 
 };
 
-struct ImguiVariables
-{
-	unsigned int CachedObjects;
-	unsigned int RemainingObjects;
-	float TimeLeft;
-};
