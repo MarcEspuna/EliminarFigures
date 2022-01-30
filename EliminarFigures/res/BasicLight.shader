@@ -25,7 +25,7 @@ void main()
 	normal_rotate[1] = vec3(u_Model[1][0], u_Model[1][1], u_Model[1][2]);
 	normal_rotate[2] = vec3(u_Model[2][0], u_Model[2][1], u_Model[2][2]);
 	normal_rotate = transpose(inverse(normal_rotate));
-
+	//
 	Normal = normal_rotate * aNormal;
 
 };
@@ -55,16 +55,17 @@ void main()
 
 	vec3 N = normalize(Normal);
 
-	vec3 L = normalize(-FragPos);
+	vec3 L = normalize(u_LightPos);
 	vec3 E = normalize(u_LightPos - FragPos);
 	vec3 H = normalize(L + E);	//H for Blinn-phong shading 
-
+	
 	float NdotL = max(dot(N, L), 0.0);
 	float NdotH = max(dot(N, H), 0.0);
 
 	vec3 result = u_Color.xyz * u_ambient +
 		u_Color.xyz * u_diffuse * NdotL +
-		u_Color.xyz * pow(NdotH, u_shininess); ;
+		u_Color.xyz * u_specular * pow(NdotH, u_shininess);
+
 
 	color = vec4(result, 1.0);
 }

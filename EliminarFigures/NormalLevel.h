@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
+//#include "ObjectReader.h"
 #include "ObjectLight.h"
 #include "TextureObject.h"
 #include <unordered_map>
@@ -31,13 +32,10 @@ namespace Level {
 
 	private:
 
-		Shader shader;
-		Shader TexShader;
-
 		Renderer renderer;
+		//ObjectReader objectReader;
 
-		glm::mat4 m_Proj = glm::ortho(-16.0f, 9.0f, -16.0f, 9.0f);
-
+		glm::mat4 m_Proj = glm::ortho(-640.0f , 640.0f, -360.0f, 360.0f, -640.0f, 640.0f);
 
 		glm::mat4 m_View = glm::lookAt(
 			glm::vec3(0.0f, 0.0f, 0.0f),
@@ -51,8 +49,8 @@ namespace Level {
 
 		RandomGenerator random;
 
-		void RegisterObjects();
-
+		void BuildObjects();
+		void LoadObjectFiles();
 
 
 	};

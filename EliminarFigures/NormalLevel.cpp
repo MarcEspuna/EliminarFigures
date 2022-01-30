@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Object.h"
 #include "Shader.h"
 #include "VertexArrayLayout.h"
 
@@ -17,16 +16,17 @@
 #include "Texture.h"
 
 Level::NormalLevel::NormalLevel()
-    : shader("res/BasicLight.shader"), TexShader("res/TexBasic.shader")
+    
 {
-    //Registering shapes in the current level
-    RegisterObjects();
+    //Loading the objects of the current level:
+    LoadObjectFiles();
+    BuildObjects();
 
     glEnable(GL_BLEND);
-    //glEnable(GL_DEPTH_TEST);    
-    //glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);    
+    glDepthFunc(GL_LESS);
     //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_FRONT);
+    //glCullFace(GL_BACK);
 
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -65,15 +65,30 @@ void Level::NormalLevel::OnImGuiRender()
        
 }
 
-/* It will create all the available objects to be rendered in the current level, directly in the world vector*/
-void Level::NormalLevel::RegisterObjects()
+
+void Level::NormalLevel::LoadObjectFiles()
 {
-    worldBuffer.reserve(5);
-    //worldBuffer.emplace_back("res/obj/Star.obj", glm::vec4(0.1f, 0.1f, 1.0f, 1.0f), 0.5f);          //Triangle_3D
-    //worldBuffer.emplace_back("res/obj/Covid.obj", glm::vec4(0.1f, 0.1f, 1.0f, 1.0f), 0.5f);         //Square_3D
-    //worldBuffer.emplace_back("res/obj/Icosphere.obj", glm::vec4(0.1f, 0.1f, 1.0f, 1.0f), 55.0f, "res/BasicLight.shader");          //Octahedron_3D
-    worldBuffer.emplace_back("res/obj/teapot.obj", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 80.0f, "res/BasicLight.shader");          //Octahedron_3D
-    //worldBuffer.emplace_back("res/obj/Star.obj", glm::vec4(0.1f, 0.1f, 1.0f, 1.0f), 0.5f);          //Dodecahedron_3D
-    //worldBuffer.emplace_back("res/obj/Star.obj", glm::vec4(0.1f, 0.1f, 1.0f, 1.0f), 0.5f);          //Icosahedron_3D
+    //We define the objects that we want to load:
+    std::vector<std::string> filenames = { "teapot.obj" };
+    //objectReader.loadObjectFiles(filenames, "/res/obj/");
+
+    std::vector<tinyobj::shape_t> shapes;
+    std::vector<tinyobj::material_t> materials;
+    std::string errorMessage;
+
+    std::string basepath = "res/obj/";
+    std::string inputfile = basepath + "teapot.obj";
+
+    bool ret = tinyobj::LoadObj(shapes, materials, errorMessage, inputfile.c_str(), basepath.c_str());
+    if (!ret) std::cout << "error: " << errorMessage << std::endl;
+    std::cout << "shapes size: " << shapes.size();
+    worldBuffer.emplace_back("/res/obj/teapot.obj", shapes[0]);
+
+}
+
+/* It will create all the available objects to be rendered in the current level, directly in the world vector*/
+void Level::NormalLevel::BuildObjects()
+{
+    //objectReader.buildObjects(worldBuffer);
 }
 

@@ -121,7 +121,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)EliminarFigures/dependencies;$(SolutionDir)EliminarFigures/res/vendor</AdditionalIncludeDirectories>
     </ClCompile>
@@ -163,6 +163,7 @@
     <ClCompile Include="NormalLevel.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectLight.cpp" />
+    <ClCompile Include="ObjectReader.cpp" />
     <ClCompile Include="ObjParser.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="res\vendor\glm\detail\glm.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="NormalLevel.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectLight.h" />
+    <ClInclude Include="ObjectReader.h" />
     <ClInclude Include="ObjParser.h" />
     <ClInclude Include="PositionsBuffers.h" />
     <ClInclude Include="dependencies\GLFW\glfw3.h" />
@@ -497,6 +499,7 @@
     <ClInclude Include="res\vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="res\vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="res\vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="res\vendor\obj_loader\tiny_obj_loader.h" />
     <ClInclude Include="res\vendor\stb_image\stb_image.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Level.h" />

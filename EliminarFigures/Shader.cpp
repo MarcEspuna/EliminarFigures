@@ -190,6 +190,7 @@ unsigned int Shader::createShader(unsigned int vertex, unsigned int fragment)
         glDeleteProgram(program);
 
         std::cout << "[SHADER LINKAGE ERROR]: " << errorMessage << std::endl;
+        delete[] errorMessage;
         return 0;
     }
 
