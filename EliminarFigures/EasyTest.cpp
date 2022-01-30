@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Object.h"
+#include "BasicObject.h"
 #include "Shader.h"
 #include "VertexArrayLayout.h"
 

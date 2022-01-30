@@ -48,28 +48,28 @@ public:
 	inline unsigned int GetStride() const { return m_Stride; } 
 
 	template<typename T>
-	void Push(int count)
+	void Push(unsigned int count)
 	{
 		std::cout << "[ERROR]: Type not supported" << std::endl;
 		static_assert(false);
 	}
 
 	template<>
-	void Push<float>(int count)
+	void Push<float>(unsigned int count)
 	{
 		m_Layout.emplace_back(GL_FLOAT, GL_FALSE, count);
 		m_Stride += m_Layout[m_Layout.size() - 1].GetSize() * count;
 	}
 
 	template<>
-	void Push<unsigned int>(int count)
+	void Push<unsigned int>(unsigned int count)
 	{
 		m_Layout.emplace_back(GL_FALSE, GL_UNSIGNED_INT, count);
 		m_Stride += m_Layout[m_Layout.size() - 1].GetSize() * count;
 	}
 
 	template<>
-	void Push<unsigned char>(int count)
+	void Push<unsigned char>(unsigned int count)
 	{
 		m_Layout.emplace_back(GL_FALSE, GL_UNSIGNED_BYTE, count);
 		m_Stride += m_Layout[m_Layout.size() - 1].GetSize() * count;

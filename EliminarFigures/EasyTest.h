@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
-#include "Object.h"
+#include "BasicObject.h"
 #include "TextureObject.h"
 #include "AiPlayer.h"
 #include <unordered_map>
@@ -37,14 +37,14 @@ namespace Level {
 		AiPlayer aiPlayer;
 		int playerInput;
 
-		Object Horse;
-		Object HLine;
-		Object VLine;
-		Object CQuad;
-		Object Star;
-		Object Rings;
-		Object Satellite;
-		Object Covid;
+		BasicObject Horse;
+		BasicObject HLine;
+		BasicObject VLine;
+		BasicObject CQuad;
+		BasicObject Star;
+		BasicObject Rings;
+		BasicObject Satellite;
+		BasicObject Covid;
 
 		TextureObject tex_GameOver;
 		TextureObject tex_YouLose;

@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "Object.h"
+#include "BasicObject.h"
 #include <unordered_map>
 
 class AiPlayer

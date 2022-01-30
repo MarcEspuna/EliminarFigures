@@ -8,6 +8,7 @@
 
 
 VertexArray::VertexArray()
+	: m_AttributesCount(0)
 {
 	glGenVertexArrays(1, &m_RendererID);
 }
@@ -29,18 +30,19 @@ void VertexArray::Unbind() const
 
 void VertexArray::AddBuffer(const VertexBuffer& vbo, const VertexArrayLayout& layout)
 {
-	size_t offset = 0;
+	uint16_t offset = 0;
 	
 	Bind();
 	vbo.Bind();
 
 	const auto& elements = layout.GetLayouts();
 
-	for (unsigned int i = 0; i < elements.size(); i++)
+	for (const auto& element : elements)
 	{
-		glEnableVertexAttribArray(i);
-		glVertexAttribPointer(i, elements[i].count, elements[i].type, elements[i].normalized, layout.GetStride(), (void*)offset);
-		offset += (elements[i].GetSize() * (size_t)elements[i].count);
-
+		glEnableVertexAttribArray(m_AttributesCount);
+		glVertexAttribPointer(m_AttributesCount, element.count, element.type, element.normalized, layout.GetStride(), (const void*)offset);
+		offset += element.GetSize() * element.count;
+		m_AttributesCount++;
 	}	
+
 }

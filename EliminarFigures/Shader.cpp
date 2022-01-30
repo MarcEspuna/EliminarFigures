@@ -129,7 +129,7 @@ ShaderSourceCode Shader::parseShader(const char* filePath)
 
      if (location == -1)
      {
-         std::cout << "Uniform " << uniformName << " not found!" << std::endl;
+         //std::cout << "Uniform " << uniformName << " not found!" << std::endl;
      }
 
      return location;
@@ -139,6 +139,18 @@ void Shader::SetUniform4f(std::string uniformName, const glm::vec4& values)
 {
     Bind();
     glUniform4f(GetUniformLocation(uniformName), values.x, values.y, values.z, values.t);
+}
+
+void Shader::SetUniform3f(std::string uniformName, const glm::vec3& values)
+{
+    Bind();
+    glUniform3f(GetUniformLocation(uniformName), values.x, values.y, values.z);
+}
+
+void Shader::SetUniform1f(std::string uniformName, const float& value)
+{
+    Bind();
+    glUniform1f(GetUniformLocation(uniformName), value);
 }
 
 void Shader::SetUniform1i(std::string uniformName, int value)

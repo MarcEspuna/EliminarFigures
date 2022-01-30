@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
-#include "Object.h"
+#include "BasicObject.h"
 #include "TextureObject.h"
 #include <unordered_map>
 #include <future>
@@ -31,14 +31,14 @@ namespace Level {
 
 
 	private:
-		Object Horse;
-		Object HLine;
-		Object VLine;
-		Object CQuad;
-		Object Star;
-		Object Rings;
-		Object Covid;
-		Object Satellite;
+		BasicObject Horse;
+		BasicObject HLine;
+		BasicObject VLine;
+		BasicObject CQuad;
+		BasicObject Star;
+		BasicObject Rings;
+		BasicObject Covid;
+		BasicObject Satellite;
 
 
 		TextureObject tex_GameOver;

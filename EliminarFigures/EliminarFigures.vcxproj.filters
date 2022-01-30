@@ -93,6 +93,12 @@
     <ClCompile Include="NormalLevel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\GLFW\glfw3.h">
@@ -1058,6 +1064,12 @@
     <ClInclude Include="ImguiVariables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\vendor\glm\detail\func_common.inl">
@@ -1480,6 +1492,7 @@
     <None Include="res\Basic.shader" />
     <None Include="res\TexBasic.shader" />
     <None Include="imgui.ini" />
+    <None Include="res\BasicLight.shader" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\libs\glew32s.lib" />

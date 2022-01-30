@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
-#include "Object.h"
+#include "ObjectLight.h"
 #include "TextureObject.h"
 #include <unordered_map>
 #include <future>
@@ -36,15 +36,20 @@ namespace Level {
 
 		Renderer renderer;
 
-		glm::mat4 m_Proj = glm::ortho(-640.0f, 640.0f, -360.0f, 360.0f);
-		glm::mat4 m_View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		glm::mat4 m_Proj = glm::ortho(-16.0f, 9.0f, -16.0f, 9.0f);
 
-		std::vector<Object> worldBuffer;
+
+		glm::mat4 m_View = glm::lookAt(
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, 0.0f, 1.0f),
+			glm::vec3(0.0f, 1.0f, 0.0f)
+		);
+
+		std::vector<ObjectLight> worldBuffer;
 
 		GLFWwindow* ptr_window = nullptr;
 
 		RandomGenerator random;
-
 
 		void RegisterObjects();
 

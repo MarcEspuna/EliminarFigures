@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AiPlayer.cpp" />
+    <ClCompile Include="BasicObject.cpp" />
     <ClCompile Include="CollisionDetector.cpp" />
     <ClCompile Include="EasyTest.cpp" />
     <ClCompile Include="HardTest.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="MediumTest.cpp" />
     <ClCompile Include="NormalLevel.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjectLight.cpp" />
     <ClCompile Include="ObjParser.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="res\vendor\glm\detail\glm.cpp" />
@@ -181,12 +183,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AiPlayer.h" />
+    <ClInclude Include="BasicObject.h" />
     <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="EasyTest.h" />
     <ClInclude Include="ImguiVariables.h" />
     <ClInclude Include="MediumTest.h" />
     <ClInclude Include="NormalLevel.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectLight.h" />
     <ClInclude Include="ObjParser.h" />
     <ClInclude Include="PositionsBuffers.h" />
     <ClInclude Include="dependencies\GLFW\glfw3.h" />
@@ -505,6 +509,7 @@
   <ItemGroup>
     <None Include="imgui.ini" />
     <None Include="res\Basic.shader" />
+    <None Include="res\BasicLight.shader" />
     <None Include="res\TexBasic.shader" />
     <None Include="res\vendor\glm\detail\func_common.inl" />
     <None Include="res\vendor\glm\detail\func_common_simd.inl" />

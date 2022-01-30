@@ -11,21 +11,21 @@
 class Object
 {
 public:
+
 	Object(const char* filePath);
 	Object(const char* filePath, glm::vec4 color);
 	Object(const char* filePath, float scale);
 	Object(const char* filePath, glm::vec4 color, float scale);
+	Object(const char* filePath, glm::vec4 color, float scale, const char* shaderPath);
 	Object(const char* filePath, glm::vec4 color, glm::vec3 scale);
-	~Object();
 
-	std::function<void(glm::mat4&, const glm::vec2& ,glm::vec4&, const float&, glm::vec3& movement)> f_ModelColorUpdate =
-		[&](glm::mat4& model, const glm::vec2& oneVertex ,glm::vec4& color, const float& deltaTime, glm::vec3& movement) {};
 
-	void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar);
+	virtual void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar) = 0;
+	virtual void setUniform(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view) = 0;
+	virtual void Bind() const;
+
 	void TrackCollisionWith(Object* otherObject);
 	void New(const glm::mat4& u_NewModel, const glm::vec3& movement = { 1.0f,1.0f,1.0f });
-	void Bind() const;
-	void setUniform(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view);
 
 	inline std::vector<glm::mat4>& GetModels() { return vec_Model; }
 	inline const glm::vec4& GetColor() { return u_Color; } 
@@ -41,7 +41,7 @@ public:
 	inline size_t getIboCount() const { return ibo.GetCount(); };
 	inline size_t size() const { return vec_Model.size(); }
 
-private:
+protected:
 
 	ObjParser m_Data;
 	VertexArray vao;
