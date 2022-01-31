@@ -14,6 +14,7 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
+	void AddBuffer(const VertexBuffer& vbo, const VertexArrayLayout& layout, const unsigned int& shaderID);
 	void AddBuffer(const VertexBuffer& vbo, const VertexArrayLayout& layout);
 
 private:

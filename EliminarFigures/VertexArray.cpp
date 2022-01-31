@@ -28,10 +28,30 @@ void VertexArray::Unbind() const
 	glBindVertexArray(0);
 }
 
-void VertexArray::AddBuffer(const VertexBuffer& vbo, const VertexArrayLayout& layout)
+void VertexArray::AddBuffer(const VertexBuffer& vbo, const VertexArrayLayout& layout, const unsigned int& shaderID)
 {
 	uint16_t offset = 0;
 	
+	Bind();
+	vbo.Bind();
+
+	const auto& elements = layout.GetLayouts();
+
+	for (const auto& element : elements)
+	{
+		GLuint attribLoc = glGetAttribLocation(shaderID, element.u_name.c_str());
+		glEnableVertexAttribArray(attribLoc);
+		glVertexAttribPointer(attribLoc, element.count, element.type, element.normalized, layout.GetStride(), (const void*)offset);
+		offset += element.GetSize() * element.count;
+		m_AttributesCount++;
+	}	
+
+}
+
+void VertexArray::AddBuffer(const VertexBuffer& vbo, const VertexArrayLayout& layout)
+{
+	uint16_t offset = 0;
+
 	Bind();
 	vbo.Bind();
 
@@ -43,6 +63,5 @@ void VertexArray::AddBuffer(const VertexBuffer& vbo, const VertexArrayLayout& la
 		glVertexAttribPointer(m_AttributesCount, element.count, element.type, element.normalized, layout.GetStride(), (const void*)offset);
 		offset += element.GetSize() * element.count;
 		m_AttributesCount++;
-	}	
-
+	}
 }

@@ -39,10 +39,16 @@ public:
 		glDrawElements(GL_QUADS, (GLsizei)ibo.GetCount(), GL_UNSIGNED_INT, 0);
 	}
 
-	void Clear()
+	void ClearColor()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
+
+	void ClearDepth()
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+
 
 private:
 

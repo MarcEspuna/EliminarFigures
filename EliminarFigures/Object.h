@@ -12,17 +12,22 @@ class Object
 {
 public:
 
-	Object(const char* filePath);
-	Object(const char* filePath, glm::vec4 color);
-	Object(const char* filePath, float scale);
-	Object(const char* filePath, glm::vec4 color, float scale);
-	Object(const char* filePath, glm::vec4 color, float scale, const char* shaderPath);
-	Object(const char* filePath, glm::vec4 color, glm::vec3 scale);
+	Object();
+	Object(glm::vec4 color);
+	Object(float scale);
+	Object(glm::vec4 color, float scale);
+	Object(glm::vec4 color, float scale, const char* shaderPath);
+	Object(glm::vec4 color, glm::vec3 scale);
+
 
 
 	virtual void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar) = 0;
 	virtual void setUniform(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view) = 0;
 	virtual void Bind() const;
+	virtual size_t GetVertexSize() { return 0; };
+	virtual size_t GetIndexSize() { return 0; };
+	virtual std::vector<unsigned int>& GetIndex();
+	virtual std::vector<float>& GetVertex();
 
 	void TrackCollisionWith(Object* otherObject);
 	void New(const glm::mat4& u_NewModel, const glm::vec3& movement = { 1.0f,1.0f,1.0f });
@@ -31,10 +36,7 @@ public:
 	inline const glm::vec4& GetColor() { return u_Color; } 
 	inline VertexArray& GetVao() { return vao; }
 	inline IndexBuffer& GetIbo() { return ibo; }
-	inline size_t GetVertexSize() { return m_Data.GetVerticesIn2D().size(); }
-	inline size_t GetIndexSize() { return m_Data.GetIndexes().size(); }
-	inline std::vector<unsigned int>& GetIndex() { return m_Data.GetIndexes(); }
-	inline std::vector<float>& GetVertex() { return m_Data.GetVerticesIn2D(); }
+
 	inline bool GetCollisionStatus() { return collision.GetStatus(); }
 	inline void CollisionEnd() { collision.End(); }
 	inline std::vector<glm::vec3>& GetMovementValues() { return movementValues; }
@@ -43,7 +45,6 @@ public:
 
 protected:
 
-	ObjParser m_Data;
 	VertexArray vao;
 	VertexBuffer vbo;
 	IndexBuffer ibo;
@@ -60,3 +61,9 @@ protected:
 
 };
 
+enum class ObjectType
+{
+	LIGHT_OBJECT,
+	BASIC_OBJECT,
+	UNSUPORTED_OBJECT
+};

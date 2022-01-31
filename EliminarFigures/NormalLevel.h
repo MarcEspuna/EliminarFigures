@@ -2,8 +2,8 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
-//#include "ObjectReader.h"
 #include "ObjectLight.h"
+#include "ObjectReader.h"
 #include "TextureObject.h"
 #include <unordered_map>
 #include <future>
@@ -33,7 +33,7 @@ namespace Level {
 	private:
 
 		Renderer renderer;
-		//ObjectReader objectReader;
+		ObjectReader objectReader;
 
 		glm::mat4 m_Proj = glm::ortho(-640.0f , 640.0f, -360.0f, 360.0f, -640.0f, 640.0f);
 
@@ -43,7 +43,7 @@ namespace Level {
 			glm::vec3(0.0f, 1.0f, 0.0f)
 		);
 
-		std::vector<ObjectLight> worldBuffer;
+		std::vector<Object*> worldBuffer;
 
 		GLFWwindow* ptr_window = nullptr;
 

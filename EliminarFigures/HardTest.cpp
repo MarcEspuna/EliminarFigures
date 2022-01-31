@@ -180,7 +180,6 @@ void Level::HardTest::OnUpdate(float deltaTime, bool& testExit)
 
 void Level::HardTest::OnRender()
 {
-    renderer.Clear();
     //A for loop for rendering the texture objects:
 
     for (auto& object : WorldBuffer)

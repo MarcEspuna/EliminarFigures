@@ -195,7 +195,6 @@ void Level::MediumTest::OnUpdate(float deltaTime, bool& testExit)
 
 void Level::MediumTest::OnRender()
 {
-    renderer.Clear();
     //A for loop for rendering the texture objects:
 
     for (auto& object : WorldBuffer)
