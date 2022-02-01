@@ -6,6 +6,7 @@
 #include "CollisionDetector.h"
 #include "ImguiVariables.h"
 #include "Shader.h"
+#include "SquareCollider.h"
 #include <functional>
 
 class Object
@@ -15,8 +16,8 @@ public:
 	Object();
 	Object(glm::vec4 color);
 	Object(float scale);
-	Object(glm::vec4 color, float scale);
-	Object(glm::vec4 color, float scale, const char* shaderPath);
+	Object(glm::vec4 color,const char* shaderPath);
+	Object(glm::vec4 color,const char* shaderPath, const tinyobj::shape_t& shape, const glm::mat4& u_Model);
 	Object(glm::vec4 color, glm::vec3 scale);
 
 
@@ -30,7 +31,13 @@ public:
 	virtual std::vector<float>& GetVertex();
 
 	void TrackCollisionWith(Object* otherObject);
+	void UpdateCollisionWith(Object* other);
 	void New(const glm::mat4& u_NewModel, const glm::vec3& movement = { 1.0f,1.0f,1.0f });
+
+	void moveUP(const float& deltaTime, const float& sensitivity);
+	void moveDown(const float& deltaTime, const float& sensitivity);
+	void moveRight(const float& deltaTime, const float& sensitivity);
+	void moveLeft(const float& deltaTime, const float& sensitivity);
 
 	inline std::vector<glm::mat4>& GetModels() { return vec_Model; }
 	inline const glm::vec4& GetColor() { return u_Color; } 
@@ -49,6 +56,7 @@ protected:
 	VertexBuffer vbo;
 	IndexBuffer ibo;
 	CollisionDetector collision;
+	SquareCollider m_SquareCollider;
 	Shader shader;
 
 	std::vector<glm::mat4> vec_Model;					//Canviar a vector per si volem renderitzar el mateix vao en varios llocs

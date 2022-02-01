@@ -7,7 +7,7 @@
 #include "ObjectLight.h"
 
 ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model)
-	: Object(glm::vec4(1.0f,1.0f,1.0f,1.0f), 20.0f, "res/BasicLight.shader")
+	: Object(glm::vec4(1.0f,1.0f,1.0f,1.0f), "res/BasicLight.shader")
 {
 	shader.Bind();
 	VertexArrayLayout layout;
@@ -25,7 +25,7 @@ ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model)
 	vec_Model.push_back(u_Model);
 	u_MVP.push_back(glm::mat4(1.0f));
 	movementValues.push_back({ 1.0f, 1.0f, 1.0f });
-
+	m_SquareCollider = SquareCollider(u_Model, shape);
 }
 
 void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar)
@@ -37,7 +37,14 @@ void ObjectLight::setUniform(size_t objectIndex, const glm::mat4& projection, co
 {	
 	shader.Bind();
 	glm::vec3 lightPosition = glm::vec3(2000.0f, 0.0f, -2000.0f); 
-	shader.SetUniform4f("u_Color", GetColor());     //Set the color Uniform
+	if (m_SquareCollider.thereIsCollision())
+	{
+		shader.SetUniform4f("u_Color", glm::vec4(1.0f, 0.0f,0.0f,1.0f));     //Set the color Uniform
+	}
+	else
+	{
+		shader.SetUniform4f("u_Color", GetColor());     //Set the color Uniform
+	}
 	shader.SetUniform4Mat("u_Model", vec_Model[objectIndex]);		
 	shader.SetUniform4Mat("u_View", view);
 	shader.SetUniform4Mat("u_Proj", projection);
@@ -47,6 +54,7 @@ void ObjectLight::setUniform(size_t objectIndex, const glm::mat4& projection, co
 	shader.SetUniform3f("u_specular", glm::vec3(1.0f, 1.0f, 1.0f));
 	shader.SetUniform1f("u_shininess", 20.0f);
 }
+
 
 void ObjectLight::Bind() const
 {

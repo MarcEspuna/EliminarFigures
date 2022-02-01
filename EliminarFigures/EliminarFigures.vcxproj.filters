@@ -102,6 +102,9 @@
     <ClCompile Include="ObjectReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SquareCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\GLFW\glfw3.h">
@@ -1077,6 +1080,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObjectReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SquareCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

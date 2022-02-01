@@ -33,7 +33,7 @@ BasicObject::BasicObject(const char* filePath, glm::vec4 color)
 BasicObject::BasicObject(const char* filePath, float scale)
 	: Object(scale), m_Data(filePath)
 {
-	m_Data.SetVertexScale(glm::vec3(scale, scale, 0.0f));
+	m_Data.SetVertexScale(glm::vec3(scale, scale, 1.0f));
 	VertexArrayLayout layout;
 	vbo.LoadData(&m_Data.GetVerticesIn2D()[0], m_Data.GetVerticesIn2D().size() * sizeof(float));
 	ibo.LoadData(&m_Data.GetIndexes()[0], m_Data.GetIndexes().size() * sizeof(unsigned int));
@@ -45,9 +45,9 @@ BasicObject::BasicObject(const char* filePath, float scale)
 }
 
 BasicObject::BasicObject(const char* filePath, glm::vec4 color, float scale)
-	: Object(color,scale), m_Data(filePath)
+	: Object(color), m_Data(filePath)
 {
-	m_Data.SetVertexScale(glm::vec3(scale, scale, 0.0f));
+	m_Data.SetVertexScale(glm::vec3(scale, scale, 1.0f));
 	VertexArrayLayout layout;
 	vbo.LoadData(&m_Data.GetVerticesIn2D()[0], m_Data.GetVerticesIn2D().size() * sizeof(float));
 	ibo.LoadData(&m_Data.GetIndexes()[0], m_Data.GetIndexes().size() * sizeof(unsigned int));
@@ -60,9 +60,9 @@ BasicObject::BasicObject(const char* filePath, glm::vec4 color, float scale)
 
 
 BasicObject::BasicObject(const char* filePath, glm::vec4 color, float scale, const char* shaderPath)
-	: Object(color, scale, shaderPath), m_Data(filePath)
+	: Object(color, shaderPath), m_Data(filePath)
 {
-	m_Data.SetVertexScale(glm::vec3(scale, scale, 0.0f));
+	m_Data.SetVertexScale(glm::vec3(scale, scale, 1.0f));
 	VertexArrayLayout layout;
 	vbo.LoadData(&m_Data.GetVerticesIn2D()[0], m_Data.GetVerticesIn2D().size() * sizeof(float));
 	ibo.LoadData(&m_Data.GetIndexes()[0], m_Data.GetIndexes().size() * sizeof(unsigned int));
@@ -87,6 +87,20 @@ BasicObject::BasicObject(const char* filePath, glm::vec4 color, glm::vec3 scale)
 	movementValues.push_back({ 1.0f, 1.0f, 1.0f });
 }
 
+
+BasicObject::BasicObject(const char* filePath, glm::vec4 color, glm::vec3 scale, const glm::mat4& u_Model)
+	: Object(color, scale), m_Data(filePath)
+{
+	m_Data.SetVertexScale(scale);
+	VertexArrayLayout layout;
+	vbo.LoadData(&m_Data.GetVerticesIn2D()[0], m_Data.GetVerticesIn2D().size() * sizeof(float));
+	ibo.LoadData(&m_Data.GetIndexes()[0], m_Data.GetIndexes().size() * sizeof(unsigned int));
+	layout.Push<float>(2);
+	vao.AddBuffer(vbo, layout);
+	vec_Model.push_back(u_Model);
+	u_MVP.push_back(glm::mat4(1.0f));
+	movementValues.push_back({  1.0f, 1.0f, 1.0f });
+}
 
 void BasicObject::OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar)
 {

@@ -17,7 +17,9 @@
 #include <tuple>
 
 Level::NormalLevel::NormalLevel()
-    
+    : cursor({ new BasicObject("res/obj/HLine.obj", glm::vec4(0.7, 0.1, 0.1, 1.0f), glm::vec3(1.0f, 0.4f, 1.0f)),
+               new BasicObject("res/obj/VLine.obj", glm::vec4(0.1, 0.2, 0.7, 1.0f), glm::vec3(0.4f, 1.0f, 1.0f)),
+               new BasicObject("res/obj/CQuad.obj", glm::vec4(1.0f, 0.96f, 0.22f, 1.0f), glm::vec3(0.4f, 0.4f, 1.0f))})
 {
     //Loading the objects of the current level:
     LoadObjectFiles();
@@ -35,6 +37,9 @@ Level::NormalLevel::~NormalLevel()
     {
         delete worldBuffer[i];
     }
+    delete cursor.CQuad;
+    delete cursor.HLine;
+    delete cursor.VLine;
     std::cout << "[NORMAL LEVEL]: Default Level destoyed. " << std::endl;
     glDisable(GL_DEPTH_TEST);
 }
@@ -45,16 +50,27 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
     for (auto& object : worldBuffer)
     {
         object->OnObjectUpdate(false, 0, random);
+        object->UpdateCollisionWith(cursor.CQuad);
     }
+
+    updateCursor(deltaTime);
+
 }
 
 void Level::NormalLevel::OnRender()
 {
     renderer.ClearDepth();
+    //Render all the world space objects:
     for (auto& object : worldBuffer)
     {
         renderer.Draw(*object, m_Proj, m_View);                  //Each pass will draw all the objects of the current shape object
     }
+    glDisable(GL_DEPTH_TEST);
+    //Render the user cursor:
+    renderer.Draw(*cursor.VLine, m_Proj, m_View);
+    renderer.Draw(*cursor.HLine, m_Proj, m_View);
+    renderer.Draw(*cursor.CQuad, m_Proj, m_View);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void Level::NormalLevel::OnImGuiRender()
@@ -66,18 +82,14 @@ void Level::NormalLevel::OnImGuiRender()
 void Level::NormalLevel::LoadObjectFiles()
 {
     //We define the objects that we want to load:
-    std::vector<std::string> filenames = { "teapot.obj" , "Icosphere.obj" };
     std::vector<ObjectArguments> objectArguments = { 
         {"teapot.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::mat4(1.0f), glm::vec3(100.0f,100.0f,100.0f))},
-        {"Icosphere.obj", ObjectType::LIGHT_OBJECT, glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(80.0f,80.0f,80.0f)), glm::vec3(-5.0f,0.0f,0.0f))},
-        {"square.obj", ObjectType::LIGHT_OBJECT, glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(25.0f,25.0f,25.0f)), glm::vec3(20.0f,0.0f,0.0f))},
-        {"bunny.obj", ObjectType::LIGHT_OBJECT, glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(600.0f,600.0f,600.0f)), glm::vec3(0.25f,0.25f,0.0f))},
-        {"monkey.obj", ObjectType::LIGHT_OBJECT, glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(60.0f,60.0f,60.0f)), glm::vec3(0.0f,-3.0f,0.0f))},
-        {"torus.obj", ObjectType::LIGHT_OBJECT, glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(40.0f,40.0f,40.0f)), glm::vec3(-5.0f,3.0f,0.0f))}
+        {"Icosphere.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f,0.0f,0.0f)),  glm::vec3(80.0f,80.0f,80.0f))},
+        {"square.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(400.0f,0.0f,0.0f)),  glm::vec3(25.0f,25.0f,25.0f))},
+        {"bunny.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(400.0f,200.0f,0.0f)), glm::vec3(600.0f,600.0f,600.0f))},
+        {"torus.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f,200.0f,0.0f)),  glm::vec3(40.0f,40.0f,40.0f))}
     };
-
     objectReader.loadObjectFiles(objectArguments, "res/obj/");
-
 }
 
 /* It will create all the available objects to be rendered in the current level, in other words, we add the objects in the worldbuffer*/
@@ -85,4 +97,39 @@ void Level::NormalLevel::BuildObjects()
 {
     objectReader.buildObjects(worldBuffer);
 }
+
+void Level::NormalLevel::updateCursor(const float& deltaTime)
+{
+    int state = glfwGetKey(ptr_window, GLFW_KEY_W);
+    if (state == GLFW_PRESS)
+    {
+        cursor.CQuad->moveUP(deltaTime, 6.0f);
+        cursor.HLine->moveUP(deltaTime, 6.0f);
+    }
+
+    int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
+    if (state1 == GLFW_PRESS)
+    {
+        cursor.CQuad->moveDown(deltaTime, 6.0f);
+        cursor.HLine->moveDown(deltaTime, 6.0f);
+    }
+
+    int state2 = glfwGetKey(ptr_window, GLFW_KEY_RIGHT);
+    if (state2 == GLFW_PRESS)
+    {
+        cursor.CQuad->moveRight(deltaTime, 6.0f);
+        cursor.VLine->moveRight(deltaTime, 6.0f);
+    }
+
+    int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
+    if (state3 == GLFW_PRESS)
+    {
+        cursor.CQuad->moveLeft(deltaTime, 6.0f);
+        cursor.VLine->moveLeft(deltaTime, 6.0f);
+    }
+
+}
+
+
+
 

@@ -18,6 +18,7 @@ public:
 	BasicObject(const char* filePath, glm::vec4 color, float scale);
 	BasicObject(const char* filePath, glm::vec4 color, float scale, const char* shaderPath);
 	BasicObject(const char* filePath, glm::vec4 color, glm::vec3 scale);
+	BasicObject(const char* filePath, glm::vec4 color, glm::vec3 scale, const glm::mat4& u_Model);
 
 	size_t GetVertexSize() override { return m_Data.GetVerticesIn2D().size(); }
 	size_t GetIndexSize() override { return m_Data.GetIndexes().size(); }

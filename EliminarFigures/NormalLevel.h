@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "ObjParser.h"
 #include "ObjectLight.h"
+#include "BasicObject.h"
 #include "ObjectReader.h"
 #include "TextureObject.h"
 #include <unordered_map>
@@ -13,6 +14,13 @@
 
 
 namespace Level {
+
+	struct Cursor
+	{
+		Object* HLine;
+		Object* VLine;
+		Object* CQuad;
+	};
 
 	class NormalLevel : public Level
 
@@ -35,7 +43,8 @@ namespace Level {
 		Renderer renderer;
 		ObjectReader objectReader;
 
-		glm::mat4 m_Proj = glm::ortho(-640.0f , 640.0f, -360.0f, 360.0f, -640.0f, 640.0f);
+
+		glm::mat4 m_Proj = glm::ortho(640.0f , -640.0f, -360.0f, 360.0f, -640.0f, 640.0f);
 
 		glm::mat4 m_View = glm::lookAt(
 			glm::vec3(0.0f, 0.0f, 0.0f),
@@ -44,6 +53,7 @@ namespace Level {
 		);
 
 		std::vector<Object*> worldBuffer;
+		Cursor cursor;
 
 		GLFWwindow* ptr_window = nullptr;
 
@@ -51,7 +61,7 @@ namespace Level {
 
 		void BuildObjects();
 		void LoadObjectFiles();
-
+		void updateCursor(const float& deltaTime);
 
 	};
 	
