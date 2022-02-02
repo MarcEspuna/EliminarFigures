@@ -30,14 +30,31 @@ ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model)
 
 void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar)
 {
-	vec_Model[0] = glm::rotate(vec_Model[0], 0.0001f, glm::vec3(0.0f, 1.0f, 0.0f));
+	for (size_t i = 0; i < vec_Model.size(); i++)
+	{
+		if (hit)
+		{
+			objectMovement.scale(1.0f - deltaTime / 10.0f, vec_Model[i], m_SquareCollider);
+			objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i]);
+		}
+		else if (m_SquareCollider.thereIsCollision() && deleteObject)
+		{
+			hit = true;
+		}
+		objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i]);
+		checkExistance(i);
+	}
 }
 
 void ObjectLight::setUniform(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view)
 {	
 	shader.Bind();
 	glm::vec3 lightPosition = glm::vec3(2000.0f, 0.0f, -2000.0f); 
-	if (m_SquareCollider.thereIsCollision())
+	if (m_SquareCollider.thereIsCollision() && !hit)
+	{
+		shader.SetUniform4f("u_Color", glm::vec4(0.39f, 0.11f, 0.78f, 1.0f));
+	}
+	else if (hit)
 	{
 		shader.SetUniform4f("u_Color", glm::vec4(1.0f, 0.0f,0.0f,1.0f));     //Set the color Uniform
 	}
@@ -63,6 +80,15 @@ void ObjectLight::Bind() const
 	vbo.Bind();
 	ibo.Bind();
 	shader.Bind();
+}
+
+void ObjectLight::checkExistance(size_t modelIndex)
+{
+	if (objectMovement.getScale() < 0.02f && modelIndex < vec_Model.size())
+	{
+		vec_Model.erase(vec_Model.begin() + modelIndex);
+		hit = false;
+	}
 }
 
 

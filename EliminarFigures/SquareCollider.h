@@ -23,6 +23,9 @@ public:
 	void moveDown(const float& deltaTime, const float& sensitivity);
 	void moveRight(const float& deltaTime, const float& sensitivity);
 	void moveLeft(const float& deltaTime, const float& sensitivity);
+	void moveTo(const glm::vec3& position);
+	void move(const glm::vec3& direction);
+	void scale(const float& scale);
 	
 	inline bool thereIsCollision() { return m_Collided; }
 

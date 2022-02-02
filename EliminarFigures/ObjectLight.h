@@ -14,6 +14,7 @@ public:
 
 private:
 	VertexBuffer vboNormals;
+	void checkExistance(size_t modelIndex);
 
 };
 

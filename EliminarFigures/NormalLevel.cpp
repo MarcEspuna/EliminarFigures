@@ -47,14 +47,15 @@ Level::NormalLevel::~NormalLevel()
 void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
 {
     ImguiVariables random;
+    size_t newLevel = 0;
     for (auto& object : worldBuffer)
     {
-        object->OnObjectUpdate(false, 0, random);
         object->UpdateCollisionWith(cursor.CQuad);
+        object->OnObjectUpdate(userHitKey(), deltaTime, random);
+        newLevel += object->size();
     }
-
     updateCursor(deltaTime);
-
+    if (!newLevel) { createNewLevel(); }
 }
 
 void Level::NormalLevel::OnRender()
@@ -83,11 +84,11 @@ void Level::NormalLevel::LoadObjectFiles()
 {
     //We define the objects that we want to load:
     std::vector<ObjectArguments> objectArguments = { 
-        {"teapot.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::mat4(1.0f), glm::vec3(100.0f,100.0f,100.0f))},
+        {"teapot.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,30.0f,0.0f)), glm::vec3(100.0f,100.0f,100.0f))},
         {"Icosphere.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f,0.0f,0.0f)),  glm::vec3(80.0f,80.0f,80.0f))},
         {"square.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(400.0f,0.0f,0.0f)),  glm::vec3(25.0f,25.0f,25.0f))},
         {"bunny.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(400.0f,200.0f,0.0f)), glm::vec3(600.0f,600.0f,600.0f))},
-        {"torus.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f,200.0f,0.0f)),  glm::vec3(40.0f,40.0f,40.0f))}
+        {"torus.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f,200.0f,0.0f)),  glm::vec3(40.0f,40.0f,40.0f))},
     };
     objectReader.loadObjectFiles(objectArguments, "res/obj/");
 }
@@ -129,6 +130,28 @@ void Level::NormalLevel::updateCursor(const float& deltaTime)
     }
 
 }
+
+bool Level::NormalLevel::userHitKey()
+{
+    int state = glfwGetKey(ptr_window, GLFW_KEY_ENTER);
+    if (state == GLFW_PRESS)
+    {
+        return true;
+    }
+    return false;
+}
+
+void Level::NormalLevel::createNewLevel()
+{
+    for (auto& object : worldBuffer)
+    {
+        //object->New(glm::mat4(1.0f));
+        object->New(random);
+    }
+    std::cout << "new level\n";
+}
+
+
 
 
 

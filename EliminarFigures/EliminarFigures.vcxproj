@@ -164,6 +164,7 @@
     <ClCompile Include="NormalLevel.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectLight.cpp" />
+    <ClCompile Include="ObjectMovement.cpp" />
     <ClCompile Include="ObjectReader.cpp" />
     <ClCompile Include="ObjParser.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="NormalLevel.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectLight.h" />
+    <ClInclude Include="ObjectMovement.h" />
     <ClInclude Include="ObjectReader.h" />
     <ClInclude Include="ObjParser.h" />
     <ClInclude Include="PositionsBuffers.h" />

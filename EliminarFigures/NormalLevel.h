@@ -62,6 +62,8 @@ namespace Level {
 		void BuildObjects();
 		void LoadObjectFiles();
 		void updateCursor(const float& deltaTime);
+		bool userHitKey();
+		void createNewLevel();
 
 	};
 	

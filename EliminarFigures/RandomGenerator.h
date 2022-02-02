@@ -7,8 +7,8 @@ public:
 	RandomGenerator();
 	~RandomGenerator();
 
-	int GetValue(int lowValue, int HighValue);
-	void Randomize();
+	int GetValue(int lowValue, int HighValue) const;
+	void Randomize() const;
 
 private:
 

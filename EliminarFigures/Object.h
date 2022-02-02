@@ -7,6 +7,8 @@
 #include "ImguiVariables.h"
 #include "Shader.h"
 #include "SquareCollider.h"
+#include "ObjectMovement.h"
+#include "RandomGenerator.h"
 #include <functional>
 
 class Object
@@ -33,6 +35,7 @@ public:
 	void TrackCollisionWith(Object* otherObject);
 	void UpdateCollisionWith(Object* other);
 	void New(const glm::mat4& u_NewModel, const glm::vec3& movement = { 1.0f,1.0f,1.0f });
+	void New(const RandomGenerator& random);
 
 	void moveUP(const float& deltaTime, const float& sensitivity);
 	void moveDown(const float& deltaTime, const float& sensitivity);
@@ -49,14 +52,21 @@ public:
 	inline std::vector<glm::vec3>& GetMovementValues() { return movementValues; }
 	inline size_t getIboCount() const { return ibo.GetCount(); };
 	inline size_t size() const { return vec_Model.size(); }
+	inline void objectSelected() { selected = true; }
+	inline void objectUnSelected() { selected = false; }
+	inline void objectHit() { hit = true; }
 
 protected:
+
+	bool selected;
+	bool hit;
 
 	VertexArray vao;
 	VertexBuffer vbo;
 	IndexBuffer ibo;
 	CollisionDetector collision;
 	SquareCollider m_SquareCollider;
+	ObjectMovement objectMovement;
 	Shader shader;
 
 	std::vector<glm::mat4> vec_Model;					//Canviar a vector per si volem renderitzar el mateix vao en varios llocs

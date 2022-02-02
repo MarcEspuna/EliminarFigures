@@ -45,6 +45,29 @@ void SquareCollider::moveLeft(const float& deltaTime, const float& sensitivity)
 	m_SquareColider.x -= deltaTime * sensitivity;
 }
 
+void SquareCollider::moveTo(const glm::vec3& position)
+{
+	m_SquareColider.x = position.x - m_SquareColider.xSize / 2.0f;
+	m_SquareColider.y = position.y - m_SquareColider.ySize / 2.0f;
+}
+
+void SquareCollider::move(const glm::vec3& direction)
+{
+	m_SquareColider.x += direction.x;
+	m_SquareColider.y += direction.y;
+
+}
+
+void SquareCollider::scale(const float& scale)
+{
+	float xRange = m_SquareColider.xSize/2.0f;
+	float yRange = m_SquareColider.ySize/2.0f;
+	m_SquareColider.x += xRange * (1.0f - scale);
+	m_SquareColider.y += yRange * (1.0f - scale);
+	m_SquareColider.xSize = m_SquareColider.xSize * scale;
+	m_SquareColider.ySize = m_SquareColider.ySize * scale;
+}
+
 void SquareCollider::checkCollision(const SquareCollider& other)
 {
 	// collision x-axis?
@@ -72,7 +95,6 @@ const std::vector<float> SquareCollider::updateObjectPositions(const std::vector
 		updatedPositions.push_back(newPosition.y);
 		updatedPositions.push_back(newPosition.z);
 	}
-	std::cout << "size: " << positions.size() << std::endl;
 	return updatedPositions;
 }
 
