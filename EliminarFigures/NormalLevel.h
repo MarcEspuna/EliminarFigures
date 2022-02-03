@@ -53,6 +53,7 @@ namespace Level {
 		);
 
 		std::vector<Object*> worldBuffer;
+		Slot slot;
 		Cursor cursor;
 
 		GLFWwindow* ptr_window = nullptr;

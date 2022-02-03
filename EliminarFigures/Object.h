@@ -7,6 +7,7 @@
 #include "SquareCollider.h"
 #include "ObjectMovement.h"
 #include "RandomGenerator.h"
+#include "Slot.h"
 #include <functional>
 
 class Object  : public Entity
@@ -33,7 +34,7 @@ public:
 	void TrackCollisionWith(Object* otherObject);
 	float UpdateCollisionWith(Object* other);
 	void New(const glm::mat4& u_NewModel, const glm::vec3& movement = { 1.0f,1.0f,1.0f });
-	void New(const RandomGenerator& random);
+	void New(const RandomGenerator& random,	Slot& availableSlots);
 
 	void moveUP(const float& deltaTime, const float& sensitivity);
 	void moveDown(const float& deltaTime, const float& sensitivity);

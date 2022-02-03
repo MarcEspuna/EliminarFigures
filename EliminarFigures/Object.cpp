@@ -1,8 +1,8 @@
 #include "Object.h"
 #include "ObjParser.h"
 #include "VertexArrayLayout.h"
-#include "Slot.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include <unordered_map>
 #include <future>
 
 
@@ -44,16 +44,30 @@ void Object::New(const glm::mat4& u_NewModel, const glm::vec3& movement)
 	movementValues.push_back(movement);
 }
 
-void Object::New(const RandomGenerator& random)
+void Object::New(const RandomGenerator& random, Slot& slot)
 {
-	Slot slot;
-	//random.Randomize();
 	unsigned int index = std::abs(random.GetValue(0, 17));
+	bool available = slot.isAvailable(index);
+	while (!available)
+	{
+		if (index)
+		{
+			index--;
+			available = slot.isAvailable(index);
+		}
+		else
+		{
+			index = 17;
+			available = slot.isAvailable(index);
+		}
+	}
+
 	vec_Model.push_back(glm::scale(slot[index], glm::vec3(m_DefaultScale)));
 	objectMovement.reset(slot[index], 100.0f);
 	selected = false;
 	activeCollider = false;
 	hit = false;
+
 }
 
 void Object::moveUP(const float& deltaTime, const float& sensitivity)

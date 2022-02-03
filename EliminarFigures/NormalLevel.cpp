@@ -96,7 +96,6 @@ void Level::NormalLevel::OnImGuiRender()
 
 void Level::NormalLevel::LoadObjectFiles()
 {
-    Slot slot;
     //We define the objects that we want to load:
     std::vector<ObjectArguments> objectArguments = { 
         {"teapot.obj", ObjectType::LIGHT_OBJECT, slot[14], 100.0f},
@@ -158,10 +157,10 @@ bool Level::NormalLevel::userHitKey()
 
 void Level::NormalLevel::createNewLevel()
 {
+    slot.clear();
     for (auto& object : worldBuffer)
     {
-        //object->New(glm::mat4(1.0f));
-        object->New(random);
+        object->New(random, slot);
     }
 
 
