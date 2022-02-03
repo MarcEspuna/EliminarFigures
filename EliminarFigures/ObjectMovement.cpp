@@ -35,6 +35,13 @@ void ObjectMovement::scale(const float& scale, glm::mat4& model, SquareCollider&
 	collider.Update(model);
 }
 
+void ObjectMovement::reset(const glm::mat4& model,const float& scale, const float& rotation)
+{
+	m_Translation = glm::vec3(model[3][0], model[3][1], model[3][2]);
+	m_Scale = scale;
+	m_Rotation = rotation;
+}
+
 glm::mat4 ObjectMovement::calculateModelMatrix()
 {
 	glm::mat4 id = glm::translate(glm::mat4(1.0f), m_Translation);

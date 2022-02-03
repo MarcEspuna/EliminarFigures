@@ -6,8 +6,8 @@
 #include "obj_loader/tiny_obj_loader.h"
 #include "ObjectLight.h"
 
-ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model)
-	: Object(glm::vec4(1.0f,1.0f,1.0f,1.0f), "res/BasicLight.shader", shape, u_Model)
+ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model, const float& scale)
+	: Object(glm::vec4(1.0f,1.0f,1.0f,1.0f), "res/BasicLight.shader", shape, u_Model, scale)
 {
 	shader.Bind();
 	VertexArrayLayout layout;

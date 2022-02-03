@@ -1,6 +1,8 @@
 #include "Object.h"
 #include "ObjParser.h"
 #include "VertexArrayLayout.h"
+#include "Slot.h"
+#include "glm/gtc/matrix_transform.hpp"
 #include <future>
 
 
@@ -16,8 +18,8 @@ Object::Object(float scale)
 Object::Object(glm::vec4 color, const char* shaderPath)
 	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false) {}
 
-Object::Object(glm::vec4 color, const char* shaderPath, const tinyobj::shape_t& shape, const glm::mat4& u_Model)
-	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), m_SquareCollider(u_Model, shape) {}
+Object::Object(glm::vec4 color, const char* shaderPath, const tinyobj::shape_t& shape, const glm::mat4& u_Model, const float& scale)
+	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), m_SquareCollider(u_Model, shape), m_DefaultScale(scale) {}
 
 Object::Object(glm::vec4 color, glm::vec3 scale)
 	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {}
@@ -44,8 +46,14 @@ void Object::New(const glm::mat4& u_NewModel, const glm::vec3& movement)
 
 void Object::New(const RandomGenerator& random)
 {
-	random.Randomize();
-
+	Slot slot;
+	//random.Randomize();
+	unsigned int index = std::abs(random.GetValue(0, 17));
+	vec_Model.push_back(glm::scale(slot[index], glm::vec3(m_DefaultScale)));
+	objectMovement.reset(slot[index], 100.0f);
+	selected = false;
+	activeCollider = false;
+	hit = false;
 }
 
 void Object::moveUP(const float& deltaTime, const float& sensitivity)

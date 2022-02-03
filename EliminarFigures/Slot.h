@@ -2,7 +2,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-static struct Slot
+struct Slot
 {
 	//18 slots in total
 	glm::mat4 operator[](size_t index)

@@ -12,6 +12,7 @@ public:
 	glm::mat4 wsGoTo(const glm::vec3& position, SquareCollider& collider);
 	void rotateY(const float& angle, glm::mat4& model, SquareCollider& collider);
 	void scale(const float& scale, glm::mat4& model, SquareCollider& collider);
+	void reset(const glm::mat4& model, const float& scale, const float& rotation = 0.0f);
 	inline const float& getScale() const { return m_Scale; }
 
 private:

@@ -60,12 +60,11 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
         object->OnObjectUpdate(userHitKey(), deltaTime, random);
         newLevel += object->size();
 
-        if (distance < minDistance)
+        if (distance < minDistance && object->size() > 0)
         {
             closestObject = object;
             minDistance = distance;
         }
-
     }
     updateCursor(deltaTime);
     if (closestObject) { closestObject->isTarget(); }

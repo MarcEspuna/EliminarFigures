@@ -17,7 +17,7 @@ public:
 	Object(glm::vec4 color);
 	Object(float scale);
 	Object(glm::vec4 color,const char* shaderPath);
-	Object(glm::vec4 color,const char* shaderPath, const tinyobj::shape_t& shape, const glm::mat4& u_Model);
+	Object(glm::vec4 color,const char* shaderPath, const tinyobj::shape_t& shape, const glm::mat4& u_Model, const float& scale = 1.0f);
 	Object(glm::vec4 color, glm::vec3 scale);
 
 
@@ -64,6 +64,8 @@ protected:
 	bool selected;
 	bool hit;
 	bool activeCollider;
+
+	float m_DefaultScale = 1.0f;
 
 	CollisionDetector collision;						//Move to BasicObject
 	SquareCollider m_SquareCollider;
