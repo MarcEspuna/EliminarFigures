@@ -15,6 +15,7 @@
 
 #include "Texture.h"
 #include <tuple>
+#include "Slot.h"
 
 Level::NormalLevel::NormalLevel()
     : cursor({ new BasicObject("res/obj/HLine.obj", glm::vec4(0.7, 0.1, 0.1, 1.0f), glm::vec3(1.0f, 0.4f, 1.0f)),
@@ -96,13 +97,14 @@ void Level::NormalLevel::OnImGuiRender()
 
 void Level::NormalLevel::LoadObjectFiles()
 {
+    Slot slot;
     //We define the objects that we want to load:
     std::vector<ObjectArguments> objectArguments = { 
-        {"teapot.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,30.0f,0.0f)), glm::vec3(100.0f,100.0f,100.0f))},
-        {"Icosphere.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f,0.0f,0.0f)),  glm::vec3(80.0f,80.0f,80.0f))},
-        {"square.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(400.0f,0.0f,0.0f)),  glm::vec3(35.0f,35.0f,35.0f))},
-        {"bunny.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(400.0f,200.0f,0.0f)), glm::vec3(600.0f,600.0f,600.0f))},
-        {"torus.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f,200.0f,0.0f)),  glm::vec3(40.0f,40.0f,40.0f))},
+        {"teapot.obj", ObjectType::LIGHT_OBJECT, slot[14], 100.0f},
+        {"Icosphere.obj", ObjectType::LIGHT_OBJECT, slot[9], 80.0f},
+        {"square.obj", ObjectType::LIGHT_OBJECT, slot[11], 35.0f},
+        {"bunny.obj", ObjectType::LIGHT_OBJECT, slot[6], 600.0f},
+        {"torus.obj", ObjectType::LIGHT_OBJECT, slot[17], 40.0f}
     };
     objectReader.loadObjectFiles(objectArguments, "res/obj/");
 }

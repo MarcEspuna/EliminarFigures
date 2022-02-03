@@ -5,7 +5,8 @@ struct ObjectArguments
 {
 	std::string name;
 	ObjectType objectType;
-	glm::mat4 u_Model;
+	glm::mat4 slot;
+	float scale;
 };
 
 class ObjectReader

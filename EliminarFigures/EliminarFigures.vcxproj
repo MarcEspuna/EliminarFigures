@@ -181,6 +181,7 @@
     <ClCompile Include="res\vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="Slot.cpp" />
     <ClCompile Include="SquareCollider.cpp" />
     <ClCompile Include="SquareObject.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -512,6 +513,7 @@
     <ClInclude Include="res\vendor\stb_image\stb_image.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="Slot.h" />
     <ClInclude Include="SquareCollider.h" />
     <ClInclude Include="SquareObject.h" />
     <ClInclude Include="Texture.h" />
