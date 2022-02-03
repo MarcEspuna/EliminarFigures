@@ -21,17 +21,18 @@ glm::mat4 ObjectMovement::wsGoTo(const glm::vec3& position, SquareCollider& coll
 	return calculateModelMatrix();
 }
 
-void ObjectMovement::rotateY(const float& angle, glm::mat4& model)
+void ObjectMovement::rotateY(const float& angle, glm::mat4& model, SquareCollider& collider)
 {
 	m_Rotation += angle;
 	model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+	collider.Update(model);
 }
 
 void ObjectMovement::scale(const float& scale, glm::mat4& model, SquareCollider& collider)
 {
 	m_Scale = m_Scale * scale;
 	model = glm::scale(model, glm::vec3(scale, scale, scale));
-	collider.scale(scale);
+	collider.Update(model);
 }
 
 glm::mat4 ObjectMovement::calculateModelMatrix()

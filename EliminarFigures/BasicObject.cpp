@@ -15,7 +15,7 @@ BasicObject::BasicObject(const char* filePath)
 	vec_Model.push_back(glm::mat4(1.0f));
 	u_MVP.push_back(glm::mat4(1.0f));
 	movementValues.push_back({ 1.0f, 1.0f, 1.0f });
-	m_SquareCollider = SquareCollider(vec_Model[0], m_Data.GetVertices());
+	m_SquareCollider.Load(vec_Model[0], m_Data.GetVertices());
 }
 
 BasicObject::BasicObject(const char* filePath, glm::vec4 color)
@@ -29,7 +29,7 @@ BasicObject::BasicObject(const char* filePath, glm::vec4 color)
 	vec_Model.push_back(glm::mat4(1.0f));		
 	u_MVP.push_back(glm::mat4(1.0f));
 	movementValues.push_back({ 1.0f, 1.0f, 1.0f });
-	m_SquareCollider = SquareCollider(vec_Model[0], m_Data.GetVertices());
+	m_SquareCollider.Load(vec_Model[0], m_Data.GetVertices());
 }
 
 BasicObject::BasicObject(const char* filePath, float scale)
@@ -44,7 +44,7 @@ BasicObject::BasicObject(const char* filePath, float scale)
 	vec_Model.push_back(glm::mat4(1.0f));	
 	u_MVP.push_back(glm::mat4(1.0f));
 	movementValues.push_back({ 1.0f, 1.0f, 1.0f });
-	m_SquareCollider = SquareCollider(vec_Model[0], m_Data.GetVertices());
+	m_SquareCollider.Load(vec_Model[0], m_Data.GetVertices());
 }
 
 BasicObject::BasicObject(const char* filePath, glm::vec4 color, float scale)
@@ -59,7 +59,7 @@ BasicObject::BasicObject(const char* filePath, glm::vec4 color, float scale)
 	vec_Model.push_back(glm::mat4(1.0f));	
 	u_MVP.push_back(glm::mat4(1.0f));
 	movementValues.push_back({ 1.0f, 1.0f, 1.0f });
-	m_SquareCollider = SquareCollider(vec_Model[0], m_Data.GetVertices());
+	m_SquareCollider.Load(vec_Model[0], m_Data.GetVertices());
 }
 
 
@@ -75,7 +75,7 @@ BasicObject::BasicObject(const char* filePath, glm::vec4 color, float scale, con
 	vec_Model.push_back(glm::mat4(1.0f));
 	u_MVP.push_back(glm::mat4(1.0f));
 	movementValues.push_back({ 1.0f, 1.0f, 1.0f });
-	m_SquareCollider = SquareCollider(vec_Model[0], m_Data.GetVertices());
+	m_SquareCollider.Load(vec_Model[0], m_Data.GetVertices());
 }
 
 BasicObject::BasicObject(const char* filePath, glm::vec4 color, glm::vec3 scale)
@@ -90,7 +90,7 @@ BasicObject::BasicObject(const char* filePath, glm::vec4 color, glm::vec3 scale)
 	vec_Model.push_back(glm::mat4(1.0f));
 	u_MVP.push_back(glm::mat4(1.0f));
 	movementValues.push_back({ 1.0f, 1.0f, 1.0f });
-	m_SquareCollider = SquareCollider(vec_Model[0], m_Data.GetVertices());
+	m_SquareCollider.Load(vec_Model[0], m_Data.GetVertices());
 }
 
 
@@ -106,7 +106,7 @@ BasicObject::BasicObject(const char* filePath, glm::vec4 color, glm::vec3 scale,
 	vec_Model.push_back(u_Model);
 	u_MVP.push_back(glm::mat4(1.0f));
 	movementValues.push_back({  1.0f, 1.0f, 1.0f });
-	m_SquareCollider = SquareCollider(vec_Model[0], m_Data.GetVertices());
+	m_SquareCollider.Load(vec_Model[0], m_Data.GetVertices());
 }
 
 void BasicObject::OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar)

@@ -10,7 +10,7 @@ public:
 
 	glm::mat4 wsMove(const glm::vec3& translatingVector, SquareCollider& collider);
 	glm::mat4 wsGoTo(const glm::vec3& position, SquareCollider& collider);
-	void rotateY(const float& angle, glm::mat4& model);
+	void rotateY(const float& angle, glm::mat4& model, SquareCollider& collider);
 	void scale(const float& scale, glm::mat4& model, SquareCollider& collider);
 	inline const float& getScale() const { return m_Scale; }
 

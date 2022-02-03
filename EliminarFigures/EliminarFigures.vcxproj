@@ -155,8 +155,10 @@
   <ItemGroup>
     <ClCompile Include="AiPlayer.cpp" />
     <ClCompile Include="BasicObject.cpp" />
+    <ClCompile Include="CircleObject.cpp" />
     <ClCompile Include="CollisionDetector.cpp" />
     <ClCompile Include="EasyTest.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="HardTest.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -180,6 +182,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="SquareCollider.cpp" />
+    <ClCompile Include="SquareObject.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="VertexArray.cpp" />
@@ -188,8 +191,10 @@
   <ItemGroup>
     <ClInclude Include="AiPlayer.h" />
     <ClInclude Include="BasicObject.h" />
+    <ClInclude Include="CircleObject.h" />
     <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="EasyTest.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="ImguiVariables.h" />
     <ClInclude Include="MediumTest.h" />
     <ClInclude Include="NormalLevel.h" />
@@ -508,6 +513,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="SquareCollider.h" />
+    <ClInclude Include="SquareObject.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="VertexArray.h" />
@@ -518,6 +524,8 @@
     <None Include="imgui.ini" />
     <None Include="res\Basic.shader" />
     <None Include="res\BasicLight.shader" />
+    <None Include="res\Circle.shader" />
+    <None Include="res\Square.shader" />
     <None Include="res\TexBasic.shader" />
     <None Include="res\vendor\glm\detail\func_common.inl" />
     <None Include="res\vendor\glm\detail\func_common_simd.inl" />

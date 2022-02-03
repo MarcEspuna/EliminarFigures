@@ -42,19 +42,32 @@ Level::NormalLevel::~NormalLevel()
     delete cursor.VLine;
     std::cout << "[NORMAL LEVEL]: Default Level destoyed. " << std::endl;
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
 }
 
 void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
 {
     ImguiVariables random;
     size_t newLevel = 0;
+    float minDistance = 9999999.0f;
+    Object* closestObject = nullptr;
+
     for (auto& object : worldBuffer)
     {
-        object->UpdateCollisionWith(cursor.CQuad);
+        object->isNotTarget();
+        float distance = object->UpdateCollisionWith(cursor.CQuad);
         object->OnObjectUpdate(userHitKey(), deltaTime, random);
         newLevel += object->size();
+
+        if (distance < minDistance)
+        {
+            closestObject = object;
+            minDistance = distance;
+        }
+
     }
     updateCursor(deltaTime);
+    if (closestObject) { closestObject->isTarget(); }
     if (!newLevel) { createNewLevel(); }
 }
 
@@ -72,6 +85,7 @@ void Level::NormalLevel::OnRender()
     renderer.Draw(*cursor.HLine, m_Proj, m_View);
     renderer.Draw(*cursor.CQuad, m_Proj, m_View);
     glEnable(GL_DEPTH_TEST);
+
 }
 
 void Level::NormalLevel::OnImGuiRender()
@@ -86,7 +100,7 @@ void Level::NormalLevel::LoadObjectFiles()
     std::vector<ObjectArguments> objectArguments = { 
         {"teapot.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,30.0f,0.0f)), glm::vec3(100.0f,100.0f,100.0f))},
         {"Icosphere.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f,0.0f,0.0f)),  glm::vec3(80.0f,80.0f,80.0f))},
-        {"square.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(400.0f,0.0f,0.0f)),  glm::vec3(25.0f,25.0f,25.0f))},
+        {"square.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(400.0f,0.0f,0.0f)),  glm::vec3(35.0f,35.0f,35.0f))},
         {"bunny.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(400.0f,200.0f,0.0f)), glm::vec3(600.0f,600.0f,600.0f))},
         {"torus.obj", ObjectType::LIGHT_OBJECT, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f,200.0f,0.0f)),  glm::vec3(40.0f,40.0f,40.0f))},
     };
@@ -137,7 +151,7 @@ bool Level::NormalLevel::userHitKey()
     if (state == GLFW_PRESS)
     {
         return true;
-    }
+    } 
     return false;
 }
 
@@ -148,7 +162,8 @@ void Level::NormalLevel::createNewLevel()
         //object->New(glm::mat4(1.0f));
         object->New(random);
     }
-    std::cout << "new level\n";
+
+
 }
 
 

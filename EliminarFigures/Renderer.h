@@ -3,6 +3,7 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Object.h"
+#include "SquareObject.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -29,7 +30,16 @@ public:
 			object.setUniform(i, projection, view);
 			glDrawElements(GL_TRIANGLES, (GLsizei)object.getIboCount(), GL_UNSIGNED_INT, 0);
 		}
+		if (object.isColliderActive())
+		{
+			glDisable(GL_DEPTH_TEST);
+			object.BindCollider();
+			object.setUniformCollider(0, projection, view);
+			glDrawElements(GL_TRIANGLES, (GLsizei)object.getIboCountCollider(), GL_UNSIGNED_INT, 0);
+			glEnable(GL_DEPTH_TEST);
+		}
 	}
+
 
 	void DrawQ(const VertexArray& vao, const IndexBuffer& ibo, const Shader& shader) const
 	{

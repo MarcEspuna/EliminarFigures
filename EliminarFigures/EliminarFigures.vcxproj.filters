@@ -108,6 +108,15 @@
     <ClCompile Include="ObjectMovement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SquareObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\GLFW\glfw3.h">
@@ -1091,6 +1100,15 @@
     <ClInclude Include="ObjectMovement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SquareObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\vendor\glm\detail\func_common.inl">
@@ -1514,6 +1532,8 @@
     <None Include="res\TexBasic.shader" />
     <None Include="imgui.ini" />
     <None Include="res\BasicLight.shader" />
+    <None Include="res\Circle.shader" />
+    <None Include="res\Square.shader" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\libs\glew32s.lib" />

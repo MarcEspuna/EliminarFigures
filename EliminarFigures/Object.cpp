@@ -5,23 +5,22 @@
 
 
 Object::Object()
-	: u_Color(1.0f, 1.0f, 1.0f, 1.0f), collision(this), shader("res/Basic.shader"), selected(false), hit(false) {}
+	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {}
 
 Object::Object(glm::vec4 color)
-	: u_Color(color), collision(this), shader("res/Basic.shader"), selected(false), hit(false){}
+	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {}
 
 Object::Object(float scale)
-	: u_Color(1.0f, 1.0f, 1.0f, 1.0f), collision(this), shader("res/Basic.shader"), selected(false), hit(false){}
-
+	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {}
 
 Object::Object(glm::vec4 color, const char* shaderPath)
-	: u_Color(color), collision(this), shader(shaderPath), selected(false), hit(false) {}
+	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false) {}
 
 Object::Object(glm::vec4 color, const char* shaderPath, const tinyobj::shape_t& shape, const glm::mat4& u_Model)
-	: u_Color(color), collision(this), shader(shaderPath), m_SquareCollider(u_Model, shape), selected(false), hit(false) {}
+	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), m_SquareCollider(u_Model, shape) {}
 
 Object::Object(glm::vec4 color, glm::vec3 scale)
-	: u_Color(color), collision(this), shader("res/Basic.shader"), selected(false), hit(false) {}
+	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {}
 
 
 void Object::TrackCollisionWith(Object* otherObject)
@@ -30,10 +29,10 @@ void Object::TrackCollisionWith(Object* otherObject)
 
 }
 
-void Object::UpdateCollisionWith(Object* other)
+float Object::UpdateCollisionWith(Object* other)
 {
 	m_SquareCollider.checkCollision(other->m_SquareCollider);
-
+	return m_SquareCollider.checkDistance(other->m_SquareCollider);
 }
 
 void Object::New(const glm::mat4& u_NewModel, const glm::vec3& movement)
@@ -89,12 +88,15 @@ void Object::moveLeft(const float& deltaTime, const float& sensitivity)
 	}
 }
 
-void Object::Bind() const
+void Object::setUniformCollider(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view)
 {
-	shader.Bind();
-	vao.Bind();
-	vbo.Bind();
-	ibo.Bind();
+	m_CollisionView.setUniform(objectIndex, projection, view);
+}
+
+
+void Object::BindCollider() const
+{
+	m_CollisionView.Bind();
 }
 
 std::vector<unsigned int>& Object::GetIndex()

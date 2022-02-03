@@ -10,11 +10,15 @@ public:
 
 	void OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar) override;
 	void setUniform(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view) override;
-	void Bind() const override;
+	void Bind() const;
 
 private:
+
 	VertexBuffer vboNormals;
 	void checkExistance(size_t modelIndex);
+
+
+
 
 };
 

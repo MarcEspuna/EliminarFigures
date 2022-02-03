@@ -7,7 +7,7 @@
 #include "ObjectLight.h"
 
 ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model)
-	: Object(glm::vec4(1.0f,1.0f,1.0f,1.0f), "res/BasicLight.shader")
+	: Object(glm::vec4(1.0f,1.0f,1.0f,1.0f), "res/BasicLight.shader", shape, u_Model)
 {
 	shader.Bind();
 	VertexArrayLayout layout;
@@ -25,7 +25,9 @@ ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model)
 	vec_Model.push_back(u_Model);
 	u_MVP.push_back(glm::mat4(1.0f));
 	movementValues.push_back({ 1.0f, 1.0f, 1.0f });
-	m_SquareCollider = SquareCollider(u_Model, shape);
+	activeCollider = true;
+
+	m_CollisionView.Load(m_SquareCollider.getShapes(), m_SquareCollider.getIndex());
 }
 
 void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar)
@@ -35,13 +37,15 @@ void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, Imgu
 		if (hit)
 		{
 			objectMovement.scale(1.0f - deltaTime / 10.0f, vec_Model[i], m_SquareCollider);
-			objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i]);
+			objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i], m_SquareCollider);
+
 		}
 		else if (m_SquareCollider.thereIsCollision() && deleteObject)
 		{
 			hit = true;
 		}
-		objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i]);
+		objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i], m_SquareCollider);
+		m_CollisionView.Load(m_SquareCollider.getShapes(), m_SquareCollider.getIndex());
 		checkExistance(i);
 	}
 }
@@ -87,6 +91,7 @@ void ObjectLight::checkExistance(size_t modelIndex)
 	if (objectMovement.getScale() < 0.02f && modelIndex < vec_Model.size())
 	{
 		vec_Model.erase(vec_Model.begin() + modelIndex);
+		activeCollider = false;
 		hit = false;
 	}
 }
