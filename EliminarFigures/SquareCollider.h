@@ -20,7 +20,8 @@ public:
 	SquareCollider(const glm::mat4& u_Model, const std::vector<float>& positions);
 	~SquareCollider();
 	void checkCollision(const SquareCollider& other);
-	float checkDistance(const SquareCollider& other);
+	float checkDistance(const SquareCollider& other) const;
+	glm::vec2 checkDistanceVec2(const SquareCollider& other) const;
 
 	void moveUp(const float& deltaTime, const float& sensitivity);
 	void moveDown(const float& deltaTime, const float& sensitivity);

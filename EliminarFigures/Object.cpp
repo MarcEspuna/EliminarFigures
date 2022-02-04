@@ -64,6 +64,7 @@ void Object::New(const RandomGenerator& random, Slot& slot)
 
 	vec_Model.push_back(glm::scale(slot[index], glm::vec3(m_DefaultScale)));
 	objectMovement.reset(slot[index], 100.0f);
+	m_SquareCollider.Update(vec_Model[0]);
 	selected = false;
 	activeCollider = false;
 	hit = false;

@@ -17,7 +17,7 @@ namespace Level {
 
 	{
 	public:
-		HardTest();
+		HardTest(bool playerXAI, bool playerYAI);
 		~HardTest();
 
 

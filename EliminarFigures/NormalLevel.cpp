@@ -17,17 +17,17 @@
 #include <tuple>
 #include "Slot.h"
 
-Level::NormalLevel::NormalLevel()
+Level::NormalLevel::NormalLevel(bool playerXAI, bool playerYAI)
     : cursor({ new BasicObject("res/obj/HLine.obj", glm::vec4(0.7, 0.1, 0.1, 1.0f), glm::vec3(1.0f, 0.4f, 1.0f)),
                new BasicObject("res/obj/VLine.obj", glm::vec4(0.1, 0.2, 0.7, 1.0f), glm::vec3(0.4f, 1.0f, 1.0f)),
-               new BasicObject("res/obj/CQuad.obj", glm::vec4(1.0f, 0.96f, 0.22f, 1.0f), glm::vec3(0.4f, 0.4f, 1.0f))})
+               new BasicObject("res/obj/CQuad.obj", glm::vec4(1.0f, 0.96f, 0.22f, 1.0f), glm::vec3(0.4f, 0.4f, 1.0f))}),
+               x_AiEnabled(playerXAI), y_AiEnabled(playerYAI)
 {
     //Loading the objects of the current level:
     LoadObjectFiles();
     BuildObjects();
-    glEnable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);    
-    glDepthFunc(GL_LESS);
+    LoadConfig();
+
     std::cout << "[NORMAL LEVEL]: Default Level created. " << std::endl;
 }
 
@@ -67,7 +67,7 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
         }
     }
     updateCursor(deltaTime);
-    if (closestObject) { closestObject->isTarget(); }
+    if (closestObject) { closestObject->isTarget(); aiPlayer.goTo(closestObject); }
     if (!newLevel) { createNewLevel(); }
 }
 
@@ -115,44 +115,32 @@ void Level::NormalLevel::BuildObjects()
 
 void Level::NormalLevel::updateCursor(const float& deltaTime)
 {
-    int state = glfwGetKey(ptr_window, GLFW_KEY_W);
-    if (state == GLFW_PRESS)
-    {
-        cursor.CQuad->moveUP(deltaTime, 6.0f);
-        cursor.HLine->moveUP(deltaTime, 6.0f);
-    }
+    if (x_AiEnabled){doAiXInput(deltaTime); }
+    else{ doUserXInput(deltaTime);}
 
-    int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
-    if (state1 == GLFW_PRESS)
-    {
-        cursor.CQuad->moveDown(deltaTime, 6.0f);
-        cursor.HLine->moveDown(deltaTime, 6.0f);
-    }
-
-    int state2 = glfwGetKey(ptr_window, GLFW_KEY_RIGHT);
-    if (state2 == GLFW_PRESS)
-    {
-        cursor.CQuad->moveRight(deltaTime, 6.0f);
-        cursor.VLine->moveRight(deltaTime, 6.0f);
-    }
-
-    int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
-    if (state3 == GLFW_PRESS)
-    {
-        cursor.CQuad->moveLeft(deltaTime, 6.0f);
-        cursor.VLine->moveLeft(deltaTime, 6.0f);
-    }
+    if (y_AiEnabled) { doAiYInput(deltaTime); }
+    else { doUserYInput(deltaTime); }
 
 }
 
 bool Level::NormalLevel::userHitKey()
 {
-    int state = glfwGetKey(ptr_window, GLFW_KEY_ENTER);
-    if (state == GLFW_PRESS)
+    bool userX = false;
+    bool userY = false;
+
+
+    int state1 = glfwGetKey(ptr_window, GLFW_KEY_ENTER);
+    if (state1 == GLFW_PRESS)
     {
-        return true;
+        userX = true;
     } 
-    return false;
+
+    int state2 = glfwGetKey(ptr_window, GLFW_KEY_SPACE);
+    if (state2 == GLFW_PRESS)
+    {
+        userY = true;
+    }
+    return (x_AiEnabled && y_AiEnabled) || (y_AiEnabled && userX) || (x_AiEnabled && userY) || (userX && userY);
 }
 
 void Level::NormalLevel::createNewLevel()
@@ -166,7 +154,77 @@ void Level::NormalLevel::createNewLevel()
 
 }
 
+void Level::NormalLevel::LoadConfig()
+{
+    glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    aiPlayer.setCursor(cursor.CQuad);
+}
 
+void Level::NormalLevel::doAiXInput(const float& deltaTime)
+{
+    glm::vec2 aiInput = aiPlayer.getAiInput();
+    if (aiInput.x == 1)
+    {
+        cursor.CQuad->moveRight(deltaTime, 6.0f);
+        cursor.VLine->moveRight(deltaTime, 6.0f);
+    } 
+    else if (aiInput.x == -1)
+    {
+        cursor.CQuad->moveLeft(deltaTime, 6.0f);
+        cursor.VLine->moveLeft(deltaTime, 6.0f);
+    }
+}
+
+void Level::NormalLevel::doAiYInput(const float& deltaTime)
+{
+    glm::vec2 aiInput = aiPlayer.getAiInput();
+    if (aiInput.y == 1)
+    {
+        cursor.CQuad->moveUP(deltaTime, 6.0f);
+        cursor.HLine->moveUP(deltaTime, 6.0f);
+    }
+    else if (aiInput.y == -1)
+    {
+        cursor.CQuad->moveDown(deltaTime, 6.0f);
+        cursor.HLine->moveDown(deltaTime, 6.0f);
+    }
+}
+
+void Level::NormalLevel::doUserXInput(const float& deltaTime)
+{
+    int state2 = glfwGetKey(ptr_window, GLFW_KEY_RIGHT);
+    if (state2 == GLFW_PRESS)
+    {
+        cursor.CQuad->moveRight(deltaTime, 6.0f);
+        cursor.VLine->moveRight(deltaTime, 6.0f);
+    }
+
+    int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
+    if (state3 == GLFW_PRESS)
+    {
+        cursor.CQuad->moveLeft(deltaTime, 6.0f);
+        cursor.VLine->moveLeft(deltaTime, 6.0f);
+    }
+}
+
+void Level::NormalLevel::doUserYInput(const float& deltaTime)
+{
+    int state = glfwGetKey(ptr_window, GLFW_KEY_W);
+    if (state == GLFW_PRESS)
+    {
+        cursor.CQuad->moveUP(deltaTime, 6.0f);
+        cursor.HLine->moveUP(deltaTime, 6.0f);
+    }
+
+    int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
+    if (state1 == GLFW_PRESS)
+    {
+        cursor.CQuad->moveDown(deltaTime, 6.0f);
+        cursor.HLine->moveDown(deltaTime, 6.0f);
+    }
+}
 
 
 

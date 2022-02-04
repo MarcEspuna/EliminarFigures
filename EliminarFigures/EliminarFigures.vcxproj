@@ -181,7 +181,6 @@
     <ClCompile Include="res\vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Level.cpp" />
-    <ClCompile Include="Slot.cpp" />
     <ClCompile Include="SquareCollider.cpp" />
     <ClCompile Include="SquareObject.cpp" />
     <ClCompile Include="Texture.cpp" />

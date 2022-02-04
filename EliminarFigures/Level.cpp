@@ -5,7 +5,7 @@
 #include <iostream>
 
 Level::Menu::Menu(Level*& currentTest)
-	:m_CurrentTest(currentTest)
+	:m_CurrentTest(currentTest), playerXAI(false), playerYAI(false)
 {
 
 
@@ -19,8 +19,6 @@ Level::Menu::~Menu()
 
 void Level::Menu::OnImGuiRender()
 {
-	static bool playerXAI = false;
-	static bool playerYAI = false;
 	for (auto& test : m_Tests)
 	{
 		if (ImGui::Button(test.first.c_str())) 
@@ -28,7 +26,6 @@ void Level::Menu::OnImGuiRender()
 			m_CurrentTest = test.second();
 		}
 	}
-
 
 	ImGui::Checkbox("Player X AI", &playerXAI);
 	ImGui::Checkbox("Player Y AI", &playerYAI);

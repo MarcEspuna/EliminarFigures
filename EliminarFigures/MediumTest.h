@@ -18,7 +18,7 @@ namespace Level {
 
 	{
 	public:
-		MediumTest();
+		MediumTest(bool playerXAI, bool playerYAI);
 		~MediumTest();
 
 

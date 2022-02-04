@@ -22,6 +22,7 @@ namespace Level
 	{
 	public:
 		Level() {}
+		Level(bool playerXAI, bool playerYAI) {}
 		virtual ~Level() {}
 
 
@@ -51,13 +52,16 @@ namespace Level
 		void RegisterTest(const std::string& testName)
 		{
 			std::cout << "Registering test: " << testName << std::endl;
-			m_Tests.push_back(std::make_pair(testName, []() { return new T; }));		// LAMDAS!
+			m_Tests.push_back(std::make_pair(testName, [=]() { return new T(playerXAI, playerYAI); }));		// LAMDAS!
 
 		}
 
 	private:
 		Level*& m_CurrentTest;
-		std::vector < std::pair < std::string, std::function<Level* () >>> m_Tests;
+		std::vector < std::pair < std::string, std::function<Level* () >> > m_Tests;
+		bool playerXAI;
+		bool playerYAI;
+
 
 	};
 }

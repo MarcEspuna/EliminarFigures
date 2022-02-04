@@ -4,7 +4,6 @@
 #include "ObjParser.h"
 #include "BasicObject.h"
 #include "TextureObject.h"
-#include "AiPlayer.h"
 #include <unordered_map>
 #include <future>
 #include <mutex>
@@ -19,7 +18,7 @@ namespace Level {
 
 	{
 	public:
-		EasyTest();
+		EasyTest(bool playerXAI, bool playerYAI);
 		~EasyTest();
 
 
@@ -33,10 +32,6 @@ namespace Level {
 
 
 	private:
-
-		AiPlayer aiPlayer;
-		int playerInput;
-
 		BasicObject Horse;
 		BasicObject HLine;
 		BasicObject VLine;

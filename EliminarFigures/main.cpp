@@ -47,7 +47,7 @@ int main(void)
     menu->RegisterTest<Level::HardTest>("Hard Difficulty");
     menu->RegisterTest<Level::MediumTest>("Medium Difficulty");
     menu->RegisterTest<Level::EasyTest>("Easy Difficulty");
-    menu->RegisterTest<Level::NormalLevel>("Default Level");
+    menu->RegisterTest<Level::NormalLevel>("KASPAR");
 
     //La idea sera seleccionar la AI en una casella (un tic)
     //També seleccionarem l'eix al qual la AI es moura

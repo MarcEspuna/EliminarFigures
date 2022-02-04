@@ -35,5 +35,5 @@ void SquareObject::setUniform(size_t objectIndex, const glm::mat4& projection, c
 	shader.SetUniform4Mat("u_View", view);
 	shader.SetUniform4Mat("u_Proj", projection);
 	shader.SetUniform4f("u_Color", GetColor());
-	shader.SetUniform1f("thickness", 0.98);
+	shader.SetUniform1f("thickness", 0.98f);
 }

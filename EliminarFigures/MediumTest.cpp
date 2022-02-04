@@ -16,7 +16,7 @@
 
 #include "Texture.h"
 
-Level::MediumTest::MediumTest()
+Level::MediumTest::MediumTest(bool playerXAI, bool playerYAI)
     : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 40.0f),
     HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.65f, 1.0f) ),
     VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.65f, 1.0f, 1.0f)),

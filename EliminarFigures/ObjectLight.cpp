@@ -34,6 +34,8 @@ void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, Imgu
 {
 	for (size_t i = 0; i < vec_Model.size(); i++)
 	{
+		objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i], m_SquareCollider);
+		m_CollisionView.Load(m_SquareCollider.getShapes(), m_SquareCollider.getIndex());
 		if (hit)
 		{
 			objectMovement.scale(1.0f - deltaTime / 10.0f, vec_Model[i], m_SquareCollider);
@@ -44,8 +46,6 @@ void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, Imgu
 		{
 			hit = true;
 		}
-		objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i], m_SquareCollider);
-		m_CollisionView.Load(m_SquareCollider.getShapes(), m_SquareCollider.getIndex());
 		checkExistance(i);
 	}
 }

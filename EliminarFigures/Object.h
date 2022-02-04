@@ -59,6 +59,7 @@ public:
 	inline void objectHit() { hit = true; }
 	inline bool isColliderActive() { return activeCollider; }
 	inline SquareObject& getVisualizer() { return m_CollisionView; }
+	inline const SquareCollider* getCollider() const { return &m_SquareCollider; }
 
 protected:
 
