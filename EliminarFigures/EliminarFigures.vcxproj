@@ -156,6 +156,7 @@
     <ClCompile Include="AiPlayer.cpp" />
     <ClCompile Include="BasicObject.cpp" />
     <ClCompile Include="CircleObject.cpp" />
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="CollisionDetector.cpp" />
     <ClCompile Include="EasyTest.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="res\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="res\vendor\stb_image\stb_image.cpp" />
+    <ClCompile Include="Server.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="SquareCollider.cpp" />
@@ -192,6 +194,7 @@
     <ClInclude Include="AiPlayer.h" />
     <ClInclude Include="BasicObject.h" />
     <ClInclude Include="CircleObject.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="EasyTest.h" />
     <ClInclude Include="Entity.h" />
@@ -510,6 +513,7 @@
     <ClInclude Include="res\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="res\vendor\obj_loader\tiny_obj_loader.h" />
     <ClInclude Include="res\vendor\stb_image\stb_image.h" />
+    <ClInclude Include="Server.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Slot.h" />

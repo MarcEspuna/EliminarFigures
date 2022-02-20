@@ -112,7 +112,7 @@ float SquareCollider::checkDistance(const SquareCollider& other) const
 {
 	float distanceX = std::abs(m_SquareCoords.x + m_SquareCoords.xSize/2.0f - other.m_SquareCoords.x - other.m_SquareCoords.xSize/2.0f);
 	float distanceY = std::abs(m_SquareCoords.y + m_SquareCoords.ySize/2.0f - other.m_SquareCoords.y - other.m_SquareCoords.ySize/2.0f);
-	return std::sqrt(std::pow(distanceX,2) + std::pow(distanceY,2));
+	return (float)std::sqrt(std::pow(distanceX,2) + std::pow(distanceY,2));
 }
 
 glm::vec2 SquareCollider::checkDistanceVec2(const SquareCollider& other) const
