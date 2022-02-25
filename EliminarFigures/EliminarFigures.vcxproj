@@ -139,7 +139,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)EliminarFigures/dependencies;$(SolutionDir)EliminarFigures/res/vendor</AdditionalIncludeDirectories>
     </ClCompile>
@@ -148,7 +148,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;Opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)EliminarFigures/dependencies/libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -158,10 +158,12 @@
     <ClCompile Include="CircleObject.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CollisionDetector.cpp" />
+    <ClCompile Include="DataLink.cpp" />
     <ClCompile Include="EasyTest.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="HardTest.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MediumTest.cpp" />
     <ClCompile Include="NormalLevel.cpp" />
@@ -196,9 +198,11 @@
     <ClInclude Include="CircleObject.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="CollisionDetector.h" />
+    <ClInclude Include="DataLink.h" />
     <ClInclude Include="EasyTest.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="ImguiVariables.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="MediumTest.h" />
     <ClInclude Include="NormalLevel.h" />
     <ClInclude Include="Object.h" />

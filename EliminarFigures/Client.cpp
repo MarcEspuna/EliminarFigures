@@ -2,20 +2,20 @@
 #include <iostream>
 
 Client::Client()
+	: connected(false)
 {
 	initWinsoc();
 	initSocket();
 }
-
 
 Client::~Client()
 {
 
 }
 
-void Client::connectS(const unsigned int& port)
+void Client::connectS(const unsigned int& port, const char* address)
 {
-	server.sin_addr.s_addr = inet_addr("127.0.0.1");						//Connecting to localhost address
+	server.sin_addr.s_addr = inet_addr(address);						//Connecting to localhost address
 	server.sin_family = AF_INET;
 	server.sin_port = htons(port);
 
@@ -24,23 +24,47 @@ void Client::connectS(const unsigned int& port)
 	{
 		std::cout << "[CLIENT ERROR]: Error connecting to server" << std::endl;
 	}
-	std::cout << "[CLIENT]: Successfully connected to server" << std::endl;
+	else
+	{
+		connected = true;
+		std::cout << "[CLIENT]: Successfully connected to server" << std::endl;
+	}
+	
 }
 
-void Client::sendBuffer(const char* message)
+void Client::sendBuffer(const char* message, unsigned int size)
 {
-	send(s, message, strlen(message), 0);
+
+	if (connected)
+	{
+		send(s, message, size, 0);
+		std::cout << "[CLIENT]: Message sent" << std::endl;
+	}
+	else
+	{
+		std::cout << "[CLIENT ERROR]: Data can't be sent, not connected to server\n";
+	}
 }
 
 void Client::recieveBuffer(char* reply, int maxSize)
 {
-	size_t size = 0;
-	while (!size)
+	if (connected)
 	{
-		size = recv(s, reply, maxSize, 0);
+		size_t size = 0;
+		while (!size)
+		{
+			size = recv(s, reply, maxSize, 0);
+		}
 	}
-	std::cout << size << std::endl;
-	std::cout << reply << std::endl;
+	else
+	{
+		std::cout << "[CLIENT ERROR]: Can't recieve data, not connected to server\n";
+	}
+}
+
+bool Client::isConnected()
+{
+	return connected;
 }
 
 void Client::initWinsoc()

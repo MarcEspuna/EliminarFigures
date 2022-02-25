@@ -44,6 +44,8 @@ namespace Level {
 		Renderer renderer;
 		ObjectReader objectReader;
 		AiPlayer aiPlayer;
+		DataLink dataLink;
+
 
 		bool x_AiEnabled;
 		bool y_AiEnabled;
@@ -74,7 +76,6 @@ namespace Level {
 		void doAiYInput(const float& deltaTime);
 		void doUserXInput(const float& deltaTime);
 		void doUserYInput(const float& deltaTime);
-
 
 
 	};

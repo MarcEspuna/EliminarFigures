@@ -50,6 +50,26 @@ void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, Imgu
 	}
 }
 
+void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar, DataLink& datalink)
+{
+	for (size_t i = 0; i < vec_Model.size(); i++)
+	{
+		objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i], m_SquareCollider);
+		m_CollisionView.Load(m_SquareCollider.getShapes(), m_SquareCollider.getIndex());
+		if (hit)
+		{
+			objectMovement.scale(1.0f - deltaTime / 10.0f, vec_Model[i], m_SquareCollider);
+			objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i], m_SquareCollider);
+			//datalink.figureErased(); not neeeded
+		}
+		else if (m_SquareCollider.thereIsCollision() && deleteObject)
+		{
+			hit = true;
+		}
+		checkExistance(i);
+	}
+}
+
 void ObjectLight::setUniform(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view)
 {	
 	shader.Bind();
@@ -76,6 +96,19 @@ void ObjectLight::setUniform(size_t objectIndex, const glm::mat4& projection, co
 	shader.SetUniform1f("u_shininess", 20.0f);
 }
 
+void ObjectLight::updateLink(DataLink& datalink)
+{
+	if (m_SquareCollider.thereIsCollision())
+		datalink.overFigure();
+	else
+		datalink.notOverFigure();
+
+	if (hit)
+		datalink.figureErased();
+	else
+		datalink.figureNotErased();
+}
+
 
 void ObjectLight::Bind() const
 {
@@ -85,6 +118,8 @@ void ObjectLight::Bind() const
 	ibo.Bind();
 	shader.Bind();
 }
+
+
 
 void ObjectLight::checkExistance(size_t modelIndex)
 {

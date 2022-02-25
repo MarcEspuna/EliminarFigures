@@ -45,11 +45,11 @@ void Server::listenS()
 
 }
 
-void Server::sendBuffer(const char* message)
+void Server::sendBuffer(const char* message, unsigned int size)
 {
-	//Reply to client
-	send(new_socket, message, strlen(message), 0);
-	
+	send(new_socket, message, size, 0);
+	std::cout << "[SERVER]: Message sent" << std::endl;
+
 }
 
 void Server::recieveBuffer(char* reply)

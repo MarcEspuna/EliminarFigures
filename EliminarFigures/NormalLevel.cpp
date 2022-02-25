@@ -1,5 +1,6 @@
 #include "Level.h"
 #include "NormalLevel.h"
+#include <thread>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -27,10 +28,11 @@ Level::NormalLevel::NormalLevel(bool playerXAI, bool playerYAI)
     LoadObjectFiles();
     BuildObjects();
     LoadConfig();
+    
+    
 
     std::cout << "[NORMAL LEVEL]: Default Level created. " << std::endl;
 }
-
 
 Level::NormalLevel::~NormalLevel()
 {
@@ -57,7 +59,7 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
     {
         object->isNotTarget();
         float distance = object->UpdateCollisionWith(cursor.CQuad);
-        object->OnObjectUpdate(userHitKey(), deltaTime, random);
+        object->OnObjectUpdate(userHitKey(), deltaTime, random, dataLink);
         newLevel += object->size();
 
         if (distance < minDistance && object->size() > 0)
@@ -66,8 +68,16 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
             minDistance = distance;
         }
     }
+
     updateCursor(deltaTime);
-    if (closestObject) { closestObject->isTarget(); aiPlayer.goTo(closestObject); }
+    if (closestObject) 
+    { 
+        closestObject->isTarget(); 
+        closestObject->updateLink(dataLink);
+        aiPlayer.goTo(closestObject); 
+        dataLink.setTargetObject(closestObject->getId());
+    }
+    dataLink.setRemainingFigures(newLevel);
     if (!newLevel) { createNewLevel(); }
 }
 
@@ -96,6 +106,7 @@ void Level::NormalLevel::OnImGuiRender()
 
 void Level::NormalLevel::LoadObjectFiles()
 {
+    Object::init();   //Reset the counter of objects to 0, in order to propoerly set the object ids
     //We define the objects that we want to load:
     std::vector<ObjectArguments> objectArguments = { 
         {"teapot.obj", ObjectType::LIGHT_OBJECT, slot[14], 100.0f},
@@ -184,12 +195,19 @@ void Level::NormalLevel::doAiYInput(const float& deltaTime)
     {
         cursor.CQuad->moveUP(deltaTime, 6.0f);
         cursor.HLine->moveUP(deltaTime, 6.0f);
+        dataLink.cursorUp();
     }
     else if (aiInput.y == -1)
     {
         cursor.CQuad->moveDown(deltaTime, 6.0f);
         cursor.HLine->moveDown(deltaTime, 6.0f);
+        dataLink.cursorDown();
     }
+    else
+    {
+        dataLink.aiCursorStoped();
+    }
+
 }
 
 void Level::NormalLevel::doUserXInput(const float& deltaTime)
@@ -199,6 +217,7 @@ void Level::NormalLevel::doUserXInput(const float& deltaTime)
     {
         cursor.CQuad->moveRight(deltaTime, 6.0f);
         cursor.VLine->moveRight(deltaTime, 6.0f);
+        dataLink.cursorRight();
     }
 
     int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
@@ -206,7 +225,14 @@ void Level::NormalLevel::doUserXInput(const float& deltaTime)
     {
         cursor.CQuad->moveLeft(deltaTime, 6.0f);
         cursor.VLine->moveLeft(deltaTime, 6.0f);
+        dataLink.cursorLeft();
     }
+
+    if (state2 != GLFW_PRESS && state3 != GLFW_PRESS)
+    {
+        dataLink.usrCursorStoped();
+    }
+
 }
 
 void Level::NormalLevel::doUserYInput(const float& deltaTime)
@@ -225,6 +251,7 @@ void Level::NormalLevel::doUserYInput(const float& deltaTime)
         cursor.HLine->moveDown(deltaTime, 6.0f);
     }
 }
+
 
 
 

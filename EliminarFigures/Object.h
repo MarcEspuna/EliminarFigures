@@ -8,6 +8,7 @@
 #include "ObjectMovement.h"
 #include "RandomGenerator.h"
 #include "Slot.h"
+#include "DataLink.h"
 #include <functional>
 
 class Object  : public Entity
@@ -23,13 +24,15 @@ public:
 
 
 
-	virtual void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar) = 0;
+	virtual void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar);
+	virtual void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar, DataLink& datalink);
 	virtual void setUniformCollider(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view);
 	virtual void BindCollider() const;
 	virtual size_t GetVertexSize() { return 0; };
 	virtual size_t GetIndexSize() { return 0; };
 	virtual std::vector<unsigned int>& GetIndex();
 	virtual std::vector<float>& GetVertex();
+	virtual void updateLink(DataLink& dataLink) {};
 
 	void TrackCollisionWith(Object* otherObject);
 	float UpdateCollisionWith(Object* other);
@@ -60,9 +63,12 @@ public:
 	inline bool isColliderActive() { return activeCollider; }
 	inline SquareObject& getVisualizer() { return m_CollisionView; }
 	inline const SquareCollider* getCollider() const { return &m_SquareCollider; }
+	static void init();
+	unsigned int getId();
 
 protected:
-
+	static unsigned int objectCounter;
+	unsigned int id;
 	bool selected;
 	bool hit;
 	bool activeCollider;

@@ -5,24 +5,37 @@
 #include <unordered_map>
 #include <future>
 
+unsigned int Object::objectCounter;
 
 Object::Object()
-	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {}
+	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
+	id = objectCounter; objectCounter++;
+}
 
 Object::Object(glm::vec4 color)
-	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {}
+	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
+	id = objectCounter; objectCounter++;
+}
 
 Object::Object(float scale)
-	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {}
+	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
+	id = objectCounter; objectCounter++;
+}
 
 Object::Object(glm::vec4 color, const char* shaderPath)
-	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false) {}
+	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false) {
+	id = objectCounter; objectCounter++;
+}
 
 Object::Object(glm::vec4 color, const char* shaderPath, const tinyobj::shape_t& shape, const glm::mat4& u_Model, const float& scale)
-	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), m_SquareCollider(u_Model, shape), m_DefaultScale(scale) {}
+	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), m_SquareCollider(u_Model, shape), m_DefaultScale(scale) {
+	id = objectCounter; objectCounter++;
+}
 
 Object::Object(glm::vec4 color, glm::vec3 scale)
-	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {}
+	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
+	id = objectCounter; objectCounter++;
+}
 
 
 void Object::TrackCollisionWith(Object* otherObject)
@@ -111,6 +124,14 @@ void Object::moveLeft(const float& deltaTime, const float& sensitivity)
 	}
 }
 
+void Object::OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar)
+{
+}
+
+void Object::OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar, DataLink& datalink)
+{
+}
+
 void Object::setUniformCollider(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view)
 {
 	m_CollisionView.setUniform(objectIndex, projection, view);
@@ -132,6 +153,16 @@ std::vector<float>& Object::GetVertex()
 {
 	std::vector<float> random;
 	return random;
+}
+
+void Object::init()
+{
+	objectCounter = 0;
+}
+
+unsigned int Object::getId()
+{
+	return id;
 }
 
 
