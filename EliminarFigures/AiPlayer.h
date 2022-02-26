@@ -1,7 +1,6 @@
 #pragma once
 #include "glm/glm.hpp"
 #include "Object.h"
-#include "SquareCollider.h"
 
 class AiPlayer
 {

@@ -1,6 +1,5 @@
 #include "DataLink.h"
 #include <string>
-#include <Windows.h>
 #include <chrono>
 
 #define TS 0				//Timestamp 8 bytes

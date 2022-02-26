@@ -54,7 +54,7 @@ public:
 	void Push(unsigned int count,const std::string& u_name)
 	{
 		std::cout << "[ERROR]: Type not supported" << std::endl;
-		static_assert(false);
+		//static_assert(false);
 	}
 
 	template<>
@@ -83,7 +83,7 @@ public:
 	void Push(unsigned int count)
 	{
 		std::cout << "[ERROR]: Type not supported" << std::endl;
-		static_assert(false);
+		//static_assert(false);
 	}
 
 	template<>

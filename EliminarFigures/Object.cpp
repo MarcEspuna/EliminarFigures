@@ -1,9 +1,12 @@
+#include "DataLink.h"
 #include "Object.h"
 #include "ObjParser.h"
 #include "VertexArrayLayout.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include <unordered_map>
 #include <future>
+
+
 
 unsigned int Object::objectCounter;
 
@@ -158,11 +161,6 @@ std::vector<float>& Object::GetVertex()
 void Object::init()
 {
 	objectCounter = 0;
-}
-
-unsigned int Object::getId()
-{
-	return id;
 }
 
 

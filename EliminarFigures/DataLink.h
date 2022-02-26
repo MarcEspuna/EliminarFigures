@@ -1,7 +1,6 @@
 #pragma once
-#include "Client.h"
 #include "Server.h"
-#include "Logger.h"
+//#include "Logger.h"
 #include <thread>
 class DataLink
 {
@@ -30,7 +29,7 @@ private:
 
 	char data[15];
 	Server server;
-	Logger log;
+	//Logger log;
 	//std::thread outputLink;
 	//std::thread inputLink;
 

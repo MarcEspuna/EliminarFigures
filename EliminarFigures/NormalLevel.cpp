@@ -1,5 +1,6 @@
 #include "Level.h"
 #include "NormalLevel.h"
+#include "DataLink.h"
 #include <thread>
 
 #include <GL/glew.h>
@@ -28,9 +29,9 @@ Level::NormalLevel::NormalLevel(bool playerXAI, bool playerYAI)
     LoadObjectFiles();
     BuildObjects();
     LoadConfig();
-    
-    
-
+    aiInterface.setCursor(cursor.CQuad);
+    aiInterface.setUserPressedKey(&userPressedKey);
+    aiInterface.setObjects(worldBuffer);
     std::cout << "[NORMAL LEVEL]: Default Level created. " << std::endl;
 }
 
@@ -59,7 +60,7 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
     {
         object->isNotTarget();
         float distance = object->UpdateCollisionWith(cursor.CQuad);
-        object->OnObjectUpdate(userHitKey(), deltaTime, random, dataLink);
+        object->OnObjectUpdate(userHitKey(), deltaTime, random);
         newLevel += object->size();
 
         if (distance < minDistance && object->size() > 0)
@@ -73,11 +74,11 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
     if (closestObject) 
     { 
         closestObject->isTarget(); 
-        closestObject->updateLink(dataLink);
+        //closestObject->updateLink(dataLink);
         aiPlayer.goTo(closestObject); 
-        dataLink.setTargetObject(closestObject->getId());
+        //dataLink.setTargetObject(closestObject->getId());
     }
-    dataLink.setRemainingFigures(newLevel);
+    //dataLink.setRemainingFigures(newLevel);
     if (!newLevel) { createNewLevel(); }
 }
 
@@ -139,7 +140,6 @@ bool Level::NormalLevel::userHitKey()
     bool userX = false;
     bool userY = false;
 
-
     int state1 = glfwGetKey(ptr_window, GLFW_KEY_ENTER);
     if (state1 == GLFW_PRESS)
     {
@@ -151,7 +151,8 @@ bool Level::NormalLevel::userHitKey()
     {
         userY = true;
     }
-    return (x_AiEnabled && y_AiEnabled) || (y_AiEnabled && userX) || (x_AiEnabled && userY) || (userX && userY);
+    userPressedKey = (x_AiEnabled && y_AiEnabled) || (y_AiEnabled && userX) || (x_AiEnabled && userY) || (userX && userY);
+    return userPressedKey;
 }
 
 void Level::NormalLevel::createNewLevel()
@@ -195,17 +196,17 @@ void Level::NormalLevel::doAiYInput(const float& deltaTime)
     {
         cursor.CQuad->moveUP(deltaTime, 6.0f);
         cursor.HLine->moveUP(deltaTime, 6.0f);
-        dataLink.cursorUp();
+        //dataLink.cursorUp();
     }
     else if (aiInput.y == -1)
     {
         cursor.CQuad->moveDown(deltaTime, 6.0f);
         cursor.HLine->moveDown(deltaTime, 6.0f);
-        dataLink.cursorDown();
+        //dataLink.cursorDown();
     }
     else
     {
-        dataLink.aiCursorStoped();
+        //dataLink.aiCursorStoped();
     }
 
 }
@@ -217,7 +218,7 @@ void Level::NormalLevel::doUserXInput(const float& deltaTime)
     {
         cursor.CQuad->moveRight(deltaTime, 6.0f);
         cursor.VLine->moveRight(deltaTime, 6.0f);
-        dataLink.cursorRight();
+        //dataLink.cursorRight();
     }
 
     int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
@@ -225,12 +226,12 @@ void Level::NormalLevel::doUserXInput(const float& deltaTime)
     {
         cursor.CQuad->moveLeft(deltaTime, 6.0f);
         cursor.VLine->moveLeft(deltaTime, 6.0f);
-        dataLink.cursorLeft();
+        //dataLink.cursorLeft();
     }
 
     if (state2 != GLFW_PRESS && state3 != GLFW_PRESS)
     {
-        dataLink.usrCursorStoped();
+        //dataLink.usrCursorStoped();
     }
 
 }

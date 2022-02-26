@@ -8,8 +8,9 @@
 #include "ObjectMovement.h"
 #include "RandomGenerator.h"
 #include "Slot.h"
-#include "DataLink.h"
 #include <functional>
+
+class DataLink;
 
 class Object  : public Entity
 {
@@ -64,7 +65,10 @@ public:
 	inline SquareObject& getVisualizer() { return m_CollisionView; }
 	inline const SquareCollider* getCollider() const { return &m_SquareCollider; }
 	static void init();
-	unsigned int getId();
+	inline unsigned int getId() const { return id; }
+	inline glm::vec2 getCentralPosition() const { return m_SquareCollider.getPosition(); }
+	inline bool collided() const { return m_SquareCollider.thereIsCollision(); }
+	inline bool isActive() const { return vec_Model.size() > 0; }
 
 protected:
 	static unsigned int objectCounter;

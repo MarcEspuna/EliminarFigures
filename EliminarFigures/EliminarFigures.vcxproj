@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AiInterface.cpp" />
     <ClCompile Include="AiPlayer.cpp" />
     <ClCompile Include="BasicObject.cpp" />
     <ClCompile Include="CircleObject.cpp" />
@@ -193,6 +194,7 @@
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AiInterface.h" />
     <ClInclude Include="AiPlayer.h" />
     <ClInclude Include="BasicObject.h" />
     <ClInclude Include="CircleObject.h" />

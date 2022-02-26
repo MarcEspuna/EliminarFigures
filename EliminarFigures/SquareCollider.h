@@ -32,9 +32,11 @@ public:
 	void Load(const glm::mat4& u_Model, const std::vector<float>& positions);
 	void Update(const glm::mat4& u_Model);
 
-	inline bool thereIsCollision() { return m_Collided; }
+	inline bool thereIsCollision() const { return m_Collided; }
 	const float* getShapes();
 	const unsigned int* getIndex();
+	inline glm::vec2 getPosition() const { return glm::vec2(m_SquareCoords.x + m_SquareCoords.xSize / 2, m_SquareCoords.y + m_SquareCoords.ySize / 2); }
+
 
 private:
 

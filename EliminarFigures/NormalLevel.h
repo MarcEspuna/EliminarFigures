@@ -1,3 +1,6 @@
+#pragma once
+#include "AiInterface.h"
+#include "DataLink.h"
 #include "Level.h"
 #include "Shader.h"
 #include "Renderer.h"
@@ -12,7 +15,6 @@
 #include <mutex>
 #include <algorithm>
 #include <numeric>
-
 
 namespace Level {
 
@@ -44,11 +46,13 @@ namespace Level {
 		Renderer renderer;
 		ObjectReader objectReader;
 		AiPlayer aiPlayer;
-		DataLink dataLink;
+		AiInterface aiInterface;
+		//DataLink dataLink;
 
 
 		bool x_AiEnabled;
 		bool y_AiEnabled;
+		bool userPressedKey;
 
 		glm::mat4 m_Proj = glm::ortho(640.0f , -640.0f, -360.0f, 360.0f, -640.0f, 640.0f);
 
