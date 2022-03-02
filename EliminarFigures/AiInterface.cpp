@@ -8,8 +8,9 @@ static int sgn(T val) {
 
 
 AiInterface::AiInterface()
-	: m_Cursor(nullptr), aiCommand({0.0f,0.0f}), receive(nullptr), send(nullptr), userPressedKey(nullptr), dataS(nullptr), activeObjects(0)
+	: m_Cursor(nullptr), receive(nullptr), send(nullptr), userPressedKey(nullptr), dataS(nullptr), activeObjects(0)
 {
+	std::memset(dataR, 0, sizeof(dataR));
 	server.bindS(8888);
 	connect = new std::thread(&AiInterface::connectionManager, this);
 }
@@ -18,9 +19,9 @@ AiInterface::~AiInterface()
 {
 	server.stop();		//Will stop the server socket
 	connect->join();			//We wait for the connection thread to stop
+	cleanThreads();
 	delete connect;
 	delete dataS;
-	cleanThreads();
 }
 
 void AiInterface::setCursor(const Object* object)
@@ -40,7 +41,22 @@ void AiInterface::setObjects(const std::vector<Object*> objects)
 		delete dataS;
 	}
 	dataS = new char[1 + m_Objects.size() * 12];		//Identifier : 'O', Object id and positions : Each object 3 floats (id, xcoord, ycoord) 
-	std::cout << 1 + m_Objects.size() * 12 << std::endl;
+}
+
+glm::vec3 AiInterface::getAiInput()
+{
+	glm::vec3 desicion(0.0f);
+	if (dataR[0] == 'R')
+		desicion.x = 1.0f;
+	else if (dataR[0] == 'L')
+		desicion.x = -1.0f;
+	if (dataR[1] == 'U')
+		desicion.y = 1.0f;
+	else if (dataR[1] == 'D')
+		desicion.y = -1.0f;
+	if (dataR[2] == 'Y')
+		desicion.z = 1.0f;
+	return desicion;
 }
 
 void AiInterface::setUserPressedKey(const bool* userKey)
@@ -53,6 +69,10 @@ void AiInterface::connectionManager()
 	if (server.listenS(1))
 	{
 		//Successfull connection
+		//Always send objects when starting connection
+		int size = loadObjectPositions();
+		server.sendBuffer(dataS, size);
+
 		cleanThreads();
 		//If there is a successful incomming connection, we start the transmition thread and reception thread
 		receive = new std::thread(&AiInterface::reception, this);
@@ -64,9 +84,12 @@ void AiInterface::reception()
 {
 	size_t waitingTime = 0;
 	while (server.recieveBuffer(dataR));
-	connect->join();
-	delete connect;
-	connect = new std::thread(&AiInterface::connectionManager, this);
+	if (server.isActive())
+	{
+		connect->join();
+		delete connect;
+		connect = new std::thread(&AiInterface::connectionManager, this);
+	}
 }
 
 void AiInterface::transmition()
@@ -87,11 +110,13 @@ void AiInterface::cleanThreads()
 	{
 		receive->join();
 		delete receive;
+		receive = nullptr;
 	}
 	if (send)
 	{
 		send->join();
 		delete send;
+		send = nullptr;
 	}
 }
 
@@ -124,7 +149,6 @@ unsigned int AiInterface::loadObjectPositions()
 				ptrIndex += sizeof(float);
 			}
 		}
-		std::cout << ptrIndex << std::endl;
 		return ptrIndex;
 	}
 	else

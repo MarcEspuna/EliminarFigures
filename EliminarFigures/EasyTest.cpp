@@ -227,7 +227,7 @@ void Level::EasyTest::OnRender()
 
 }
 
-void Level::EasyTest::OnImGuiRender()
+void Level::EasyTest::OnImGuiRender(GLFWwindow* window)
 {
 
    ImGui::Begin("Statistics Window!");                         // Create a window called "Hello, world!" and append into it.

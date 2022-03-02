@@ -28,7 +28,7 @@ namespace Level
 
 		virtual void OnUpdate(float deltaTime, bool& testExit) {}
 		virtual void OnRender() {}
-		virtual void OnImGuiRender() {}
+		virtual void OnImGuiRender(GLFWwindow* window) {}
 
 		virtual void SaveWindow(GLFWwindow* window) {}
 		/*
@@ -46,7 +46,7 @@ namespace Level
 		Menu(Level*& currentTest);
 		~Menu();
 
-		void OnImGuiRender() override;
+		void OnImGuiRender(GLFWwindow* window) override;
 
 		template <typename T>
 		void RegisterTest(const std::string& testName)

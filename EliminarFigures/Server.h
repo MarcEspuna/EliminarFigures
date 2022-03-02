@@ -17,6 +17,7 @@ public:
 	bool recieveBuffer(char* reply);
 	void stop();
 	inline bool clientConnected() { return connected; }
+	inline bool isActive() { return active; }
 
 private:
 	bool connected;							//Client connected 

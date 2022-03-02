@@ -17,13 +17,14 @@ Level::Menu::~Menu()
 
 }
 
-void Level::Menu::OnImGuiRender()
+void Level::Menu::OnImGuiRender(GLFWwindow* window)
 {
 	for (auto& test : m_Tests)
 	{
 		if (ImGui::Button(test.first.c_str())) 
 		{
 			m_CurrentTest = test.second();
+			m_CurrentTest->SaveWindow(window);
 		}
 	}
 

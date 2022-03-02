@@ -5,8 +5,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include <unordered_map>
 #include <future>
+#include <mutex>
 
-
+static std::mutex s_MoveMutex;
 
 unsigned int Object::objectCounter;
 
@@ -90,6 +91,7 @@ void Object::New(const RandomGenerator& random, Slot& slot)
 void Object::moveUP(const float& deltaTime, const float& sensitivity)
 {
 	//We check if we are inside the boundaries of the screen
+	std::lock_guard<std::mutex> lock(s_MoveMutex);
 	if (!(vec_Model[0][3][1] > 330.0f))
 	{
 		vec_Model[0] = glm::translate(vec_Model[0], glm::vec3(0.0f, deltaTime * sensitivity, 0.0f));
@@ -100,6 +102,7 @@ void Object::moveUP(const float& deltaTime, const float& sensitivity)
 
 void Object::moveDown(const float& deltaTime, const float& sensitivity)
 {
+	std::lock_guard<std::mutex> lock(s_MoveMutex);
 	if (!(vec_Model[0][3][1] < -330.0f))                                                        //Not allowing the cursor to go outside of the screen
 	{
 		vec_Model[0] = glm::translate(vec_Model[0], glm::vec3(0.0f, -deltaTime * sensitivity, 0.0f));
@@ -110,6 +113,7 @@ void Object::moveDown(const float& deltaTime, const float& sensitivity)
 
 void Object::moveRight(const float& deltaTime, const float& sensitivity)
 {
+	std::lock_guard<std::mutex> lock(s_MoveMutex);
 	if (!(vec_Model[0][3][0] > 630.0f))
 	{
 		vec_Model[0] = glm::translate(vec_Model[0], glm::vec3(deltaTime * sensitivity, 0.0f, 0.0f));
@@ -120,6 +124,7 @@ void Object::moveRight(const float& deltaTime, const float& sensitivity)
 
 void Object::moveLeft(const float& deltaTime, const float& sensitivity)
 {
+	std::lock_guard<std::mutex> lock(s_MoveMutex);
 	if (!(vec_Model[0][3][0] < -630.0f))
 	{
 		vec_Model[0] = glm::translate(vec_Model[0], glm::vec3(-deltaTime * sensitivity, 0.0f, 0.0f));

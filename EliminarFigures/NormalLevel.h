@@ -15,6 +15,7 @@
 #include <mutex>
 #include <algorithm>
 #include <numeric>
+#include <thread>
 
 namespace Level {
 
@@ -34,21 +35,19 @@ namespace Level {
 
 		void OnRender() override;
 		void OnUpdate(float deltaTime, bool& testExit) override;
-		void OnImGuiRender() override;
-		void SaveWindow(GLFWwindow* window) override
-		{
-			ptr_window = window;
-		}
+		void OnImGuiRender(GLFWwindow* window) override;
+		void SaveWindow(GLFWwindow* window) override;
+	
 
 
 	private:
-
+		bool levelActive;
 		Renderer renderer;
 		ObjectReader objectReader;
-		AiPlayer aiPlayer;
 		AiInterface aiInterface;
 		//DataLink dataLink;
-
+		std::thread* cursorUpdaterX;
+		std::thread* cursorUpdaterY;
 
 		bool x_AiEnabled;
 		bool y_AiEnabled;
@@ -72,16 +71,16 @@ namespace Level {
 
 		void BuildObjects();
 		void LoadObjectFiles();
-		void updateCursor(const float& deltaTime);
+		//void updateCursor(const float& deltaTime);
 		bool userHitKey();
 		void createNewLevel();
 		void LoadConfig();
-		void doAiXInput(const float& deltaTime);
-		void doAiYInput(const float& deltaTime);
-		void doUserXInput(const float& deltaTime);
-		void doUserYInput(const float& deltaTime);
-
-
+		void doAiXInput();
+		void doAiYInput();
+		void doUserXInput();
+		void doUserYInput();
+		void loadCommunications();
+		void loadThread();
 	};
 	
 

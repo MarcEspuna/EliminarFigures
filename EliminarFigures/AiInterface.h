@@ -15,7 +15,7 @@ public:
 
 	void setCursor(const Object* object);
 	void setObjects(const std::vector<Object*> objects);
-	inline glm::vec2 getAiInput() { return aiCommand; }
+	glm::vec3 getAiInput();
 	void setUserPressedKey(const bool* userKey);
 
 private:
@@ -23,9 +23,7 @@ private:
 	const SquareCollider* m_Cursor;
 	std::vector<const Object*> m_Objects;
 	const bool* userPressedKey;
-	unsigned int activeObjects;
-
-	glm::vec2 aiCommand;							//Latest stored data of the decision of the ai
+	unsigned int activeObjects;						
 	
 	Server server;									//Server of the aplication
 	std::thread* receive;							//Thread that will manage the incomming connections
@@ -38,13 +36,13 @@ private:
 	void connectionManager();						//Listens and manages incomming connections
 	void reception();								//Reads incomming data and stores it, also it's responsible to determine if the client is still connected
 	void transmition();								//Transmits relevant data periodically
-	void cleanThreads();
+	void cleanThreads();							//Used to clean send and receive threads, it doese not clean the connection thread
 
-	unsigned int updateDataS();
-	unsigned int loadObjectPositions();
-	bool checkActiveObjects();
-	unsigned int loadCursorPosition();
-	bool checkObjectCollisions();
+	unsigned int updateDataS();						//Updates the data to send, returns the data to send 
+	unsigned int loadObjectPositions();				//Loads the object positions to the dataS buffer
+	bool checkActiveObjects();						//Checks if there is a different number of active objects in the game (compared to previous check)
+	unsigned int loadCursorPosition();				//Loads the current cursor position to the dataS buffer
+	bool checkObjectCollisions();					//Checks if any object has a collision currently 
 
 };
 

@@ -25,7 +25,7 @@ namespace Level {
 
 		void OnUpdate(float deltaTime, bool& testExit) override;
 		void OnRender() override;
-		void OnImGuiRender() override;
+		void OnImGuiRender(GLFWwindow* window) override;
 		void SaveWindow(GLFWwindow* window) override
 		{
 			ptr_window = window;

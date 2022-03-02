@@ -67,7 +67,6 @@ int main(void)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        currentTest->SaveWindow(window);
         currentTest->OnUpdate(deltaTime, testExit);
         currentTest->OnRender();
         ImGui::Begin("DIFFICULTY/PLAYERS");
@@ -77,7 +76,7 @@ int main(void)
            currentTest = menu;
            testExit = false;
         }
-        currentTest->OnImGuiRender();
+        currentTest->OnImGuiRender(window);
         ImGui::End();
         
         ImGui::Render();

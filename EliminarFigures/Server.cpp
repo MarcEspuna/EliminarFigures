@@ -103,10 +103,9 @@ bool Server::recieveBuffer(char* reply)
 	size_t timeout = 0;
 	while (timeout < 5)
 	{
-		int size = recv(new_socket, reply, 2, 0);
+		int size = recv(new_socket, reply, 3, 0);
 		if (size > 0)
 		{
-			std::cout << "[SERVER]: Message recieved -> " << reply << std::endl;
 			return true;
 		}
 		else

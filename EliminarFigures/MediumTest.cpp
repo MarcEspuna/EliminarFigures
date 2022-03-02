@@ -225,7 +225,7 @@ void Level::MediumTest::OnRender()
 
 }
 
-void Level::MediumTest::OnImGuiRender()
+void Level::MediumTest::OnImGuiRender(GLFWwindow* window)
 {
 
    ImGui::Begin("Statistics Window!");                         // Create a window called "Hello, world!" and append into it.
