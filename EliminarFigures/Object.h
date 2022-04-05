@@ -68,7 +68,7 @@ public:
 	inline unsigned int getId() const { return id; }
 	inline glm::vec2 getCentralPosition() const { return m_SquareCollider.getPosition(); }
 	inline bool collided() const { return m_SquareCollider.thereIsCollision(); }
-	inline bool isActive() const { return vec_Model.size() > 0; }
+	inline bool isActive() const { return vec_Model.size() > 0 && !hit; }
 
 protected:
 	static unsigned int objectCounter;
@@ -83,7 +83,6 @@ protected:
 	SquareCollider m_SquareCollider;
 	SquareObject   m_CollisionView;
 	ObjectMovement objectMovement;
-
 
 	std::vector<glm::mat4> vec_Model;					//Canviar a vector per si volem renderitzar el mateix vao en varios llocs
 	std::vector<glm::mat4> u_MVP;						//

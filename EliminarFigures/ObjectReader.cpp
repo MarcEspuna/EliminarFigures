@@ -45,7 +45,7 @@ void ObjectReader::buildObjects(std::vector<Object*>& worldVector)
 		{
 			case ObjectType::LIGHT_OBJECT:
 			{
-				worldVector.push_back(new ObjectLight(shapes[i], glm::scale(inputArguments[i].slot, glm::vec3(inputArguments[i].scale)), inputArguments[i].scale));
+				worldVector.push_back(new ObjectLight(shapes[i], glm::scale(inputArguments[i].slot, glm::vec3(inputArguments[i].scale)), inputArguments[i].color, inputArguments[i].scale));
 				break;
 			}
 			case ObjectType::BASIC_OBJECT:

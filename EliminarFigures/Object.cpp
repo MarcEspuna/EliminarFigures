@@ -13,32 +13,32 @@ unsigned int Object::objectCounter;
 
 Object::Object()
 	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
-	id = objectCounter; objectCounter++;
+	objectCounter++; id = objectCounter;
 }
 
 Object::Object(glm::vec4 color)
 	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
-	id = objectCounter; objectCounter++;
+	objectCounter++; id = objectCounter;
 }
 
 Object::Object(float scale)
 	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
-	id = objectCounter; objectCounter++;
+	objectCounter++; id = objectCounter;
 }
 
 Object::Object(glm::vec4 color, const char* shaderPath)
 	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false) {
-	id = objectCounter; objectCounter++;
+	objectCounter++; id = objectCounter;
 }
 
 Object::Object(glm::vec4 color, const char* shaderPath, const tinyobj::shape_t& shape, const glm::mat4& u_Model, const float& scale)
 	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), m_SquareCollider(u_Model, shape), m_DefaultScale(scale) {
-	id = objectCounter; objectCounter++;
+	objectCounter++; id = objectCounter;
 }
 
 Object::Object(glm::vec4 color, glm::vec3 scale)
 	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
-	id = objectCounter; objectCounter++;
+	objectCounter++; id = objectCounter;
 }
 
 

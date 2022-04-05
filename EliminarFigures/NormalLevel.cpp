@@ -19,9 +19,12 @@
 #include <tuple>
 #include "Slot.h"
 #include <condition_variable>
+#include "UsrInterface.h"
 
 static std::mutex s_XuserMutex;
+static std::mutex s_YuserMutex;
 static std::condition_variable s_Xcv;
+static std::condition_variable s_Ycv;
 
 Level::NormalLevel::NormalLevel(bool playerXAI, bool playerYAI)
     : cursor({ new BasicObject("res/obj/HLine.obj", glm::vec4(0.7, 0.1, 0.1, 1.0f), glm::vec3(1.0f, 0.4f, 1.0f)),
@@ -117,6 +120,7 @@ void Level::NormalLevel::SaveWindow(GLFWwindow* window)
 {
     ptr_window = window;
     s_Xcv.notify_one();     //We notify the waiting threads to check it's waiting condition
+    s_Ycv.notify_one();     //We notify the waiting threads to check it's waiting condition
 }
 
 
@@ -125,11 +129,11 @@ void Level::NormalLevel::LoadObjectFiles()
     Object::init();   //Reset the counter of objects to 0, in order to propoerly set the object ids
     //We define the objects that we want to load:
     std::vector<ObjectArguments> objectArguments = { 
-        {"teapot.obj", ObjectType::LIGHT_OBJECT, slot[14], 100.0f},
-        {"Icosphere.obj", ObjectType::LIGHT_OBJECT, slot[9], 80.0f},
-        {"square.obj", ObjectType::LIGHT_OBJECT, slot[11], 35.0f},
-        {"bunny.obj", ObjectType::LIGHT_OBJECT, slot[6], 600.0f},
-        {"torus.obj", ObjectType::LIGHT_OBJECT, slot[17], 40.0f}
+        {"teapot.obj", ObjectType::LIGHT_OBJECT, slot[14], 100.0f, {1.0f, 0.0f, 0.0f, 1.0f}},
+        {"bunny.obj", ObjectType::LIGHT_OBJECT, slot[6], 600.0f, {1.0f, 1.0f, 1.0f, 1.0f}},
+        {"square.obj", ObjectType::LIGHT_OBJECT, slot[11], 35.0f, {0.0f, 0.0f, 1.0f, 1.0f}},
+        {"Icosphere.obj", ObjectType::LIGHT_OBJECT, slot[9], 80.0f, {1.0f, 1.0f, 0.0f, 1.0f}},
+        {"torus.obj", ObjectType::LIGHT_OBJECT, slot[17], 40.0f, {0.0f, 1.0f, 0.0f, 1.0f}}
     };
     objectReader.loadObjectFiles(objectArguments, "res/obj/");
 }
@@ -185,12 +189,12 @@ void Level::NormalLevel::doAiXInput()
     {
         Timer time(deltaTime);
         glm::vec3 aiInput = aiInterface.getAiInput();
-        if (aiInput.x == 1)
+        if (aiInput.x == 1.0f)
         {
             cursor.CQuad->moveRight(deltaTime, 6.0f);
             cursor.VLine->moveRight(deltaTime, 6.0f);
         }
-        else if (aiInput.x == -1)
+        else if (aiInput.x == -1.0f)
         {
             cursor.CQuad->moveLeft(deltaTime, 6.0f);
             cursor.VLine->moveLeft(deltaTime, 6.0f);
@@ -202,20 +206,20 @@ void Level::NormalLevel::doAiXInput()
 void Level::NormalLevel::doAiYInput()
 {
     float deltaTime = 0;
-    //We need to wait for the window to be passed int before calling the opengl functions
-    std::unique_lock<std::mutex> lk(s_XuserMutex);
-    s_Xcv.wait(lk, [&] {if (ptr_window) return true; });
+    //We need to wait for the window to be passed in before calling the opengl functions
+    std::unique_lock<std::mutex> lk(s_YuserMutex);
+    s_Ycv.wait(lk, [&] {if (ptr_window) return true; });
     while (levelActive)
     {
         Timer time(deltaTime);
         glm::vec3 aiInput = aiInterface.getAiInput();
-        if (aiInput.y == 1)
+        if (aiInput.y == 1.0f)
         {
             cursor.CQuad->moveUP(deltaTime, 6.0f);
             cursor.HLine->moveUP(deltaTime, 6.0f);
             //dataLink.cursorUp();
         }
-        else if (aiInput.y == -1)
+        else if (aiInput.y == -1.0f)
         {
             cursor.CQuad->moveDown(deltaTime, 6.0f);
             cursor.HLine->moveDown(deltaTime, 6.0f);
@@ -234,6 +238,8 @@ void Level::NormalLevel::doUserXInput()
     float deltaTime = 0;
     std::unique_lock<std::mutex> lk(s_XuserMutex);
     s_Xcv.wait(lk, [&] {if (ptr_window) return true;});
+    //UsrInterface usrCommands;
+    //glm::vec3 usrInput = usrCommands.getUsrInput();
     while (levelActive)
     {
         Timer time(deltaTime);
@@ -264,6 +270,8 @@ void Level::NormalLevel::doUserXInput()
 void Level::NormalLevel::doUserYInput()
 {
     float deltaTime = 0;
+    std::unique_lock<std::mutex> lk(s_YuserMutex);
+    s_Ycv.wait(lk, [&] {if (ptr_window) return true; });
     while (levelActive)
     {
         Timer time(deltaTime);

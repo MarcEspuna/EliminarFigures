@@ -30,7 +30,7 @@ private:
 	std::thread* send;								//Thread that will send the cursor or object positions
 	std::thread* connect;							//Thread that will receive incomming data and store it
 
-	char* dataS;									//Data to send  ('O', <object positions>) or ('C', <cursor position>, overFigure, userHitKey)
+	char* dataS;									//Data to send  ('O', <object positions>) or ('C', <cursor position>, <overFigure> id, userHitKey)
 	char dataR[3];									//Data received (x axis: int_8, y axis: int_8, correct initial reception: bool)
 
 	void connectionManager();						//Listens and manages incomming connections
@@ -42,7 +42,7 @@ private:
 	unsigned int loadObjectPositions();				//Loads the object positions to the dataS buffer
 	bool checkActiveObjects();						//Checks if there is a different number of active objects in the game (compared to previous check)
 	unsigned int loadCursorPosition();				//Loads the current cursor position to the dataS buffer
-	bool checkObjectCollisions();					//Checks if any object has a collision currently 
+	int checkObjectCollisions();					//Checks if any object has a collision currently 
 
 };
 

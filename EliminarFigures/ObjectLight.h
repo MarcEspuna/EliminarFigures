@@ -7,6 +7,7 @@ class ObjectLight	: public Object
 public:
 
 	ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model, const float& scale = 1.0f);
+	ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model, glm::vec4 color, const float& scale = 1.0f);
 
 	void OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar) override;
 	void OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar, DataLink& datalink) override;

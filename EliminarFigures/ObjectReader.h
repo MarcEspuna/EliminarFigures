@@ -7,6 +7,7 @@ struct ObjectArguments
 	ObjectType objectType;
 	glm::mat4 slot;
 	float scale;
+	glm::vec4 color;
 };
 
 class ObjectReader

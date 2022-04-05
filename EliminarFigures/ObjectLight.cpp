@@ -31,6 +31,30 @@ ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model, const
 	m_CollisionView.Load(m_SquareCollider.getShapes(), m_SquareCollider.getIndex());
 }
 
+ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model, glm::vec4 color, const float& scale)
+	: Object(color, "res/BasicLight.shader", shape, u_Model, scale)
+{
+	shader.Bind();
+	VertexArrayLayout layout;
+	VertexArrayLayout layout2;
+
+	vbo.LoadData(shape.mesh.positions);
+	ibo.LoadData(shape.mesh.indices);
+	layout.Push<float>(3, "position"); //Positions of the 3D object
+	vao.AddBuffer(vbo, layout, shader.getID());
+
+	vboNormals.LoadData(shape.mesh.normals);
+	layout2.Push<float>(3, "aNormal"); //Normals of the 3d object
+	vao.AddBuffer(vboNormals, layout2, shader.getID());
+
+	vec_Model.push_back(u_Model);
+	u_MVP.push_back(glm::mat4(1.0f));
+	movementValues.push_back({ 1.0f, 1.0f, 1.0f });
+	activeCollider = true;
+
+	m_CollisionView.Load(m_SquareCollider.getShapes(), m_SquareCollider.getIndex());
+}
+
 void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar)
 {
 	for (size_t i = 0; i < vec_Model.size(); i++)

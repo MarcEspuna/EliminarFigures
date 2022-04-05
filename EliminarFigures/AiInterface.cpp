@@ -98,7 +98,7 @@ void AiInterface::transmition()
 	while (server.clientConnected())
 	{
 		unsigned int size = updateDataS();
-		Sleep(5);
+		Sleep(1);
 		server.sendBuffer(dataS, size);
 	}
 	std::cout << "[AiInterface]: Sutting down transmition..." << std::endl;
@@ -180,10 +180,9 @@ unsigned int AiInterface::loadCursorPosition()
 		glm::vec2 position = m_Cursor->getPosition();
 		std::memcpy(&dataS[ptrIndex], &position, sizeof(position));
 		ptrIndex += sizeof(position);
-		if (checkObjectCollisions())	//Fix
-			dataS[ptrIndex++] = 'Y';
-		else
-			dataS[ptrIndex++] = 'N';
+
+		dataS[ptrIndex++] = checkObjectCollisions();						// We load the id of the collided object, if no object id = 0
+		
 		if (userPressedKey)
 		{
 			if (*userPressedKey)
@@ -199,13 +198,13 @@ unsigned int AiInterface::loadCursorPosition()
 		return 0;
 }
 
-bool AiInterface::checkObjectCollisions()
+int AiInterface::checkObjectCollisions()
 {
 	for (const auto& object : m_Objects)
 	{
 		if (object->collided())
-			return true;
+			return object->getId();
 	}
-	return false;
+	return 0;
 }
 
