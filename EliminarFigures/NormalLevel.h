@@ -41,6 +41,8 @@ namespace Level {
 
 
 	private:
+
+		int targetObjectId;
 		bool levelActive;
 		Renderer renderer;
 		ObjectReader objectReader;
@@ -52,6 +54,7 @@ namespace Level {
 		bool x_AiEnabled;
 		bool y_AiEnabled;
 		bool userPressedKey;
+		bool userSelectKey;
 
 		glm::mat4 m_Proj = glm::ortho(640.0f , -640.0f, -360.0f, 360.0f, -640.0f, 640.0f);
 

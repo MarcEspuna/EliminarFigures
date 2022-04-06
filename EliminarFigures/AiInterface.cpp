@@ -17,10 +17,10 @@ AiInterface::AiInterface()
 
 AiInterface::~AiInterface()
 {
-	server.stop();		//Will stop the server socket
-	connect->join();			//We wait for the connection thread to stop
-	cleanThreads();
-	delete connect;
+	server.stop();			//Will stop the server socket
+	connect->join();		//We wait for the connection thread to stop
+	cleanThreads();			
+	delete connect;			
 	delete dataS;
 }
 
@@ -39,29 +39,25 @@ void AiInterface::setObjects(const std::vector<Object*> objects)
 	if (dataS)
 	{
 		delete dataS;
+		dataS = nullptr;
 	}
 	dataS = new char[1 + m_Objects.size() * 12];		//Identifier : 'O', Object id and positions : Each object 3 floats (id, xcoord, ycoord) 
 }
 
-glm::vec3 AiInterface::getAiInput()
+std::string AiInterface::getAiInput()
 {
-	glm::vec3 desicion(0.0f);
-	if (dataR[0] == 'R')
-		desicion.x = 1.0f;
-	else if (dataR[0] == 'L')
-		desicion.x = -1.0f;
-	if (dataR[1] == 'U')
-		desicion.y = 1.0f;
-	else if (dataR[1] == 'D')
-		desicion.y = -1.0f;
-	if (dataR[2] == 'Y')
-		desicion.z = 1.0f;
+	std::string desicion = { dataR[0], dataR[1], dataR[2] , dataR[3]};	//We make a copy into a string
 	return desicion;
 }
 
 void AiInterface::setUserPressedKey(const bool* userKey)
 {
 	userPressedKey = userKey;
+}
+
+void AiInterface::setUserSelectKey(const bool* userSelect)
+{
+	userSelectKey = userSelect;
 }
 
 void AiInterface::connectionManager()
@@ -80,6 +76,7 @@ void AiInterface::connectionManager()
 	}
 }
 
+/* Manages the reception data from the aiPlayer module, if it's not connected starts a thread that waits for new connections */
 void AiInterface::reception()
 {
 	size_t waitingTime = 0;
@@ -148,11 +145,11 @@ unsigned int AiInterface::loadObjectPositions()
 				std::memcpy(&dataS[ptrIndex], &position.y, sizeof(float));
 				ptrIndex += sizeof(float);
 			}
-		}
-		return ptrIndex;
+		} 
+		if (ptrIndex > 1)
+			return ptrIndex;
 	}
-	else
-		return 0;
+	return 0;
 }
 
 bool AiInterface::checkActiveObjects()
@@ -182,7 +179,7 @@ unsigned int AiInterface::loadCursorPosition()
 		ptrIndex += sizeof(position);
 
 		dataS[ptrIndex++] = checkObjectCollisions();						// We load the id of the collided object, if no object id = 0
-		
+		// Updating if user pressed it's hit key
 		if (userPressedKey)
 		{
 			if (*userPressedKey)
@@ -192,6 +189,16 @@ unsigned int AiInterface::loadCursorPosition()
 		}
 		else
 			dataS[ptrIndex++] = 'X';
+		// Updating if user pressed the select key
+		if (userSelectKey) {
+			if (*userSelectKey)
+				dataS[ptrIndex++] = 'Y';
+			else
+				dataS[ptrIndex++] = 'N';
+		}
+		else
+			dataS[ptrIndex++] = 'X';
+
 		return ptrIndex;
 	}
 	else

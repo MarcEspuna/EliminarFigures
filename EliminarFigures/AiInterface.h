@@ -15,14 +15,16 @@ public:
 
 	void setCursor(const Object* object);
 	void setObjects(const std::vector<Object*> objects);
-	glm::vec3 getAiInput();
+	std::string getAiInput();
 	void setUserPressedKey(const bool* userKey);
+	void setUserSelectKey(const bool* userSelect);
 
 private:
 
 	const SquareCollider* m_Cursor;
 	std::vector<const Object*> m_Objects;
 	const bool* userPressedKey;
+	const bool* userSelectKey;
 	unsigned int activeObjects;						
 	
 	Server server;									//Server of the aplication
@@ -31,7 +33,7 @@ private:
 	std::thread* connect;							//Thread that will receive incomming data and store it
 
 	char* dataS;									//Data to send  ('O', <object positions>) or ('C', <cursor position>, <overFigure> id, userHitKey)
-	char dataR[3];									//Data received (x axis: int_8, y axis: int_8, correct initial reception: bool)
+	char dataR[4];									//Data received (x axis: int_8, y axis: int_8, correct initial reception: bool)
 
 	void connectionManager();						//Listens and manages incomming connections
 	void reception();								//Reads incomming data and stores it, also it's responsible to determine if the client is still connected

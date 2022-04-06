@@ -33,7 +33,8 @@ Level::NormalLevel::NormalLevel(bool playerXAI, bool playerYAI)
                x_AiEnabled(playerXAI), y_AiEnabled(playerYAI),
                cursorUpdaterX(nullptr),
                cursorUpdaterY(nullptr),
-               levelActive(true)
+               levelActive(true),
+               targetObjectId(0)            // Starting with no target
 {
     //Loading the objects of the current level:
     LoadObjectFiles();
@@ -67,29 +68,19 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
 {
     ImguiVariables random;
     size_t newLevel = 0;
-    float minDistance = 9999999.0f;
-    Object* closestObject = nullptr;
 
     for (auto& object : worldBuffer)
     {
-        object->isNotTarget();
         float distance = object->UpdateCollisionWith(cursor.CQuad);
         object->OnObjectUpdate(userHitKey(), deltaTime, random);
         newLevel += object->size();
 
-        if (distance < minDistance && object->size() > 0)
-        {
-            closestObject = object;
-            minDistance = distance;
-        }
+        if (object->getId() == targetObjectId)
+            object->isTarget();
+        else
+            object->isNotTarget();
     }
 
-    if (closestObject) 
-    { 
-        closestObject->isTarget(); 
-        //closestObject->updateLink(dataLink);
-        //dataLink.setTargetObject(closestObject->getId());
-    }
     //dataLink.setRemainingFigures(newLevel);
     if (!newLevel) { createNewLevel(); }
 }
@@ -188,13 +179,13 @@ void Level::NormalLevel::doAiXInput()
     while (levelActive)
     {
         Timer time(deltaTime);
-        glm::vec3 aiInput = aiInterface.getAiInput();
-        if (aiInput.x == 1.0f)
+        std::string aiInput = aiInterface.getAiInput();
+        if (aiInput[0] == 'R')
         {
             cursor.CQuad->moveRight(deltaTime, 6.0f);
             cursor.VLine->moveRight(deltaTime, 6.0f);
         }
-        else if (aiInput.x == -1.0f)
+        else if (aiInput[0] == 'L')
         {
             cursor.CQuad->moveLeft(deltaTime, 6.0f);
             cursor.VLine->moveLeft(deltaTime, 6.0f);
@@ -212,14 +203,14 @@ void Level::NormalLevel::doAiYInput()
     while (levelActive)
     {
         Timer time(deltaTime);
-        glm::vec3 aiInput = aiInterface.getAiInput();
-        if (aiInput.y == 1.0f)
+        std::string aiInput = aiInterface.getAiInput();           /* AI input: <x movement, y movement, hit, target id >*/
+        if (aiInput[1] == 'U')
         {
             cursor.CQuad->moveUP(deltaTime, 6.0f);
             cursor.HLine->moveUP(deltaTime, 6.0f);
             //dataLink.cursorUp();
         }
-        else if (aiInput.y == -1.0f)
+        else if (aiInput[1] == 'D')
         {
             cursor.CQuad->moveDown(deltaTime, 6.0f);
             cursor.HLine->moveDown(deltaTime, 6.0f);
@@ -229,6 +220,9 @@ void Level::NormalLevel::doAiYInput()
         {
             //dataLink.aiCursorStoped();
         }
+
+        targetObjectId = aiInput[3] - '0';
+
     }
 }
 
@@ -263,6 +257,14 @@ void Level::NormalLevel::doUserXInput()
         {
             //dataLink.usrCursorStoped();
         }
+
+        int state4 = glfwGetKey(ptr_window, GLFW_KEY_S);             //Select key
+        if (state4 == GLFW_PRESS) {
+            userSelectKey = true;
+        }
+        else {
+            userSelectKey = false;
+        }
     }
 }
 
@@ -295,6 +297,7 @@ void Level::NormalLevel::loadCommunications()
 {
     aiInterface.setCursor(cursor.CQuad);
     aiInterface.setUserPressedKey(&userPressedKey);
+    aiInterface.setUserSelectKey(&userSelectKey);
     aiInterface.setObjects(worldBuffer);
 }
 
