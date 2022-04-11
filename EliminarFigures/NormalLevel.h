@@ -84,6 +84,7 @@ namespace Level {
 		void doUserYInput();
 		void loadCommunications();
 		void loadThread();
+		bool usrExitKey();
 	};
 	
 

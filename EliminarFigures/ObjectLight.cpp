@@ -98,10 +98,11 @@ void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, Imgu
 void ObjectLight::setUniform(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view)
 {	
 	shader.Bind();
-	glm::vec3 lightPosition = glm::vec3(2000.0f, 0.0f, -2000.0f); 
+	glm::vec3 lightPosition = glm::vec3(0.0f, 0.0f, -2000.0f); 
 	if (m_SquareCollider.thereIsCollision() && !hit)
 	{
-		shader.SetUniform4f("u_Color", glm::vec4(0.39f, 0.11f, 0.78f, 1.0f));
+		glm::vec4 newColor = glm::vec4(GetColor()*1.4f);
+		shader.SetUniform4f("u_Color", newColor);
 	}
 	else if (hit)
 	{

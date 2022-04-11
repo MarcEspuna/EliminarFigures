@@ -83,7 +83,10 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
 
     //dataLink.setRemainingFigures(newLevel);
     if (!newLevel) { createNewLevel(); }
+    testExit = usrExitKey();                    // We exit the level if the user presses the exit key
 }
+
+
 
 void Level::NormalLevel::OnRender()
 {
@@ -120,11 +123,11 @@ void Level::NormalLevel::LoadObjectFiles()
     Object::init();   //Reset the counter of objects to 0, in order to propoerly set the object ids
     //We define the objects that we want to load:
     std::vector<ObjectArguments> objectArguments = { 
-        {"teapot.obj", ObjectType::LIGHT_OBJECT, slot[14], 100.0f, {1.0f, 0.0f, 0.0f, 1.0f}},
-        {"bunny.obj", ObjectType::LIGHT_OBJECT, slot[6], 600.0f, {1.0f, 1.0f, 1.0f, 1.0f}},
-        {"square.obj", ObjectType::LIGHT_OBJECT, slot[11], 35.0f, {0.0f, 0.0f, 1.0f, 1.0f}},
-        {"Icosphere.obj", ObjectType::LIGHT_OBJECT, slot[9], 80.0f, {1.0f, 1.0f, 0.0f, 1.0f}},
-        {"torus.obj", ObjectType::LIGHT_OBJECT, slot[17], 40.0f, {0.0f, 1.0f, 0.0f, 1.0f}}
+        {"teapot.obj", ObjectType::LIGHT_OBJECT, slot[3][5], 90.0f, {1.0f, 0.0f, 0.0f, 1.0f}},
+        {"bunny.obj", ObjectType::LIGHT_OBJECT, slot[1][2], 500.0f, {1.0f, 1.0f, 1.0f, 1.0f}},
+        {"square.obj", ObjectType::LIGHT_OBJECT, slot[4][0], 35.0f, {0.0f, 0.0f, 1.0f, 1.0f}},
+        {"Icosphere.obj", ObjectType::LIGHT_OBJECT, slot[2][4], 50.0f, {1.0f, 1.0f, 0.0f, 1.0f}},
+        {"torus.obj", ObjectType::LIGHT_OBJECT, slot[0][3], 35.0f, {0.0f, 1.0f, 0.0f, 1.0f}}
     };
     objectReader.loadObjectFiles(objectArguments, "res/obj/");
 }
@@ -199,7 +202,7 @@ void Level::NormalLevel::doAiYInput()
     float deltaTime = 0;
     //We need to wait for the window to be passed in before calling the opengl functions
     std::unique_lock<std::mutex> lk(s_YuserMutex);
-    s_Ycv.wait(lk, [&] {if (ptr_window) return true; });
+    s_Ycv.wait(lk, [&] { return ptr_window; });
     while (levelActive)
     {
         Timer time(deltaTime);
@@ -231,7 +234,7 @@ void Level::NormalLevel::doUserXInput()
 {
     float deltaTime = 0;
     std::unique_lock<std::mutex> lk(s_XuserMutex);
-    s_Xcv.wait(lk, [&] {if (ptr_window) return true;});
+    s_Xcv.wait(lk, [&] { return ptr_window; });
     //UsrInterface usrCommands;
     //glm::vec3 usrInput = usrCommands.getUsrInput();
     while (levelActive)
@@ -273,7 +276,7 @@ void Level::NormalLevel::doUserYInput()
 {
     float deltaTime = 0;
     std::unique_lock<std::mutex> lk(s_YuserMutex);
-    s_Ycv.wait(lk, [&] {if (ptr_window) return true; });
+    s_Ycv.wait(lk, [&] {return ptr_window; });
     while (levelActive)
     {
         Timer time(deltaTime);
@@ -311,6 +314,12 @@ void Level::NormalLevel::loadThread()
         cursorUpdaterY = new std::thread(&NormalLevel::doAiYInput, this);
     else
         cursorUpdaterY = new std::thread(&NormalLevel::doUserYInput, this);
+}
+
+bool Level::NormalLevel::usrExitKey()
+{
+    int state2 = glfwGetKey(ptr_window, GLFW_KEY_ESCAPE);
+    return state2 == GLFW_PRESS;
 }
 
 

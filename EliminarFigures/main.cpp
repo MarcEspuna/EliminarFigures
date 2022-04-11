@@ -49,6 +49,8 @@ int main(void)
     menu->RegisterTest<Level::EasyTest>("Easy Difficulty");
     menu->RegisterTest<Level::NormalLevel>("KASPAR");
 
+    io.Fonts->AddFontFromFileTTF("res/fonts/Roboto-Medium.ttf", 16.0f);      // Default font for the text UI of the app
+
     //La idea sera seleccionar la AI en una casella (un tic)
     //També seleccionarem l'eix al qual la AI es moura
 
@@ -69,15 +71,14 @@ int main(void)
 
         currentTest->OnUpdate(deltaTime, testExit);
         currentTest->OnRender();
-        ImGui::Begin("DIFFICULTY/PLAYERS");
-        if ((currentTest != menu && ImGui::Button("<-")) || (currentTest != menu && testExit)) // WoW! si el primer es fals el compilador ni mira la següent comprovació. Per això no apareix el boto al menu principal
+
+        if (currentTest != menu && testExit) // WoW! si el primer es fals el compilador ni mira la següent comprovació. Per això no apareix el boto al menu principal
         {
            delete currentTest;
            currentTest = menu;
            testExit = false;
         }
         currentTest->OnImGuiRender(window);
-        ImGui::End();
         
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

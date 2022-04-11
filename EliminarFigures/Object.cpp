@@ -63,24 +63,14 @@ void Object::New(const glm::mat4& u_NewModel, const glm::vec3& movement)
 
 void Object::New(const RandomGenerator& random, Slot& slot)
 {
-	unsigned int index = std::abs(random.GetValue(0, 17));
-	bool available = slot.isAvailable(index);
-	while (!available)
-	{
-		if (index)
-		{
-			index--;
-			available = slot.isAvailable(index);
-		}
-		else
-		{
-			index = 17;
-			available = slot.isAvailable(index);
-		}
-	}
+	random.Randomize();
+	unsigned int rowIdx = std::abs(random.GetValue(0, slot.getSize()));			// 5 rows  range is from [0-4]
+	unsigned int colIdx = std::abs(random.GetValue(0, slot.getSizeCol()));		// 7 columns range is from [0-6]
 
-	vec_Model.push_back(glm::scale(slot[index], glm::vec3(m_DefaultScale)));
-	objectMovement.reset(slot[index], 100.0f);
+	glm::mat4 model = slot.getModel(rowIdx, colIdx);							// Retreave the model matrix of the randomly generated slot
+	
+	vec_Model.push_back(glm::scale(model, glm::vec3(m_DefaultScale)));			
+	objectMovement.reset(model, 100.0f);
 	m_SquareCollider.Update(vec_Model[0]);
 	selected = false;
 	activeCollider = false;

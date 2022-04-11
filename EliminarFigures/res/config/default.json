@@ -1,0 +1,34 @@
+{
+    "AiPlayerX": false,
+    "AiPlayerY": false,
+    "object": {
+        "filenames": [
+            "bunny.obj",
+            "teapot.obj",
+            "square.obj",
+            "Icosphere.obj",
+            "torus.obj"
+        ],
+        "lighting": {
+            "ambient": 1.0,
+            "diffuse": 4.0,
+            "light direction": [
+                0.0,
+                0.0,
+                -100.0
+            ],
+            "specular": 20.0
+        },
+        "movement": {
+            "random positioning": true,
+            "rotation": 20.0,
+            "scale": 1.0
+        }
+    },
+    "sockets": {
+        "aiEnable": true,
+        "userEnable": true,
+        "aiPort": 10000,
+        "userPort": 8000
+    }
+}
