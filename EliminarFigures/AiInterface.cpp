@@ -6,30 +6,63 @@ static int sgn(T val) {
 	return (T(0) < val) - (val < T(0));
 }
 
-
 AiInterface::AiInterface()
-	: m_Cursor(nullptr), receive(nullptr), send(nullptr), userPressedKey(nullptr), dataS(nullptr), activeObjects(0)
+	: m_Cursor(nullptr), receive(nullptr), send(nullptr), userPressedKey(nullptr), dataS(nullptr), activeObjects(0), clientConnected(false), initialized(false)
 {
-	std::memset(dataR, 0, sizeof(dataR));
-	server.bindS(8888);
+	dataS = new char[11];							//Cursor Label ('C') Position cursor : 2 Floats(x pos, y pos), overFigure : 1 byte (Y, N), userHitKey : 1 byte (Y, N)
+}
+
+void AiInterface::init(unsigned int port)
+{
+	std::cout << "[AIinterface]: init called\n";
+	server.init();
+	server.bindS(port);
 	connect = new std::thread(&AiInterface::connectionManager, this);
+	initialized = true;
+}
+
+void AiInterface::fini()
+{
+	std::cout << "[AIinterface]: fini called\n";
+	if (server.isActive())	server.stop();
+	if (connect) {
+		connect->join();		//We wait for the connection thread to stop
+		cleanThreads();
+		delete connect;
+		connect = nullptr;
+	}
+	if (dataS) {
+		delete dataS;
+		dataS = nullptr;
+	}
+	// Super important to reset all the important pointers and values
+	initialized = false;
+	clear();
+}
+
+void AiInterface::clear()
+{
+	m_Cursor = nullptr;
+	activeObjects = 0;
+	clientConnected = false;
+	userPressedKey = nullptr;
+	m_Objects.clear();
 }
 
 AiInterface::~AiInterface()
 {
-	server.stop();			//Will stop the server socket
-	connect->join();		//We wait for the connection thread to stop
-	cleanThreads();			
-	delete connect;			
-	delete dataS;
+	fini();
 }
 
 void AiInterface::setCursor(const Object* object)
 {
 	m_Cursor = object->getCollider();
-	dataS = new char[11];							//Cursor Label ('C') Position cursor : 2 Floats(x pos, y pos), overFigure : 1 byte (Y, N), userHitKey : 1 byte (Y, N)
 }
 
+/// <summary>
+/// Very important to set up a mutex in case we are loading objects at the same time as transmitting!
+/// </summary>
+/// <param name="objects"></param>
 void AiInterface::setObjects(const std::vector<Object*> objects)
 {
 	for (const auto& object : objects)
@@ -38,7 +71,7 @@ void AiInterface::setObjects(const std::vector<Object*> objects)
 	}
 	if (dataS)
 	{
-		delete dataS;
+		delete dataS;									// TODO: FIX, We need a mutex here 
 		dataS = nullptr;
 	}
 	dataS = new char[1 + m_Objects.size() * 12];		//Identifier : 'O', Object id and positions : Each object 3 floats (id, xcoord, ycoord) 
@@ -60,15 +93,19 @@ void AiInterface::setUserSelectKey(const bool* userSelect)
 	userSelectKey = userSelect;
 }
 
+void AiInterface::transmitStatus()
+{
+	int size = loadObjectPositions();
+	server.sendBuffer(dataS, size);
+}
+
+
 void AiInterface::connectionManager()
 {
 	if (server.listenS(1))
 	{
+		clientConnected = true;
 		//Successfull connection
-		//Always send objects when starting connection
-		int size = loadObjectPositions();
-		server.sendBuffer(dataS, size);
-
 		cleanThreads();
 		//If there is a successful incomming connection, we start the transmition thread and reception thread
 		receive = new std::thread(&AiInterface::reception, this);
@@ -79,7 +116,6 @@ void AiInterface::connectionManager()
 /* Manages the reception data from the aiPlayer module, if it's not connected starts a thread that waits for new connections */
 void AiInterface::reception()
 {
-	size_t waitingTime = 0;
 	while (server.recieveBuffer(dataR));
 	if (server.isActive())
 	{
@@ -87,16 +123,19 @@ void AiInterface::reception()
 		delete connect;
 		connect = new std::thread(&AiInterface::connectionManager, this);
 	}
+	clientConnected = false;
 }
 
 void AiInterface::transmition()
 {
 	std::cout << "[AiInterface]: Starting data transmition" << std::endl;
-	while (server.clientConnected())
+	while (server.isActive())	
 	{
-		unsigned int size = updateDataS();
-		Sleep(1);
-		server.sendBuffer(dataS, size);
+		if (m_Cursor) {			// Once the cursor is set we start updating and transmitting
+			unsigned int size = updateDataS();
+			Sleep(1);
+			server.sendBuffer(dataS, size);
+		}
 	}
 	std::cout << "[AiInterface]: Sutting down transmition..." << std::endl;
 }
@@ -128,10 +167,10 @@ unsigned int AiInterface::updateDataS()
 
 unsigned int AiInterface::loadObjectPositions()
 {
+	dataS[0] = 'O';						//We mark the transmition as definning object positions
+	int ptrIndex = 1;
 	if (m_Cursor && m_Objects.size() > 0)
 	{
-		dataS[0] = 'O';						//We mark the transmition as definning object positions
-		int ptrIndex = 1;
 		for (const auto& object : m_Objects)
 		{
 			if (object->isActive())
@@ -146,10 +185,8 @@ unsigned int AiInterface::loadObjectPositions()
 				ptrIndex += sizeof(float);
 			}
 		} 
-		if (ptrIndex > 1)
-			return ptrIndex;
 	}
-	return 0;
+	return ptrIndex;
 }
 
 bool AiInterface::checkActiveObjects()

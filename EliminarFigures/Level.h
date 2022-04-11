@@ -11,12 +11,7 @@
 #include "imgui/imgui.h"
 #include "Json/json.hpp"
 #include "Config.h"
-
-
-namespace Config
-{
-	struct Config;
-}
+#include "AiInterface.h"
 
 namespace Level
 {
@@ -46,6 +41,8 @@ namespace Level
 	private:
 
 
+	protected:
+		static AiInterface aiInterface;
 	};
 
 
@@ -61,7 +58,7 @@ namespace Level
 		void RegisterTest(const std::string& testName)
 		{
 			std::cout << "Registering test: " << testName << std::endl;
-			m_Tests.push_back(std::make_pair(testName, [=]() { return new T(playerXAI, playerYAI); }));		// LAMDAS!
+			m_Tests.push_back(std::make_pair(testName, [=]() { return new T(config); }));		// LAMDAS!
 
 		}
 
@@ -93,7 +90,7 @@ namespace Level
 
 		// Auxiliar windows (separete windows that the user have opened)
 		void checkAuxiliarWindows();
-		void createFileExplorer(bool* p_open, const char* directory, const char* buttonName, void(Menu::*buttonAction)(const std::string&, bool*));
+		void createFileExplorer(bool* p_open, const char* directory, const char* buttonName, void(Menu::* buttonAction)(const std::string&, bool*));
 
 		// Button action functions
 		void saveConfigButton(const std::string& filename, bool* p_open);

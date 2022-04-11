@@ -9,6 +9,7 @@ public:
 	Server();
 	~Server();
 
+	void init();
 	void bindS(const unsigned int& port, const unsigned long& address);
 	void bindS(const unsigned int& port);
 	bool listenS(const unsigned int& connections = 1);
@@ -16,11 +17,9 @@ public:
 	void recieveBufferWait(char* reply);
 	bool recieveBuffer(char* reply);
 	void stop();
-	inline bool clientConnected() { return connected; }
 	inline bool isActive() { return active; }
 
 private:
-	bool connected;							//Client connected 
 	bool active;							//Server is active
 	WSADATA wsa;							//Winsocket
 	SOCKET s, new_socket;					//Actual socket

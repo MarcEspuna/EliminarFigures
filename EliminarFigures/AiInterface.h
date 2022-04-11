@@ -18,6 +18,12 @@ public:
 	std::string getAiInput();
 	void setUserPressedKey(const bool* userKey);
 	void setUserSelectKey(const bool* userSelect);
+	void transmitStatus();
+	void init(unsigned int port);
+	void fini();
+	void clear();
+	inline bool isConnected() { return clientConnected; }
+	inline bool isActive() { return initialized; }
 
 private:
 
@@ -33,7 +39,7 @@ private:
 	std::thread* connect;							//Thread that will receive incomming data and store it
 
 	char* dataS;									//Data to send  ('O', <object positions>) or ('C', <cursor position>, <overFigure> id, userHitKey)
-	char dataR[4];									//Data received (x axis: int_8, y axis: int_8, correct initial reception: bool)
+	char dataR[4] = { 'S','S','S','S' };									//Data received (x axis: int_8, y axis: int_8, correct initial reception: bool)
 
 	void connectionManager();						//Listens and manages incomming connections
 	void reception();								//Reads incomming data and stores it, also it's responsible to determine if the client is still connected
@@ -46,5 +52,7 @@ private:
 	unsigned int loadCursorPosition();				//Loads the current cursor position to the dataS buffer
 	int checkObjectCollisions();					//Checks if any object has a collision currently 
 
+	bool clientConnected;
+	bool initialized;
 };
 

@@ -19,7 +19,7 @@ namespace Level {
 
 	{
 	public:
-		EasyTest(bool playerXAI, bool playerYAI);
+		EasyTest(const Config::Config& config);
 		~EasyTest();
 
 

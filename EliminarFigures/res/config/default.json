@@ -25,10 +25,10 @@
             "scale": 1.0
         }
     },
-    "sockets": {
-        "aiEnable": true,
-        "userEnable": true,
-        "aiPort": 10000,
-        "userPort": 8000
-    }
+  "sockets": {
+    "aiEnable": true,
+    "userEnable": true,
+    "aiPort": 8888,
+    "userPort": 8000
+  }
 }

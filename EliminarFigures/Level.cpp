@@ -28,8 +28,7 @@ Level::Menu::Menu(Level*& currentTest)
 
 Level::Menu::~Menu()
 {
-
-
+	
 }
 
 void Level::Menu::OnImGuiRender(GLFWwindow* window)
@@ -66,6 +65,9 @@ void Level::Menu::OnImGuiRender(GLFWwindow* window)
 	loggingHeader();
 
     ImGui::End();
+	
+	if (!aiInterface.isActive() && config.socket.aiEnable) aiInterface.init(config.socket.aiPort);
+	if (aiInterface.isActive() && !config.socket.aiEnable) { aiInterface.fini(); }
 
 }
 /// <summary>
@@ -198,13 +200,18 @@ void Level::Menu::socketsHeader()
 			ImGui::Checkbox("Enable Ai server", &config.socket.aiEnable);
 			if (config.socket.aiEnable)
 			{
-				ImGui::Text("Ai socket is : connected.");
+
+				ImGui::Text("Ai socket is : ");
+				ImGui::SameLine();
+				if (aiInterface.isConnected())	ImGui::Text("connected.");
+				else ImGui::Text("listenning.");
 			}
+
 			ImGui::Spacing();
 			ImGui::Checkbox("Enable remote contols", &config.socket.userEnable);
 			if (config.socket.userEnable)
 			{
-				ImGui::Text("User controls are : connected.");
+				ImGui::Text("User controls are : listenning.");
 			}
 			ImGui::TreePop();
 		}
@@ -241,8 +248,8 @@ void Level::Menu::playersHeader()
 {
 	if (ImGui::CollapsingHeader("Players"))
 	{
-		ImGui::Checkbox("Player X AI", &playerXAI);
-		ImGui::Checkbox("Player Y AI", &playerYAI);
+		ImGui::Checkbox("Player X AI", &config.aiPlayerX);
+		ImGui::Checkbox("Player Y AI", &config.aiPlayerY);
 	}
 }
 

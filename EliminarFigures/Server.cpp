@@ -3,7 +3,6 @@
 #include <iostream>
 
 Server::Server()
-	: connected(false)
 {
 	initWinsoc();
 	initSocket();
@@ -18,9 +17,16 @@ Server::~Server()
 		WSACleanup();
 		std::cout << "[SERVER]: Closed winsocket" << std::endl;
 		active = false;
-		connected = false;
 	} 
 	std::cout << "[SERVER]: Shutting down..." << std::endl;
+}
+
+void Server::init()
+{
+	if (!active) {
+		initWinsoc();
+		initSocket();
+	}
 }
 
 void Server::bindS(const unsigned int& port, const unsigned long& address)
@@ -71,11 +77,9 @@ bool Server::listenS(const unsigned int& connections)
 			std::cout << "[SERVER]: Accept failed with error code " << error << std::endl;
 			break;
 		}
-		connected = false;
 		return false;
 	}
 	std::cout << "[SERVER]: Connection accepted" << std::endl;
-	connected = true;
 	return true;
 }
 
@@ -111,7 +115,6 @@ bool Server::recieveBuffer(char* reply)
 		else
 			timeout++;
 	}
-	connected = false;
 	std::cout << "[SERVER]: Client disconnected" << std::endl;
 	return false;
 }
@@ -123,8 +126,8 @@ void Server::stop()
 	WSACleanup();
 	std::cout << "[SERVER]: Closed winsocket" << std::endl;
 	active = false;
-	connected = false;
 }
+
 
 
 void Server::initWinsoc()

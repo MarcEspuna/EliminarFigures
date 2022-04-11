@@ -15,7 +15,7 @@
 
 #include "Texture.h"
 
-Level::HardTest::HardTest(bool playerXAI, bool playerYAI)
+Level::HardTest::HardTest(const Config::Config& config)
     : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 20.0f),
     HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.4f, 1.0f) ),
     VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.4f, 1.0f, 1.0f)),

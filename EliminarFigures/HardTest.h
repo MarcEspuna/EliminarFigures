@@ -18,7 +18,7 @@ namespace Level {
 
 	{
 	public:
-		HardTest(bool playerXAI, bool playerYAI);
+		HardTest(const Config::Config& config);
 		~HardTest();
 
 

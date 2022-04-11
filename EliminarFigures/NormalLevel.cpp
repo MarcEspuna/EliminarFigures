@@ -26,11 +26,13 @@ static std::mutex s_YuserMutex;
 static std::condition_variable s_Xcv;
 static std::condition_variable s_Ycv;
 
-Level::NormalLevel::NormalLevel(bool playerXAI, bool playerYAI)
+AiInterface Level::Level::aiInterface;
+
+Level::NormalLevel::NormalLevel(const Config::Config& config)
     : cursor({ new BasicObject("res/obj/HLine.obj", glm::vec4(0.7, 0.1, 0.1, 1.0f), glm::vec3(1.0f, 0.4f, 1.0f)),
                new BasicObject("res/obj/VLine.obj", glm::vec4(0.1, 0.2, 0.7, 1.0f), glm::vec3(0.4f, 1.0f, 1.0f)),
                new BasicObject("res/obj/CQuad.obj", glm::vec4(1.0f, 0.96f, 0.22f, 1.0f), glm::vec3(0.4f, 0.4f, 1.0f))}),
-               x_AiEnabled(playerXAI), y_AiEnabled(playerYAI),
+               x_AiEnabled(config.aiPlayerX), y_AiEnabled(config.aiPlayerY),
                cursorUpdaterX(nullptr),
                cursorUpdaterY(nullptr),
                levelActive(true),
@@ -59,6 +61,8 @@ Level::NormalLevel::~NormalLevel()
     cursorUpdaterY->join();
     delete cursorUpdaterX;
     delete cursorUpdaterY;
+    aiInterface.clear();
+    //aiInterface.transmitStatus();                                           // We notify that there are no more objects
     std::cout << "[NORMAL LEVEL]: Default Level destoyed. " << std::endl;
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
@@ -298,10 +302,10 @@ void Level::NormalLevel::doUserYInput()
 
 void Level::NormalLevel::loadCommunications()
 {
-    aiInterface.setCursor(cursor.CQuad);
     aiInterface.setUserPressedKey(&userPressedKey);
     aiInterface.setUserSelectKey(&userSelectKey);
     aiInterface.setObjects(worldBuffer);
+    aiInterface.setCursor(cursor.CQuad);
 }
 
 void Level::NormalLevel::loadThread()

@@ -1,5 +1,4 @@
 #pragma once
-#include "AiInterface.h"
 #include "DataLink.h"
 #include "Level.h"
 #include "Shader.h"
@@ -30,7 +29,7 @@ namespace Level {
 
 	{
 	public:
-		NormalLevel(bool playerXAI, bool playerYAI);
+		NormalLevel(const Config::Config& config);
 		~NormalLevel();
 
 		void OnRender() override;
@@ -46,7 +45,7 @@ namespace Level {
 		bool levelActive;
 		Renderer renderer;
 		ObjectReader objectReader;
-		AiInterface aiInterface;
+		//AiInterface aiInterface;
 		//DataLink dataLink;
 		std::thread* cursorUpdaterX;
 		std::thread* cursorUpdaterY;

@@ -19,7 +19,7 @@ namespace Level {
 
 	{
 	public:
-		MediumTest(bool playerXAI, bool playerYAI);
+		MediumTest(const Config::Config& config);
 		~MediumTest();
 
 
