@@ -8,7 +8,8 @@
 #include "ObjectLight.h"
 
 ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model, const float& scale)
-	: Object(glm::vec4(1.0f,1.0f,1.0f,1.0f), "res/BasicLight.shader", shape, u_Model, scale)
+	: Object(glm::vec4(1.0f,1.0f,1.0f,1.0f), "res/BasicLight.shader", shape, u_Model, scale), lightDir(0.0f, 0.0f, -2000.0f),
+	ambientLight(0.05f, 0.05f, 0.05f), diffuseLight(0.5f, 0.5f, 0.5f), specularLight(1.0f, 1.0f, 1.0f), shininess(20)
 {
 	shader.Bind();
 	VertexArrayLayout layout;
@@ -32,7 +33,8 @@ ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model, const
 }
 
 ObjectLight::ObjectLight(const tinyobj::shape_t& shape, glm::mat4 u_Model, glm::vec4 color, const float& scale)
-	: Object(color, "res/BasicLight.shader", shape, u_Model, scale)
+	: Object(color, "res/BasicLight.shader", shape, u_Model, scale), lightDir(0.0f, 0.0f, -2000.0f),
+	ambientLight(0.05f, 0.05f, 0.05f), diffuseLight(0.5f, 0.5f, 0.5f), specularLight(1.0f, 1.0f, 1.0f), shininess(20)
 {
 	shader.Bind();
 	VertexArrayLayout layout;
@@ -59,12 +61,12 @@ void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, Imgu
 {
 	for (size_t i = 0; i < vec_Model.size(); i++)
 	{
-		objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i], m_SquareCollider);
+		if (rotationSpeed) objectMovement.rotateY(deltaTime / (float)rotationSpeed, vec_Model[i], m_SquareCollider);
 		m_CollisionView.Load(m_SquareCollider.getShapes(), m_SquareCollider.getIndex());
 		if (hit)
 		{
 			objectMovement.scale(1.0f - deltaTime / 10.0f, vec_Model[i], m_SquareCollider);
-			objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i], m_SquareCollider);
+			objectMovement.rotateY(deltaTime / 70.0f, vec_Model[i], m_SquareCollider);
 
 		}
 		else if (m_SquareCollider.thereIsCollision() && deleteObject)
@@ -79,12 +81,12 @@ void ObjectLight::OnObjectUpdate(bool deleteObject, const float& deltaTime, Imgu
 {
 	for (size_t i = 0; i < vec_Model.size(); i++)
 	{
-		objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i], m_SquareCollider);
+		if (rotationSpeed) objectMovement.rotateY(deltaTime / (float)rotationSpeed, vec_Model[i], m_SquareCollider);
 		m_CollisionView.Load(m_SquareCollider.getShapes(), m_SquareCollider.getIndex());
 		if (hit)
 		{
 			objectMovement.scale(1.0f - deltaTime / 10.0f, vec_Model[i], m_SquareCollider);
-			objectMovement.rotateY(deltaTime / 50.0f, vec_Model[i], m_SquareCollider);
+			objectMovement.rotateY(deltaTime / 70.0f, vec_Model[i], m_SquareCollider);
 			//datalink.figureErased(); not neeeded
 		}
 		else if (m_SquareCollider.thereIsCollision() && deleteObject)
@@ -115,11 +117,11 @@ void ObjectLight::setUniform(size_t objectIndex, const glm::mat4& projection, co
 	shader.SetUniform4Mat("u_Model", vec_Model[objectIndex]);		
 	shader.SetUniform4Mat("u_View", view);
 	shader.SetUniform4Mat("u_Proj", projection);
-	shader.SetUniform3f("u_LightPos", lightPosition);
-	shader.SetUniform3f("u_ambient", glm::vec3(0.05f, 0.05f, 0.05f));
-	shader.SetUniform3f("u_diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-	shader.SetUniform3f("u_specular", glm::vec3(1.0f, 1.0f, 1.0f));
-	shader.SetUniform1f("u_shininess", 20.0f);
+	shader.SetUniform3f("u_LightPos", lightDir);
+	shader.SetUniform3f("u_ambient", ambientLight);
+	shader.SetUniform3f("u_diffuse", diffuseLight);
+	shader.SetUniform3f("u_specular", specularLight);
+	shader.SetUniform1f("u_shininess", (float)shininess);
 }
 
 void ObjectLight::updateLink(DataLink& datalink)
@@ -133,6 +135,19 @@ void ObjectLight::updateLink(DataLink& datalink)
 		datalink.figureErased();
 	else
 		datalink.figureNotErased();
+}
+
+void ObjectLight::setLightDir(glm::vec3 lightdir)
+{
+	lightDir = lightdir;
+}
+
+void ObjectLight::setLightParam(int ambient, int diffuse, int specular, int shininess)
+{
+	ambientLight = glm::vec3(((float)ambient/100.0f));
+	diffuseLight = glm::vec3(((float)diffuse/100.0f));
+	specularLight = glm::vec3(((float)specular)/100.0f);
+	shininess = (float)shininess;
 }
 
 

@@ -12,6 +12,8 @@
 #include "Json/json.hpp"
 #include "Config.h"
 #include "AiInterface.h"
+#include "ObjectReader.h"
+#include "Renderer.h"
 
 namespace Level
 {
@@ -43,8 +45,21 @@ namespace Level
 
 	protected:
 		static AiInterface aiInterface;
+		ObjectReader objectReader;
+		std::vector<Object*> worldBuffer;
+		Renderer renderer;
+
+		glm::mat4 m_Proj = glm::ortho(640.0f, -640.0f, -360.0f, 360.0f, -640.0f, 640.0f);
+
+		glm::mat4 m_View = glm::lookAt(
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, 0.0f, 1.0f),
+			glm::vec3(0.0f, 1.0f, 0.0f)
+		);
+
 	};
 
+	using str_vector_pair = std::vector<std::pair<std::string, bool>>;
 
 	class Menu : public Level
 	{
@@ -53,22 +68,24 @@ namespace Level
 		~Menu();
 
 		void OnImGuiRender(GLFWwindow* window) override;
+		void OnUpdate(float deltaTime, bool& testExit) override;
+		void OnRender() override;
 
 		template <typename T>
 		void RegisterTest(const std::string& testName)
 		{
 			std::cout << "Registering test: " << testName << std::endl;
-			m_Tests.push_back(std::make_pair(testName, [=]() { return new T(config); }));		// LAMDAS!
+			m_Tests.push_back(std::make_pair(testName, [=]() { return new T(config); }));		// We add a lamda that creates the registering level
 
 		}
 
 	private:
-		Level*& m_CurrentTest;
-		std::vector < std::pair < std::string, std::function<Level* () >> > m_Tests;
+		Level*& m_CurrentTest;																	// Pointer to the current level being executed.
+		std::vector < std::pair < std::string, std::function<Level* () >> > m_Tests;			// Function pointer that creates a new level
 		bool playerXAI;
 		bool playerYAI;
 
-		ImGuiWindowFlags window_flags = 0;
+		ImGuiWindowFlags window_flags = 0;		// Flags of the imgui config panel (main panel)
 		nlohmann::json jconfig;					// Json object to store current config
 		Config::Config config;					// Struct that stores in ram the current config
 
@@ -92,13 +109,21 @@ namespace Level
 		void checkAuxiliarWindows();
 		void createFileExplorer(bool* p_open, const char* directory, const char* buttonName, void(Menu::* buttonAction)(const std::string&, bool*));
 
-		// Button action functions
-		void saveConfigButton(const std::string& filename, bool* p_open);
+		// Button action functions (used as function pointers in the file explorer method)
+		void saveConfigButton(const std::string& filename, bool* p_open);			
 		void loadConfigButton(const std::string& filename, bool* p_open);
+
+		// Objects selection
+		void updateAllObjectSelection(const str_vector_pair& objNames, const str_vector_pair& imgNames, const str_vector_pair& pkgNames);
+		void updateObjectSelection(std::string*& it, const str_vector_pair& names, const char* directory);
 
 		// UI managing variables
 		bool open = false;
 		bool save = false;
+
+		// World objects to see the changes in imgui live
+		void loadObjectFiles();
+
 
 	};
 

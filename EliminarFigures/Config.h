@@ -5,13 +5,13 @@ namespace Config
 	struct Lighting
 	{
 		float lightDir[3];
-		float ambient, diffuse, specular;
+		int ambient, diffuse, specular;
+		bool highlight;
 	};
 
 	struct Movement
 	{
-		float rotation;
-		float scale;
+		int rotation;
 		bool randPositionning;
 	};
 
@@ -26,6 +26,7 @@ namespace Config
 	struct Obj
 	{
 		std::string filenames[5];
+		int scale[5];
 		Lighting light;
 		Movement movement;
 	};
@@ -46,7 +47,6 @@ namespace Config
 	static void from_json(const nlohmann::json& j, Movement& p)
 	{
 		j.at("rotation").get_to(p.rotation);
-		j.at("scale").get_to(p.scale);
 		j.at("random positioning").get_to(p.randPositionning);
 	}
 
@@ -56,15 +56,16 @@ namespace Config
 		j.at("diffuse").get_to(p.diffuse);
 		j.at("specular").get_to(p.specular);
 		j.at("light direction").get_to(p.lightDir);
+		j.at("highlight").get_to(p.highlight);
 	}
 
 	// Note: get_to also calls from json so we can recursively go down the structs
 	static void from_json(const nlohmann::json& j, Obj& p)
 	{
 		j.at("filenames").get_to(p.filenames);			// Carefull to not exceed 5 objects in the json file
+		j.at("scale").get_to(p.scale);					// Carefull to not exceed 5 objects in the json file
 		j.at("lighting").get_to(p.light);
 		j.at("movement").get_to(p.movement);
-
 	}
 
 	static void from_json(const nlohmann::json& j, Sockets& p)
@@ -73,7 +74,6 @@ namespace Config
 		j.at("aiEnable").get_to(p.aiEnable);
 		j.at("userPort").get_to(p.userPort);
 		j.at("userEnable").get_to(p.userEnable);
-		
 	}
 
 	// Method is called every time we convert from json -> object

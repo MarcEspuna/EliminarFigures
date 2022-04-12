@@ -17,7 +17,7 @@ public:
 	ObjectReader();
 	~ObjectReader();
 
-	void loadObjectFiles(const std::vector<ObjectArguments>& arguments, const std::string& basePath);
+	void loadObjectFiles(const std::vector<ObjectArguments>& arguments, const std::string& basePath = "");
 	void buildObjects(std::vector<Object*>& worldVector);
 
 private:	

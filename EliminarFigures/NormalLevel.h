@@ -6,7 +6,6 @@
 #include "ObjParser.h"
 #include "ObjectLight.h"
 #include "BasicObject.h"
-#include "ObjectReader.h"
 #include "TextureObject.h"
 #include "AiPlayer.h"
 #include <unordered_map>
@@ -43,9 +42,8 @@ namespace Level {
 
 		int targetObjectId;
 		bool levelActive;
-		Renderer renderer;
-		ObjectReader objectReader;
-		//AiInterface aiInterface;
+
+		Config::Config configuration;
 		//DataLink dataLink;
 		std::thread* cursorUpdaterX;
 		std::thread* cursorUpdaterY;
@@ -55,15 +53,6 @@ namespace Level {
 		bool userPressedKey;
 		bool userSelectKey;
 
-		glm::mat4 m_Proj = glm::ortho(640.0f , -640.0f, -360.0f, 360.0f, -640.0f, 640.0f);
-
-		glm::mat4 m_View = glm::lookAt(
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 0.0f, 1.0f),
-			glm::vec3(0.0f, 1.0f, 0.0f)
-		);
-
-		std::vector<Object*> worldBuffer;
 		Slot slot;
 		Cursor cursor;
 

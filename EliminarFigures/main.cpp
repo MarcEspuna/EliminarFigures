@@ -69,15 +69,16 @@ int main(void)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        currentTest->OnUpdate(deltaTime, testExit);
-        currentTest->OnRender();
-
-        if (currentTest != menu && testExit) // WoW! si el primer es fals el compilador ni mira la següent comprovació. Per això no apareix el boto al menu principal
+        if (currentTest != menu && testExit)
         {
            delete currentTest;
            currentTest = menu;
            testExit = false;
         }
+
+        currentTest->OnUpdate(deltaTime, testExit);
+        currentTest->OnRender();
+
         currentTest->OnImGuiRender(window);
         
         ImGui::Render();

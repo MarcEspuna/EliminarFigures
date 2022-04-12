@@ -33,6 +33,7 @@ Level::NormalLevel::NormalLevel(const Config::Config& config)
                new BasicObject("res/obj/VLine.obj", glm::vec4(0.1, 0.2, 0.7, 1.0f), glm::vec3(0.4f, 1.0f, 1.0f)),
                new BasicObject("res/obj/CQuad.obj", glm::vec4(1.0f, 0.96f, 0.22f, 1.0f), glm::vec3(0.4f, 0.4f, 1.0f))}),
                x_AiEnabled(config.aiPlayerX), y_AiEnabled(config.aiPlayerY),
+               configuration(config),
                cursorUpdaterX(nullptr),
                cursorUpdaterY(nullptr),
                levelActive(true),
@@ -127,19 +128,25 @@ void Level::NormalLevel::LoadObjectFiles()
     Object::init();   //Reset the counter of objects to 0, in order to propoerly set the object ids
     //We define the objects that we want to load:
     std::vector<ObjectArguments> objectArguments = { 
-        {"teapot.obj", ObjectType::LIGHT_OBJECT, slot[3][5], 90.0f, {1.0f, 0.0f, 0.0f, 1.0f}},
-        {"bunny.obj", ObjectType::LIGHT_OBJECT, slot[1][2], 500.0f, {1.0f, 1.0f, 1.0f, 1.0f}},
-        {"square.obj", ObjectType::LIGHT_OBJECT, slot[4][0], 35.0f, {0.0f, 0.0f, 1.0f, 1.0f}},
-        {"Icosphere.obj", ObjectType::LIGHT_OBJECT, slot[2][4], 50.0f, {1.0f, 1.0f, 0.0f, 1.0f}},
-        {"torus.obj", ObjectType::LIGHT_OBJECT, slot[0][3], 35.0f, {0.0f, 1.0f, 0.0f, 1.0f}}
+        {configuration.obj.filenames[0], ObjectType::LIGHT_OBJECT, slot[3][5], (float)configuration.obj.scale[0], {1.0f, 0.0f, 0.0f, 1.0f}},
+        {configuration.obj.filenames[1], ObjectType::LIGHT_OBJECT, slot[1][2], (float)configuration.obj.scale[1], {1.0f, 1.0f, 1.0f, 1.0f}},
+        {configuration.obj.filenames[2], ObjectType::LIGHT_OBJECT, slot[4][0], (float)configuration.obj.scale[2], {0.0f, 0.0f, 1.0f, 1.0f}},
+        {configuration.obj.filenames[3], ObjectType::LIGHT_OBJECT, slot[2][4], (float)configuration.obj.scale[3], {1.0f, 1.0f, 0.0f, 1.0f}},
+        {configuration.obj.filenames[4], ObjectType::LIGHT_OBJECT, slot[0][3], (float)configuration.obj.scale[4], {0.0f, 1.0f, 0.0f, 1.0f}}
     };
-    objectReader.loadObjectFiles(objectArguments, "res/obj/");
+    objectReader.loadObjectFiles(objectArguments);
 }
 
 /* It will create all the available objects to be rendered in the current level, in other words, we add the objects in the worldbuffer*/
 void Level::NormalLevel::BuildObjects()
 {
-    objectReader.buildObjects(worldBuffer);
+    objectReader.buildObjects(worldBuffer);     // Creating the read objects in the world buffer
+    for (auto& object : worldBuffer)            // Updating the configuration settings
+    {
+        object->setRotationSpeed(configuration.obj.movement.rotation);
+        object->setLightDir({ configuration.obj.light.lightDir[0] * 10, configuration.obj.light.lightDir[1] * 10, configuration.obj.light.lightDir[2] * 10 });
+        object->setLightParam(configuration.obj.light.ambient, configuration.obj.light.diffuse, configuration.obj.light.specular, 20);
+    }
 }
 
 bool Level::NormalLevel::userHitKey()

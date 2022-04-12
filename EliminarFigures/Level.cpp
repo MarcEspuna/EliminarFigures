@@ -2,18 +2,26 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_glfw.h"
+#include "Slot.h"
 #include <iostream>
 #include <fstream>
 #include <filesystem>
 #include <vector>
+#include <iterator>
+
+#define MAX_OBJ	5									// Maximum number of objects allowed in the KASPAR scene 
 
 #define	CONFIG_FILEPATH	"res/config/default.json"
 #define CONFIG_DIRECTORY "res/config/"
 #define OBJECTS_DIRECTORY "res/obj/obj/"
 #define IMAGES_DIRECTORY "res/obj/images/"
+#define PACKAGES_DIRECTORY "res/obj/packages/"
 
 static std::string parseString(std::string str, const std::string& delimiter);
 static std::vector<std::string> getFiles(std::string directory);
+static std::vector<std::pair<std::string, bool>> getSelectingFiles(const char* directory);
+static void createObjectsSelectionTab(std::vector<std::pair<std::string, bool>>& selectionList, unsigned int& selectCounter);
+static void HelpMarker(const char* desc);
 
 Level::Menu::Menu(Level*& currentTest)
 	:m_CurrentTest(currentTest), playerXAI(false), playerYAI(false)
@@ -24,11 +32,57 @@ Level::Menu::Menu(Level*& currentTest)
 
 	config = jconfig.get<Config::Config>();	
 
+	loadObjectFiles();
+	objectReader.buildObjects(worldBuffer);
+
 }
 
 Level::Menu::~Menu()
 {
 	
+}
+
+void Level::Menu::OnUpdate(float deltaTime, bool& testExit)
+{
+	ImguiVariables random;
+	Slot slot;
+	static std::vector staticModels = { slot[0][5], slot[1][5], slot[2][5], slot[3][5], slot[4][5] };
+	// Execute the commands set in the ui interface:
+	// Sockets:
+
+	if (!aiInterface.isActive() && config.socket.aiEnable) aiInterface.init(config.socket.aiPort);
+	if (aiInterface.isActive() && !config.socket.aiEnable) { aiInterface.fini(); }
+
+	// Objects:
+	int counter = 4;
+	for (auto& object : worldBuffer)
+	{
+		const auto& scale = config.obj.scale[4-counter];
+		const auto& rotation = config.obj.movement.rotation;
+		object->GetModels()[0] = staticModels[counter];									// Upload the unscaled model
+		object->setRotationSpeed(rotation);												// Set the rotation speed
+		object->setLightDir({ config.obj.light.lightDir[0] * 10, config.obj.light.lightDir[1] * 10, config.obj.light.lightDir[2] * 10 });
+		object->setLightParam(config.obj.light.ambient, config.obj.light.diffuse, config.obj.light.specular, 20);
+		object->OnObjectUpdate(false, deltaTime, random);								// Rotate the object
+		staticModels[counter] = object->GetModels()[0];									// Save the rotatin object before scaling
+		object->GetModels()[0] = glm::scale(object->GetModels()[0], glm::vec3(scale));	// Scale to the setted up dimension
+		object->isNotTarget();
+		counter--;
+	}
+}
+
+void Level::Menu::OnRender()
+{
+	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	renderer.ClearDepth();
+	//Render all the world space objects:
+	for (auto& object : worldBuffer)
+	{
+		renderer.Draw(*object, m_Proj, m_View);                  //Each pass will draw all the objects of the current shape object
+	}
 }
 
 void Level::Menu::OnImGuiRender(GLFWwindow* window)
@@ -65,9 +119,6 @@ void Level::Menu::OnImGuiRender(GLFWwindow* window)
 	loggingHeader();
 
     ImGui::End();
-	
-	if (!aiInterface.isActive() && config.socket.aiEnable) aiInterface.init(config.socket.aiPort);
-	if (aiInterface.isActive() && !config.socket.aiEnable) { aiInterface.fini(); }
 
 }
 /// <summary>
@@ -91,40 +142,42 @@ void Level::Menu::objectsHeader()
 	{
 		if (ImGui::TreeNode("Load Objects"))
 		{
+			static auto objNames = getSelectingFiles(OBJECTS_DIRECTORY);
+			static auto imgNames = getSelectingFiles(IMAGES_DIRECTORY);
+			static auto pkgNames = getSelectingFiles(PACKAGES_DIRECTORY);
+			static unsigned int selectionsCounter = 0;
+
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 			if (ImGui::BeginTabBar("Object types", tab_bar_flags))
 			{
+				ImGui::Spacing();
 				if (ImGui::BeginTabItem("Png Objects"))
 				{
-					ImGui::Selectable("banana.png");
-					ImGui::Selectable("potato.png");
-					ImGui::Selectable("apple.png");
-					ImGui::Selectable("carrot.png");
+					HelpMarker("Hold CTRL and click to select multiple items.");
+					createObjectsSelectionTab(imgNames, selectionsCounter);
 					ImGui::EndTabItem();
 				}
 				if (ImGui::BeginTabItem("3D objects"))
 				{
-					ImGui::Selectable("bunny.obj");
-					ImGui::Selectable("teapot.obj");
-					ImGui::Selectable("Icosphere.obj");
-					ImGui::Selectable("torus.obj");
-					ImGui::Selectable("square.obj");
-					ImGui::Spacing();
+					HelpMarker("Hold CTRL and click to select multiple items.");
+					createObjectsSelectionTab(objNames, selectionsCounter);
 					ImGui::EndTabItem();
 				}
 				if (ImGui::BeginTabItem("Object packages"))
 				{
-					ImGui::Selectable("Animals");
-					ImGui::Selectable("Food");
-					ImGui::Selectable("Birds");
-					ImGui::Spacing();
+					HelpMarker("Hold CTRL and click to select multiple items.");
+					createObjectsSelectionTab(pkgNames, selectionsCounter);
 					ImGui::EndTabItem();
 
 				}
-				ImGui::Spacing();
-				ImGui::Spacing();
+				ImGui::Spacing(); ImGui::Spacing();
+				if (ImGui::Button("Load objects"))
+				{
+					updateAllObjectSelection(objNames, imgNames, pkgNames);
+				}
+				ImGui::Spacing(); ImGui::Spacing();
 				ImGui::EndTabBar();
 			}
 
@@ -135,24 +188,32 @@ void Level::Menu::objectsHeader()
 		{
 			ImGui::Spacing();
 			ImGui::Spacing();
-			ImGui::SliderFloat("X position", &config.obj.light.lightDir[0], 0.0f, 100.0f, "%.3f");
-			ImGui::SliderFloat("Y position", &config.obj.light.lightDir[1], 0.0f, 100.0f, "%.3f");
-			ImGui::SliderFloat("Z position", &config.obj.light.lightDir[2], 0.0f, 100.0f, "%.3f");
+			ImGui::SliderFloat("X position", &config.obj.light.lightDir[0], -100.0f, 100.0f, "%.3f");
+			ImGui::SliderFloat("Y position", &config.obj.light.lightDir[1], -100.0f, 100.0f, "%.3f");
+			ImGui::SliderFloat("Z position", &config.obj.light.lightDir[2], -100.0f, 100.0f, "%.3f");
 
 			ImGui::Spacing();
 			ImGui::Spacing();
 
-			ImGui::SliderFloat("Ambient light", &config.obj.light.ambient, 0.0f, 100.0f, "%.3f");
-			ImGui::SliderFloat("Diffuse light", &config.obj.light.diffuse, 0.0f, 100.0f, "%.3f");
-			ImGui::SliderFloat("Specular light", &config.obj.light.specular, 0.0f, 100.0f, "%.3f");
+			ImGui::SliderInt("Ambient light", &config.obj.light.ambient, 0.0f, 100.0f, "%.2d");
+			ImGui::SliderInt("Diffuse light", &config.obj.light.diffuse, 0.0f, 100.0f, "%.2d");
+			ImGui::SliderInt("Specular light", &config.obj.light.specular, 0.0f, 100.0f, "%.2d");
 			ImGui::Spacing();
 			ImGui::Spacing();
+			ImGui::Checkbox("Highlight on collision", &config.obj.light.highlight);
 			ImGui::TreePop();
 		}
 
-		if (ImGui::TreeNode("Movement"))
+		if (ImGui::TreeNode("Edit objects"))
 		{
-			ImGui::SliderFloat("Rotation speed: ", &config.obj.movement.rotation, -50.0f, 50.0f, "%.3f");
+			ImGui::Text("Objects rotation speed: ");
+			ImGui::SliderInt("Edit rotation", &config.obj.movement.rotation, -50, 50, "%.2d");
+			ImGui::Text("Objects scale:");
+			ImGui::SliderInt(parseString(config.obj.filenames[0], "/").c_str(), &config.obj.scale[0], 0, 600);
+			ImGui::SliderInt(parseString(config.obj.filenames[1], "/").c_str(), &config.obj.scale[1], 0, 600);
+			ImGui::SliderInt(parseString(config.obj.filenames[2], "/").c_str(), &config.obj.scale[2], 0, 600);
+			ImGui::SliderInt(parseString(config.obj.filenames[3], "/").c_str(), &config.obj.scale[3], 0, 600);
+			ImGui::SliderInt(parseString(config.obj.filenames[4], "/").c_str(), &config.obj.scale[4], 0, 600);
 			ImGui::TreePop();
 		}
 
@@ -231,7 +292,7 @@ void Level::Menu::loggingHeader()
 
 void Level::Menu::levelsHeader(GLFWwindow* window)
 {
-	if (ImGui::CollapsingHeader("Lavels"))
+	if (ImGui::CollapsingHeader("Levels"))
 	{
 		for (auto& test : m_Tests)
 		{
@@ -263,8 +324,8 @@ void Level::Menu::createMenuBar()
 			if (ImGui::MenuItem("Save", "Ctrl+S"))	save = true;
 			if (ImGui::MenuItem("Restore defaults", "Ctrl+D"))
 			{
-				initConfig();	// Reload the default values to the jconfig object.
-				config = jconfig.get<Config::Config>();	// Reload the configuration struct.
+				initConfig();								// Reload the default values to the jconfig object.
+				config = jconfig.get<Config::Config>();		// Reload the configuration struct.
 			}
 			ImGui::EndMenu();
 		}
@@ -290,21 +351,28 @@ void Level::Menu::createDefaults(std::fstream& file, const char* filepath)
 	jconfig["AiPlayerY"] = false;
 	nlohmann::json obj;
 	obj["filenames"] = {
-		"bunny.obj",
-		"teapot.obj",
-		"square.obj",
-		"Icosphere.obj",
-		"torus.obj"
+		"res/obj/obj/teapot.obj",
+		"res/obj/obj/bunny.obj",
+		"res/obj/obj/square.obj",
+		"res/obj/obj/Icosphere.obj",
+		"res/obj/obj/torus.obj"
+	};
+	obj["scale"] = {
+		90,
+		500,
+		35,
+		50,
+		35
 	};
 	obj["lighting"] = {
 		{"light direction", { 0.0f, 0.0f, -100.0f}},
 		{"ambient", 1.0f},
 		{"diffuse", 4.0f},
-		{"specular", 20.0f}
+		{"specular", 20.0f},
+		{"highlight", true}
 	};
 	obj["movement"] = {
-		{"rotation", 20.0f},
-		{"scale", 1.0f},
+		{"rotation", 20 },
 		{"random positioning", true}
 	};
 
@@ -323,13 +391,23 @@ void Level::Menu::createDefaults(std::fstream& file, const char* filepath)
 	std::cout << "[JSON]: New default json config file created." << std::endl;
 }
 
+/// <summary>
+/// It checks and rund the auxiliar windows of the app. It look at the appropiate boolean variables.
+/// </summary>
 void Level::Menu::checkAuxiliarWindows()
 {
 	if (open)			createFileExplorer(&open, CONFIG_DIRECTORY, "Load config", &Menu::loadConfigButton);		
 	else if (save)		createFileExplorer(&save, CONFIG_DIRECTORY, "Save config", &Menu::saveConfigButton);
 }
 
-
+/// <summary>
+/// Opens a new window with a file explorer an a specific directory. You can also specify the button label and a pointer to the button action. Needs to be a method
+/// of the current class.
+/// </summary>
+/// <param name="p_open"> Pointer to a boolean indicating if the current window is open or closed </param>
+/// <param name="directory"> Directory where the file explorer will be </param>
+/// <param name="buttonName"> Label of the button </param>
+/// <param name="buttonAction"> Function pointer that will be run when the button is pressed </param>
 void Level::Menu::createFileExplorer(bool* p_open, const char* directory, const char* buttonName, void(Menu::*buttonAction)(const std::string&, bool*))
 {
 	static ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize;	// No resizing of the 
@@ -382,7 +460,44 @@ void Level::Menu::loadConfigButton(const std::string& filename, bool* p_open)
 	config = jconfig.get<Config::Config>();	// Reload the configuration struct.
 }
 
+void Level::Menu::updateAllObjectSelection(const str_vector_pair& objNames, const str_vector_pair& imgNames, const str_vector_pair& pkgNames)
+{
+	for (auto& string : config.obj.filenames)	string.clear();		// We clear all the strings in the filenames
+	std::string* it = std::begin(config.obj.filenames);
+	updateObjectSelection(it, objNames, OBJECTS_DIRECTORY);
+	updateObjectSelection(it, imgNames, IMAGES_DIRECTORY);
+	updateObjectSelection(it, pkgNames, PACKAGES_DIRECTORY);
+	for (auto& string : config.obj.filenames)	std::cout << string << std::endl;
+}
 
+void Level::Menu::updateObjectSelection(std::string*& it, const str_vector_pair& names, const char* directory)
+{
+	for (const auto& [name, select] : names)
+	{
+		if (it == std::end(config.obj.filenames)) return;	// If we arrived at the end of the filenames array we stop the method
+		if (select) {
+			*it = { directory + name };
+			it++;
+		}
+	}
+
+}
+
+void Level::Menu::loadObjectFiles()
+{
+	Slot slot;
+	Object::init();   //Reset the counter of objects to 0, in order to propoerly set the object ids
+//We define the objects that we want to load:
+	// TODO: We need to check lenght of filenames
+	std::vector<ObjectArguments> objectArguments = {
+		{config.obj.filenames[0], ObjectType::LIGHT_OBJECT, slot[4][5], 1.0f, {1.0f, 0.0f, 0.0f, 1.0f}},
+		{config.obj.filenames[1], ObjectType::LIGHT_OBJECT, slot[3][5], 1.0f, {1.0f, 1.0f, 1.0f, 1.0f}},
+		{config.obj.filenames[2], ObjectType::LIGHT_OBJECT, slot[2][5], 1.0f, {0.0f, 0.0f, 1.0f, 1.0f}},
+		{config.obj.filenames[3], ObjectType::LIGHT_OBJECT, slot[1][5], 1.0f, {1.0f, 1.0f, 0.0f, 1.0f}},
+		{config.obj.filenames[4], ObjectType::LIGHT_OBJECT, slot[0][5], 1.0f, {0.0f, 1.0f, 0.0f, 1.0f}}
+	};
+	objectReader.loadObjectFiles(objectArguments);
+}
 
 // STATIC FUNCTIONS THAT THE MODULE USES:
 
@@ -418,4 +533,66 @@ static std::vector<std::string> getFiles(std::string directory)
 		filenames.push_back(parseString(path, "/"));
 	}
 	return filenames;
+}
+
+
+// Helper to display a little (?) mark which shows a tooltip when hovered.
+// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.md)
+static void HelpMarker(const char* desc)
+{
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
+/// <summary>
+/// Creates a vector of pairs of filenames and booleans. Used for the UI to indicate if the user selected the file or not.
+/// </summary>
+/// <param name="directory"></param>
+/// <returns></returns>
+static std::vector<std::pair<std::string, bool>> getSelectingFiles(const char* directory)
+{
+	std::vector<std::pair<std::string,bool>> filenames;
+	for (const auto& entry : std::filesystem::directory_iterator(directory))
+	{
+		std::string path = entry.path().string();
+		filenames.emplace_back(parseString(path, "/"), false);
+	}
+	return filenames;
+}
+
+static void resetSelection(std::vector<std::pair<std::string, bool>>& selectionList, unsigned int& selectCounter)
+{
+	for (auto& [name,select] : selectionList)
+	{
+		if (select)
+		{
+			selectCounter--;
+			select = false;
+		}
+	}
+}
+
+static void createObjectsSelectionTab(std::vector<std::pair<std::string, bool>>& selectionList, unsigned int& selectCounter)
+{
+	for (auto& [name, select] : selectionList)
+	{
+		if (ImGui::Selectable(name.c_str(), select))
+		{
+			if (!ImGui::GetIO().KeyCtrl)							// Clear selection when CTRL is not held
+			{
+				resetSelection(selectionList, selectCounter);
+			}
+			else if (selectCounter < MAX_OBJ)
+			{
+				selectCounter++;
+				select = true;										// We select the current selection
+			}
+		}
+	}
 }

@@ -10,14 +10,14 @@
         "res/obj/obj/torus.obj"
       ],
       "scale": [
-        90,
-        500,
+        120,
+        400,
         35,
         50,
-        35
+        45
       ],
         "lighting": {
-            "ambient": 3.0,
+            "ambient": 0.0,
             "diffuse": 55.0,
             "light direction": [
                 0.0,

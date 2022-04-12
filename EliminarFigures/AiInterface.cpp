@@ -7,7 +7,9 @@ static int sgn(T val) {
 }
 
 AiInterface::AiInterface()
-	: m_Cursor(nullptr), receive(nullptr), send(nullptr), userPressedKey(nullptr), dataS(nullptr), activeObjects(0), clientConnected(false), initialized(false)
+	: m_Cursor(nullptr), receive(nullptr), send(nullptr), userPressedKey(nullptr), 
+	dataS(nullptr), activeObjects(0), clientConnected(false), initialized(false),
+	connect(nullptr), userSelectKey(nullptr)
 {
 	dataS = new char[11];							//Cursor Label ('C') Position cursor : 2 Floats(x pos, y pos), overFigure : 1 byte (Y, N), userHitKey : 1 byte (Y, N)
 }

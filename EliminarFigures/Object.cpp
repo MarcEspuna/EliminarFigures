@@ -12,32 +12,32 @@ static std::mutex s_MoveMutex;
 unsigned int Object::objectCounter;
 
 Object::Object()
-	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
+	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false), rotationSpeed(50) {
 	objectCounter++; id = objectCounter;
 }
 
 Object::Object(glm::vec4 color)
-	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
+	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false), rotationSpeed(50) {
 	objectCounter++; id = objectCounter;
 }
 
 Object::Object(float scale)
-	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
+	: Entity(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false), rotationSpeed(50) {
 	objectCounter++; id = objectCounter;
 }
 
 Object::Object(glm::vec4 color, const char* shaderPath)
-	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false) {
+	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), rotationSpeed(50) {
 	objectCounter++; id = objectCounter;
 }
 
 Object::Object(glm::vec4 color, const char* shaderPath, const tinyobj::shape_t& shape, const glm::mat4& u_Model, const float& scale)
-	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), m_SquareCollider(u_Model, shape), m_DefaultScale(scale) {
+	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), m_SquareCollider(u_Model, shape), m_DefaultScale(scale), rotationSpeed(50) {
 	objectCounter++; id = objectCounter;
 }
 
 Object::Object(glm::vec4 color, glm::vec3 scale)
-	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false) {
+	: Entity(color, "res/Basic.shader"), collision(this), selected(false), hit(false), activeCollider(false), rotationSpeed(50) {
 	objectCounter++; id = objectCounter;
 }
 
@@ -156,6 +156,21 @@ std::vector<float>& Object::GetVertex()
 void Object::init()
 {
 	objectCounter = 0;
+}
+
+/* Rotation speed goes from -79 to -20, 0, 20 to 79*/
+void Object::setRotationSpeed(int speed)	// Speed can go from -50 to 50
+{
+	if (speed > 0) {
+		rotationSpeed = 80 - speed;
+	}
+	else if (speed < 0)
+	{
+		rotationSpeed = -80 - speed;
+	}
+	else {
+		rotationSpeed = 0;
+	}
 }
 
 

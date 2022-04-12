@@ -45,6 +45,9 @@ public:
 	void moveRight(const float& deltaTime, const float& sensitivity);
 	void moveLeft(const float& deltaTime, const float& sensitivity);
 
+	virtual void setLightDir(glm::vec3 lightDir) {};
+	virtual void setLightParam(int ambient, int diffuse, int specular, int shininess) {};
+
 	inline std::vector<glm::mat4>& GetModels() { return vec_Model; }
 	inline const glm::vec4& GetColor() { return u_Color; } 
 	inline VertexArray& GetVao() { return vao; }
@@ -69,6 +72,7 @@ public:
 	inline glm::vec2 getCentralPosition() const { return m_SquareCollider.getPosition(); }
 	inline bool collided() const { return m_SquareCollider.thereIsCollision(); }
 	inline bool isActive() const { return vec_Model.size() > 0 && !hit; }
+	void setRotationSpeed(int speed);
 
 protected:
 	static unsigned int objectCounter;
@@ -76,7 +80,7 @@ protected:
 	bool selected;
 	bool hit;
 	bool activeCollider;
-
+	int rotationSpeed;
 	float m_DefaultScale = 1.0f;
 
 	CollisionDetector collision;						//Move to BasicObject
