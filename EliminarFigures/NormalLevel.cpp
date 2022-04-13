@@ -128,11 +128,11 @@ void Level::NormalLevel::LoadObjectFiles()
     Object::init();   //Reset the counter of objects to 0, in order to propoerly set the object ids
     //We define the objects that we want to load:
     std::vector<ObjectArguments> objectArguments = { 
-        {configuration.obj.filenames[0], ObjectType::LIGHT_OBJECT, slot[3][5], (float)configuration.obj.scale[0], {1.0f, 0.0f, 0.0f, 1.0f}},
-        {configuration.obj.filenames[1], ObjectType::LIGHT_OBJECT, slot[1][2], (float)configuration.obj.scale[1], {1.0f, 1.0f, 1.0f, 1.0f}},
-        {configuration.obj.filenames[2], ObjectType::LIGHT_OBJECT, slot[4][0], (float)configuration.obj.scale[2], {0.0f, 0.0f, 1.0f, 1.0f}},
-        {configuration.obj.filenames[3], ObjectType::LIGHT_OBJECT, slot[2][4], (float)configuration.obj.scale[3], {1.0f, 1.0f, 0.0f, 1.0f}},
-        {configuration.obj.filenames[4], ObjectType::LIGHT_OBJECT, slot[0][3], (float)configuration.obj.scale[4], {0.0f, 1.0f, 0.0f, 1.0f}}
+        {configuration.obj.filenames[0], ObjectArguments::getObjectTypeFromFile(configuration.obj.filenames[0]), slot[3][5], (float)configuration.obj.scale[0], {1.0f, 0.0f, 0.0f, 1.0f}},
+        {configuration.obj.filenames[1], ObjectArguments::getObjectTypeFromFile(configuration.obj.filenames[1]), slot[1][2], (float)configuration.obj.scale[1], {1.0f, 1.0f, 1.0f, 1.0f}},
+        {configuration.obj.filenames[2], ObjectArguments::getObjectTypeFromFile(configuration.obj.filenames[2]), slot[4][0], (float)configuration.obj.scale[2], {0.0f, 0.0f, 1.0f, 1.0f}},
+        {configuration.obj.filenames[3], ObjectArguments::getObjectTypeFromFile(configuration.obj.filenames[3]), slot[2][4], (float)configuration.obj.scale[3], {1.0f, 1.0f, 0.0f, 1.0f}},
+        {configuration.obj.filenames[4], ObjectArguments::getObjectTypeFromFile(configuration.obj.filenames[4]), slot[0][3], (float)configuration.obj.scale[4], {0.0f, 1.0f, 0.0f, 1.0f}}
     };
     objectReader.loadObjectFiles(objectArguments);
 }
@@ -145,7 +145,7 @@ void Level::NormalLevel::BuildObjects()
     {
         object->setRotationSpeed(configuration.obj.movement.rotation);
         object->setLightDir({ configuration.obj.light.lightDir[0] * 10, configuration.obj.light.lightDir[1] * 10, configuration.obj.light.lightDir[2] * 10 });
-        object->setLightParam(configuration.obj.light.ambient, configuration.obj.light.diffuse, configuration.obj.light.specular, 20);
+        object->setLightParam(configuration.obj.light.ambient, configuration.obj.light.diffuse, configuration.obj.light.specular, configuration.obj.light.shinnines);
     }
 }
 

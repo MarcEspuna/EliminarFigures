@@ -25,8 +25,8 @@ public:
 
 
 
-	virtual void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar);
-	virtual void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar, DataLink& datalink);
+	virtual void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar) {};
+	virtual void OnObjectUpdate(bool deleteObject,const float& deltaTime, ImguiVariables& ImGuiVar, DataLink& datalink) {};
 	virtual void setUniformCollider(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view);
 	virtual void BindCollider() const;
 	virtual size_t GetVertexSize() { return 0; };
@@ -47,6 +47,7 @@ public:
 
 	virtual void setLightDir(glm::vec3 lightDir) {};
 	virtual void setLightParam(int ambient, int diffuse, int specular, int shininess) {};
+	virtual void setRotationSpeed(int speed) {};
 
 	inline std::vector<glm::mat4>& GetModels() { return vec_Model; }
 	inline const glm::vec4& GetColor() { return u_Color; } 
@@ -72,7 +73,6 @@ public:
 	inline glm::vec2 getCentralPosition() const { return m_SquareCollider.getPosition(); }
 	inline bool collided() const { return m_SquareCollider.thereIsCollision(); }
 	inline bool isActive() const { return vec_Model.size() > 0 && !hit; }
-	void setRotationSpeed(int speed);
 
 protected:
 	static unsigned int objectCounter;
@@ -102,5 +102,6 @@ enum class ObjectType
 {
 	LIGHT_OBJECT,
 	BASIC_OBJECT,
+	PICTURE_OBJECT,
 	UNSUPORTED_OBJECT
 };

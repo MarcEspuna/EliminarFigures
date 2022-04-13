@@ -147,7 +147,7 @@ void ObjectLight::setLightParam(int ambient, int diffuse, int specular, int shin
 	ambientLight = glm::vec3(((float)ambient/100.0f));
 	diffuseLight = glm::vec3(((float)diffuse/100.0f));
 	specularLight = glm::vec3(((float)specular)/100.0f);
-	shininess = (float)shininess;
+	this->shininess = (float)shininess;
 }
 
 
@@ -173,3 +173,17 @@ void ObjectLight::checkExistance(size_t modelIndex)
 }
 
 
+/* Rotation speed goes from -79 to -20, 0, 20 to 79*/
+void ObjectLight::setRotationSpeed(int speed)	// Speed can go from -50 to 50
+{
+	if (speed > 0) {
+		rotationSpeed = 80 - speed;
+	}
+	else if (speed < 0)
+	{
+		rotationSpeed = -80 - speed;
+	}
+	else {
+		rotationSpeed = 0;
+	}
+}

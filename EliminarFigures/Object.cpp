@@ -122,13 +122,6 @@ void Object::moveLeft(const float& deltaTime, const float& sensitivity)
 	}
 }
 
-void Object::OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar)
-{
-}
-
-void Object::OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar, DataLink& datalink)
-{
-}
 
 void Object::setUniformCollider(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view)
 {
@@ -158,19 +151,5 @@ void Object::init()
 	objectCounter = 0;
 }
 
-/* Rotation speed goes from -79 to -20, 0, 20 to 79*/
-void Object::setRotationSpeed(int speed)	// Speed can go from -50 to 50
-{
-	if (speed > 0) {
-		rotationSpeed = 80 - speed;
-	}
-	else if (speed < 0)
-	{
-		rotationSpeed = -80 - speed;
-	}
-	else {
-		rotationSpeed = 0;
-	}
-}
 
 

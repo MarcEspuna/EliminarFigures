@@ -55,14 +55,14 @@ void Level::Menu::OnUpdate(float deltaTime, bool& testExit)
 
 	// Objects:
 	int counter = 4;
-	for (auto& object : worldBuffer)
+	for (auto& object : worldBuffer)													// We upload live all the changes that the user makes through the ui
 	{
 		const auto& scale = config.obj.scale[4-counter];
 		const auto& rotation = config.obj.movement.rotation;
 		object->GetModels()[0] = staticModels[counter];									// Upload the unscaled model
 		object->setRotationSpeed(rotation);												// Set the rotation speed
 		object->setLightDir({ config.obj.light.lightDir[0] * 10, config.obj.light.lightDir[1] * 10, config.obj.light.lightDir[2] * 10 });
-		object->setLightParam(config.obj.light.ambient, config.obj.light.diffuse, config.obj.light.specular, 20);
+		object->setLightParam(config.obj.light.ambient, config.obj.light.diffuse, config.obj.light.specular, config.obj.light.shinnines);
 		object->OnObjectUpdate(false, deltaTime, random);								// Rotate the object
 		staticModels[counter] = object->GetModels()[0];									// Save the rotatin object before scaling
 		object->GetModels()[0] = glm::scale(object->GetModels()[0], glm::vec3(scale));	// Scale to the setted up dimension
@@ -195,9 +195,10 @@ void Level::Menu::objectsHeader()
 			ImGui::Spacing();
 			ImGui::Spacing();
 
-			ImGui::SliderInt("Ambient light", &config.obj.light.ambient, 0.0f, 100.0f, "%.2d");
-			ImGui::SliderInt("Diffuse light", &config.obj.light.diffuse, 0.0f, 100.0f, "%.2d");
-			ImGui::SliderInt("Specular light", &config.obj.light.specular, 0.0f, 100.0f, "%.2d");
+			ImGui::SliderInt("Ambient light", &config.obj.light.ambient, 0, 100, "%.2d");
+			ImGui::SliderInt("Diffuse light", &config.obj.light.diffuse, 0, 100, "%.2d");
+			ImGui::SliderInt("Specular light", &config.obj.light.specular, 0, 100, "%.2d");
+			ImGui::SliderInt("Shinnines", &config.obj.light.shinnines, 0, 100, "%.2d");
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGui::Checkbox("Highlight on collision", &config.obj.light.highlight);
@@ -366,9 +367,10 @@ void Level::Menu::createDefaults(std::fstream& file, const char* filepath)
 	};
 	obj["lighting"] = {
 		{"light direction", { 0.0f, 0.0f, -100.0f}},
-		{"ambient", 1.0f},
-		{"diffuse", 4.0f},
-		{"specular", 20.0f},
+		{"ambient", 3},
+		{"diffuse", 55},
+		{"specular", 70},
+		{"shinnines", 20},
 		{"highlight", true}
 	};
 	obj["movement"] = {
@@ -490,11 +492,11 @@ void Level::Menu::loadObjectFiles()
 //We define the objects that we want to load:
 	// TODO: We need to check lenght of filenames
 	std::vector<ObjectArguments> objectArguments = {
-		{config.obj.filenames[0], ObjectType::LIGHT_OBJECT, slot[4][5], 1.0f, {1.0f, 0.0f, 0.0f, 1.0f}},
-		{config.obj.filenames[1], ObjectType::LIGHT_OBJECT, slot[3][5], 1.0f, {1.0f, 1.0f, 1.0f, 1.0f}},
-		{config.obj.filenames[2], ObjectType::LIGHT_OBJECT, slot[2][5], 1.0f, {0.0f, 0.0f, 1.0f, 1.0f}},
-		{config.obj.filenames[3], ObjectType::LIGHT_OBJECT, slot[1][5], 1.0f, {1.0f, 1.0f, 0.0f, 1.0f}},
-		{config.obj.filenames[4], ObjectType::LIGHT_OBJECT, slot[0][5], 1.0f, {0.0f, 1.0f, 0.0f, 1.0f}}
+		{config.obj.filenames[0], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[0]), slot[4][5], 1.0f, {1.0f, 0.0f, 0.0f, 1.0f}},
+		{config.obj.filenames[1], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[1]), slot[3][5], 1.0f, {1.0f, 1.0f, 1.0f, 1.0f}},
+		{config.obj.filenames[2], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[2]), slot[2][5], 1.0f, {0.0f, 0.0f, 1.0f, 1.0f}},
+		{config.obj.filenames[3], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[3]), slot[1][5], 1.0f, {1.0f, 1.0f, 0.0f, 1.0f}},
+		{config.obj.filenames[4], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[4]), slot[0][5], 1.0f, {0.0f, 1.0f, 0.0f, 1.0f}}
 	};
 	objectReader.loadObjectFiles(objectArguments);
 }

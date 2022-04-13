@@ -8,6 +8,8 @@ struct ObjectArguments
 	glm::mat4 slot;
 	float scale;
 	glm::vec4 color;
+
+	static ObjectType getObjectTypeFromFile(std::string filename);
 };
 
 class ObjectReader

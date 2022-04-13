@@ -9,7 +9,7 @@ public:
 	~Texture();
 
 
-	void Bind(unsigned int slot = 0);
+	void Bind(unsigned int slot = 0) const;
 	void Unbind();
 
 	inline int GetWidth() { return m_Width; }

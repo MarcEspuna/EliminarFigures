@@ -16,8 +16,8 @@ public:
 	Entity(glm::vec4 color, const char* shaderPath, const tinyobj::shape_t& shape, const glm::mat4& u_Model);
 	Entity(glm::vec4 color, glm::vec3 scale);
 
-	virtual void setUniform(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view) = 0;
-	void Bind() const;
+	virtual void setUniform(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view) {};
+	virtual void Bind() const;
 
 	//virtual void moveUP(const float& deltaTime, const float& sensitivity);
 	//virtual void moveDown(const float& deltaTime, const float& sensitivity);

@@ -13,9 +13,10 @@ public:
 	void OnObjectUpdate(bool deleteObject, const float& deltaTime, ImguiVariables& ImGuiVar, DataLink& datalink) override;
 	void setUniform(size_t objectIndex, const glm::mat4& projection, const glm::mat4& view) override;
 	void updateLink(DataLink& datalink) override;
+	void setRotationSpeed(int speed) override;
 	void setLightDir(glm::vec3 lightdir) override;
 	void setLightParam(int ambient, int diffuse, int specular, int shininess) override;
-	void Bind() const;
+	void Bind() const override;
 
 private:
 

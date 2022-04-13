@@ -5,7 +5,7 @@ namespace Config
 	struct Lighting
 	{
 		float lightDir[3];
-		int ambient, diffuse, specular;
+		int ambient, diffuse, specular, shinnines;
 		bool highlight;
 	};
 
@@ -56,6 +56,7 @@ namespace Config
 		j.at("diffuse").get_to(p.diffuse);
 		j.at("specular").get_to(p.specular);
 		j.at("light direction").get_to(p.lightDir);
+		j.at("shinnines").get_to(p.shinnines);
 		j.at("highlight").get_to(p.highlight);
 	}
 
