@@ -23,7 +23,7 @@ TextureObject::TextureObject(const std::string& pathTexture)
 }
 
 TextureObject::TextureObject(const std::string& pathTexture, const float& scale, glm::mat4 u_Model)
-	: Object({1.0f,1.0f,1.0f,1.0f}, "res/TexBasic.shader"), texture(pathTexture)	// Initialize the texture 
+	: Object({1.0f,1.0f,1.0f,1.0f}, "res/TexBasic.shader", scale), texture(pathTexture)	// Initialize the texture 
 {
 	VertexArrayLayout layout;
 	vbo.LoadData(positions, sizeof(float) * 16);

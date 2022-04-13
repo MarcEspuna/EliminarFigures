@@ -63,8 +63,8 @@ BasicObject::BasicObject(const char* filePath, glm::vec4 color, float scale)
 }
 
 
-BasicObject::BasicObject(const char* filePath, glm::vec4 color, float scale, const char* shaderPath)
-	: Object(color, shaderPath), m_Data(filePath)
+BasicObject::BasicObject(const char* filePath, glm::vec4 color, const float& scale, const char* shaderPath)
+	: Object(color, shaderPath, scale), m_Data(filePath)
 {
 	m_Data.SetVertexScale(glm::vec3(scale, scale, 1.0f));
 	VertexArrayLayout layout;

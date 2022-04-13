@@ -16,7 +16,7 @@ public:
 	BasicObject(const char* filePath, glm::vec4 color);
 	BasicObject(const char* filePath, float scale);
 	BasicObject(const char* filePath, glm::vec4 color, float scale);
-	BasicObject(const char* filePath, glm::vec4 color, float scale, const char* shaderPath);
+	BasicObject(const char* filePath, glm::vec4 color, const float& scale, const char* shaderPath);
 	BasicObject(const char* filePath, glm::vec4 color, glm::vec3 scale);
 	BasicObject(const char* filePath, glm::vec4 color, glm::vec3 scale, const glm::mat4& u_Model);
 

@@ -178,6 +178,7 @@ void Level::NormalLevel::createNewLevel()
     {
         object->New(random, slot);
     }
+    targetObjectId = 0;                 // unset the target object
 }
 
 void Level::NormalLevel::LoadConfig()
@@ -207,6 +208,7 @@ void Level::NormalLevel::doAiXInput()
             cursor.VLine->moveLeft(deltaTime, 6.0f);
         }
         if (aiInterface.isConnected())  targetObjectId = aiInput[3] - '0';      // If the ai is connected we update the targetid
+        std::cout << "interface is: " << aiInterface.isConnected() << " and target id: " << (aiInput[3] - '0') << std::endl;
     }
 }
 

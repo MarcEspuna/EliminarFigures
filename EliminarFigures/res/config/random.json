@@ -7,24 +7,25 @@
         "res/obj/obj/bunny.obj",
         "res/obj/obj/square.obj",
         "res/obj/obj/Icosphere.obj",
-        "res/obj/obj/torus.obj"
+        "res/obj/images/GameOverTransparent.png"
       ],
       "scale": [
-        120,
-        400,
+        90,
+        500,
         35,
         50,
-        45
+        8
       ],
         "lighting": {
-            "ambient": 0.0,
-            "diffuse": 55.0,
+            "ambient": 3,
+            "diffuse": 55,
             "light direction": [
                 0.0,
                 0.0,
                 -100.0
             ],
-          "specular": 70.0,
+          "specular": 70,
+          "shinnines": 20,
           "highlight": true
         },
         "movement": {

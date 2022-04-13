@@ -14,17 +14,18 @@
         500,
         35,
         50,
-        35
+        8
       ],
         "lighting": {
-            "ambient": 3.0,
-            "diffuse": 55.0,
+            "ambient": 3,
+            "diffuse": 55,
             "light direction": [
                 0.0,
                 0.0,
                 -100.0
             ],
-          "specular": 70.0,
+          "specular": 70,
+          "shinnines": 20,
           "highlight": true
         },
         "movement": {

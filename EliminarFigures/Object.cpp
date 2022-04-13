@@ -26,8 +26,8 @@ Object::Object(float scale)
 	objectCounter++; id = objectCounter;
 }
 
-Object::Object(glm::vec4 color, const char* shaderPath)
-	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), rotationSpeed(50) {
+Object::Object(glm::vec4 color, const char* shaderPath, const float& scale)
+	: Entity(color, shaderPath), collision(this), selected(false), hit(false), activeCollider(false), rotationSpeed(50), m_DefaultScale(scale) {
 	objectCounter++; id = objectCounter;
 }
 
@@ -69,7 +69,7 @@ void Object::New(const RandomGenerator& random, Slot& slot)
 
 	glm::mat4 model = slot.getModel(rowIdx, colIdx);							// Retreave the model matrix of the randomly generated slot
 	
-	vec_Model.push_back(glm::scale(model, glm::vec3(m_DefaultScale)));			
+	vec_Model.push_back(glm::scale(model, glm::vec3(m_DefaultScale)));			// Here we use the saved default scale	
 	objectMovement.reset(model, 100.0f);
 	m_SquareCollider.Update(vec_Model[0]);
 	selected = false;

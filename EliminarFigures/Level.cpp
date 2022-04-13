@@ -39,7 +39,7 @@ Level::Menu::Menu(Level*& currentTest)
 
 Level::Menu::~Menu()
 {
-	
+	for (int i = 0; i < worldBuffer.size(); i++)	delete worldBuffer[i];
 }
 
 void Level::Menu::OnUpdate(float deltaTime, bool& testExit)
@@ -176,6 +176,8 @@ void Level::Menu::objectsHeader()
 				if (ImGui::Button("Load objects"))
 				{
 					updateAllObjectSelection(objNames, imgNames, pkgNames);
+					// Reload the objects
+
 				}
 				ImGui::Spacing(); ImGui::Spacing();
 				ImGui::EndTabBar();
@@ -460,6 +462,15 @@ void Level::Menu::loadConfigButton(const std::string& filename, bool* p_open)
 	file.close();
 	*p_open = false;
 	config = jconfig.get<Config::Config>();	// Reload the configuration struct.
+	// Update the view of the new objects:
+		// First we delete the old memory:
+	for (int i = 0; i < worldBuffer.size(); i++)	delete worldBuffer[i];
+	worldBuffer.clear();
+		// We load the new objects
+	objectReader.clear();
+	loadObjectFiles();
+	objectReader.buildObjects(worldBuffer);
+
 }
 
 void Level::Menu::updateAllObjectSelection(const str_vector_pair& objNames, const str_vector_pair& imgNames, const str_vector_pair& pkgNames)

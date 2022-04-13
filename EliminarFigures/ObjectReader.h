@@ -21,6 +21,7 @@ public:
 
 	void loadObjectFiles(const std::vector<ObjectArguments>& arguments, const std::string& basePath = "");
 	void buildObjects(std::vector<Object*>& worldVector);
+	void clear();
 
 private:	
 

@@ -6,6 +6,9 @@
 #include "IndexBuffer.h"
 #include "VertexArrayLayout.h"
 
+#define DEFAULT_WIDTH  10.0f
+#define DEFAULT_HIGHT  8.0f
+
 class TextureObject : public Object
 { 
 public:
@@ -28,10 +31,10 @@ private:
 
 	float positions[16] =
 	{
-		-120.0f,  90.0f,  0.0f,  1.0f,				//0
-		 120.0f,  90.0f,  1.0f,  1.0f,				//1
-		-120.0f, -90.0f,  0.0f,  0.0f,				//2
-		 120.0f, -90.0f,  1.0f,  0.0f				//3
+		-DEFAULT_WIDTH,  DEFAULT_HIGHT,  0.0f,  1.0f,				//0
+		 DEFAULT_WIDTH,  DEFAULT_HIGHT,  1.0f,  1.0f,				//1
+		-DEFAULT_WIDTH, -DEFAULT_HIGHT,  0.0f,  0.0f,				//2
+		 DEFAULT_WIDTH, -DEFAULT_HIGHT,  1.0f,  0.0f				//3
 	};
 
 	unsigned int indexes[6] =

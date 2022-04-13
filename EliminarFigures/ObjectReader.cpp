@@ -83,6 +83,12 @@ void ObjectReader::buildObjects(std::vector<Object*>& worldVector)
 	}
 }
 
+void ObjectReader::clear()
+{
+	shapes.clear();
+	inputArguments.clear();
+}
+
 ObjectType ObjectArguments::getObjectTypeFromFile(std::string filename)
 {
 	if (filename.find(".obj") != std::string::npos)		return ObjectType::LIGHT_OBJECT;
