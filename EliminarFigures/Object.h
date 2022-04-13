@@ -74,6 +74,9 @@ public:
 	inline bool collided() const { return m_SquareCollider.thereIsCollision(); }
 	inline bool isActive() const { return vec_Model.size() > 0 && !hit; }
 
+	inline bool inLineXWith(const Object& other) const { return m_SquareCollider.isInlineX(*other.getCollider()); }
+	inline bool inLineYWith(const Object& other) const{  return m_SquareCollider.isInlineY(*other.getCollider()); }
+
 protected:
 	static unsigned int objectCounter;
 	unsigned int id;

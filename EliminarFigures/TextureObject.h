@@ -6,7 +6,6 @@
 #include "IndexBuffer.h"
 #include "VertexArrayLayout.h"
 
-
 class TextureObject : public Object
 { 
 public:

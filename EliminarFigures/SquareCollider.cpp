@@ -40,6 +40,19 @@ void SquareCollider::Update(const glm::mat4& u_Model)
 	updateCollider(currentPositions);
 }
 
+bool SquareCollider::isInlineX(const SquareCollider& other) const
+{
+	return m_SquareCoords.x + m_SquareCoords.xSize >= other.m_SquareCoords.x &&
+		other.m_SquareCoords.x + other.m_SquareCoords.xSize >= m_SquareCoords.x;
+}
+
+bool SquareCollider::isInlineY(const SquareCollider& other) const
+{
+	return m_SquareCoords.y + m_SquareCoords.ySize >= other.m_SquareCoords.y &&
+		other.m_SquareCoords.y + other.m_SquareCoords.ySize >= m_SquareCoords.y;;
+}
+
+
 SquareCollider::~SquareCollider()
 {
 
@@ -98,14 +111,8 @@ const unsigned int* SquareCollider::getIndex()
 
 void SquareCollider::checkCollision(const SquareCollider& other)
 {
-	// collision x-axis?
-	bool collisionX = m_SquareCoords.x + m_SquareCoords.xSize >= other.m_SquareCoords.x &&
-		other.m_SquareCoords.x + other.m_SquareCoords.xSize >= m_SquareCoords.x;
-	// collision y-axis?
-	bool collisionY = m_SquareCoords.y + m_SquareCoords.ySize >= other.m_SquareCoords.y &&
-		other.m_SquareCoords.y + other.m_SquareCoords.ySize >= m_SquareCoords.y;
 	// collision only if on both axes
-	m_Collided = collisionX && collisionY;
+	m_Collided = isInlineX(other) && isInlineY(other);
 }
 
 float SquareCollider::checkDistance(const SquareCollider& other) const

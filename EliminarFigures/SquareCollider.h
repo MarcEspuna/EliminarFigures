@@ -23,6 +23,9 @@ public:
 	float checkDistance(const SquareCollider& other) const;
 	glm::vec2 checkDistanceVec2(const SquareCollider& other) const;
 
+	bool isInlineX(const SquareCollider& other) const;
+	bool isInlineY(const SquareCollider& other) const;
+
 	void moveUp(const float& deltaTime, const float& sensitivity);
 	void moveDown(const float& deltaTime, const float& sensitivity);
 	void moveRight(const float& deltaTime, const float& sensitivity);

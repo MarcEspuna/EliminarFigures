@@ -51,7 +51,8 @@ namespace Level {
 		bool x_AiEnabled;
 		bool y_AiEnabled;
 		bool userPressedKey;
-		bool userSelectKey;
+		bool userSelectKeyX;
+		bool userSelectKeyY;
 
 		Slot slot;
 		Cursor cursor;
@@ -73,6 +74,9 @@ namespace Level {
 		void loadCommunications();
 		void loadThread();
 		bool usrExitKey();
+
+		void updateTarget();
+
 	};
 	
 

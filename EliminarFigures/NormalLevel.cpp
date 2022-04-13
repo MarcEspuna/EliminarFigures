@@ -74,6 +74,8 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
     ImguiVariables random;
     size_t newLevel = 0;
 
+    if (!aiInterface.isConnected()) updateTarget();         // If the ai is not connected the game will set the targets
+
     for (auto& object : worldBuffer)
     {
         float distance = object->UpdateCollisionWith(cursor.CQuad);
@@ -204,6 +206,7 @@ void Level::NormalLevel::doAiXInput()
             cursor.CQuad->moveLeft(deltaTime, 6.0f);
             cursor.VLine->moveLeft(deltaTime, 6.0f);
         }
+        if (aiInterface.isConnected())  targetObjectId = aiInput[3] - '0';      // If the ai is connected we update the targetid
     }
 }
 
@@ -234,9 +237,7 @@ void Level::NormalLevel::doAiYInput()
         {
             //dataLink.aiCursorStoped();
         }
-
-        targetObjectId = aiInput[3] - '0';
-
+        if (aiInterface.isConnected())  targetObjectId = aiInput[3] - '0';      // If the ai is connected we update the targetid
     }
 }
 
@@ -272,12 +273,12 @@ void Level::NormalLevel::doUserXInput()
             //dataLink.usrCursorStoped();
         }
 
-        int state4 = glfwGetKey(ptr_window, GLFW_KEY_S);             //Select key
+        int state4 = glfwGetKey(ptr_window, GLFW_KEY_T);             //Select key
         if (state4 == GLFW_PRESS) {
-            userSelectKey = true;
+            userSelectKeyX = true;
         }
         else {
-            userSelectKey = false;
+            userSelectKeyX = false;
         }
     }
 }
@@ -304,13 +305,21 @@ void Level::NormalLevel::doUserYInput()
             cursor.CQuad->moveDown(deltaTime, 6.0f);
             cursor.HLine->moveDown(deltaTime, 6.0f);
         }
+
+        int state4 = glfwGetKey(ptr_window, GLFW_KEY_Y);                        // Select key
+        if (state4 == GLFW_PRESS) {
+            userSelectKeyY = true;
+        }
+        else {
+            userSelectKeyY = false;
+        }
     }
 }
 
 void Level::NormalLevel::loadCommunications()
 {
     aiInterface.setUserPressedKey(&userPressedKey);
-    aiInterface.setUserSelectKey(&userSelectKey);
+    aiInterface.setUserSelectKey(&userSelectKeyX);
     aiInterface.setObjects(worldBuffer);
     aiInterface.setCursor(cursor.CQuad);
 }
@@ -333,6 +342,14 @@ bool Level::NormalLevel::usrExitKey()
     return state2 == GLFW_PRESS;
 }
 
+void Level::NormalLevel::updateTarget()
+{
+    for (const auto& object : worldBuffer)
+    {
+        if (userSelectKeyX && object->inLineXWith(*cursor.CQuad)) targetObjectId = object->getId();
+        if (userSelectKeyY && object->inLineYWith(*cursor.CQuad)) targetObjectId = object->getId();
+    }
+}
 
 
 

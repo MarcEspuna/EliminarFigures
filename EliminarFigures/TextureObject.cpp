@@ -89,7 +89,7 @@ void TextureObject::checkExistance(size_t modelIndex)
 	{
 		vec_Model.erase(vec_Model.begin() + modelIndex);
 		activeCollider = false;
-		hit = false;
+		hit = false;	
 	}
 }
 
