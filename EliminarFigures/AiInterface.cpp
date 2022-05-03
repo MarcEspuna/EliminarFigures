@@ -46,7 +46,7 @@ void AiInterface::clear()
 {
 	m_Cursor = nullptr;
 	activeObjects = 0;
-	clientConnected = false;
+	//clientConnected = false;
 	userPressedKey = nullptr;
 	m_Objects.clear();
 }
@@ -77,6 +77,30 @@ void AiInterface::setObjects(const std::vector<Object*> objects)
 		dataS = nullptr;
 	}
 	dataS = new char[1 + m_Objects.size() * 12];		//Identifier : 'O', Object id and positions : Each object 3 floats (id, xcoord, ycoord) 
+}
+
+void AiInterface::gameStart(const std::string desc[5])
+{
+	std::string buffer;
+	buffer.push_back('I');
+	buffer.push_back('X');
+	for (int i = 0; i < 5; i++)
+	{
+		buffer.append(desc[i]);
+		buffer.push_back('#');
+	}
+	buffer[1] = buffer.size() - 2;	// Minus header and size
+	std::cout << "[AI Interface]: obj decriptions: " << buffer << std::endl;
+	if (isConnected()) server.sendBuffer(buffer.c_str(), buffer.size());		// Send description to Ai interface
+	std::cout << "[AI interface]: final size: " << buffer.size() << std::endl;
+}
+
+void AiInterface::gameEnd()
+{
+	if (isConnected()) {
+		server.sendBuffer("F", 1);
+		std::cout << "[AiInterface]: game ended byte sent.\n";
+	}
 }
 
 std::string AiInterface::getAiInput()
@@ -125,6 +149,7 @@ void AiInterface::reception()
 		delete connect;
 		connect = new std::thread(&AiInterface::connectionManager, this);
 	}
+	std::cout << "[AiInterface]: Client disconnected\n";
 	clientConnected = false;
 }
 
@@ -138,6 +163,7 @@ void AiInterface::transmition()
 			Sleep(1);
 			server.sendBuffer(dataS, size);
 		}
+		Sleep(1);
 	}
 	std::cout << "[AiInterface]: Sutting down transmition..." << std::endl;
 }

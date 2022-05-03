@@ -1,6 +1,7 @@
 #include "Server.h"
 #include <thread>
 #include <iostream>
+#include <mutex>
 
 Server::Server()
 {
@@ -83,10 +84,12 @@ bool Server::listenS(const unsigned int& connections)
 	return true;
 }
 
+static std::mutex mutex_lock;
+
 void Server::sendBuffer(const char* message, unsigned int size)
 {
+	std::lock_guard<std::mutex> lock(mutex_lock);
 	send(new_socket, message, size, 0);
-	//std::cout << "[SERVER]: Message sent" << std::endl;
 }
 
 void Server::recieveBufferWait(char* reply)
@@ -102,12 +105,12 @@ void Server::recieveBufferWait(char* reply)
 }
 
 /* It checks if a massage has been received for a period of time, if nothing is received it returns false */
-bool Server::recieveBuffer(char* reply)
+bool Server::recieveBuffer(char* reply, int len)
 {
 	size_t timeout = 0;
 	while (timeout < 5)
 	{
-		int size = recv(new_socket, reply, 4, 0);
+		int size = recv(new_socket, reply, len, 0);
 		if (size > 0)
 		{
 			return true;

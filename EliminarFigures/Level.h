@@ -12,6 +12,7 @@
 #include "Json/json.hpp"
 #include "Config.h"
 #include "AiInterface.h"
+#include "rcInterface.h"
 #include "ObjectReader.h"
 #include "Renderer.h"
 
@@ -45,6 +46,7 @@ namespace Level
 
 	protected:
 		static AiInterface aiInterface;
+		static RcInterface rcInterface;
 		ObjectReader objectReader;
 		std::vector<Object*> worldBuffer;
 		Renderer renderer;
@@ -89,6 +91,8 @@ namespace Level
 		nlohmann::json jconfig;					// Json object to store current config
 		Config::Config config;					// Struct that stores in ram the current config
 
+		std::vector<glm::mat4> modelMatrices;	// Model matrices that keep track of the object position (unscaled). Used to scale the object live through the ui.
+		
 		void initConfig();						// Reloads the default config into the jconfig attribute 
 		
 		// UI headers of the main pannel

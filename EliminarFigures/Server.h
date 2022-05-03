@@ -15,7 +15,7 @@ public:
 	bool listenS(const unsigned int& connections = 1);
 	void sendBuffer(const char* message, unsigned int size);
 	void recieveBufferWait(char* reply);
-	bool recieveBuffer(char* reply);
+	bool recieveBuffer(char* reply, int len = 4);
 	void stop();
 	inline bool isActive() { return active; }
 

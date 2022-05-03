@@ -22,6 +22,9 @@ static std::vector<std::string> getFiles(std::string directory);
 static std::vector<std::pair<std::string, bool>> getSelectingFiles(const char* directory);
 static void createObjectsSelectionTab(std::vector<std::pair<std::string, bool>>& selectionList, unsigned int& selectCounter);
 static void HelpMarker(const char* desc);
+static void resetModelMatrices(std::vector<glm::mat4>& models);
+
+RcInterface Level::Level::rcInterface;
 
 Level::Menu::Menu(Level*& currentTest)
 	:m_CurrentTest(currentTest), playerXAI(false), playerYAI(false)
@@ -34,38 +37,41 @@ Level::Menu::Menu(Level*& currentTest)
 
 	loadObjectFiles();
 	objectReader.buildObjects(worldBuffer);
-
 }
 
 Level::Menu::~Menu()
 {
 	for (int i = 0; i < worldBuffer.size(); i++)	delete worldBuffer[i];
+	worldBuffer.clear();
 }
 
 void Level::Menu::OnUpdate(float deltaTime, bool& testExit)
 {
 	ImguiVariables random;
-	Slot slot;
-	static std::vector staticModels = { slot[0][5], slot[1][5], slot[2][5], slot[3][5], slot[4][5] };
 	// Execute the commands set in the ui interface:
 	// Sockets:
-
 	if (!aiInterface.isActive() && config.socket.aiEnable) aiInterface.init(config.socket.aiPort);
 	if (aiInterface.isActive() && !config.socket.aiEnable) { aiInterface.fini(); }
 
+	if (!rcInterface.isXActive() && config.socket.userXEnable) rcInterface.initX(config.socket.userXPort);
+	if (rcInterface.isXActive() && !config.socket.userXEnable) { rcInterface.finiX(); }
+
+	if (!rcInterface.isYActive() && config.socket.userYEnable) rcInterface.initY(config.socket.userYPort);
+	if (rcInterface.isYActive() && !config.socket.userYEnable) { rcInterface.finiY(); }
+
 	// Objects:
 	int counter = 4;
-	for (auto& object : worldBuffer)													// We upload live all the changes that the user makes through the ui
+	for (auto& object : worldBuffer)														// We upload live all the changes that the user makes through the ui
 	{
 		const auto& scale = config.obj.scale[4-counter];
 		const auto& rotation = config.obj.movement.rotation;
-		object->GetModels()[0] = staticModels[counter];									// Upload the unscaled model
-		object->setRotationSpeed(rotation);												// Set the rotation speed
+		object->GetModels()[0] = modelMatrices[counter];									// Upload the unscaled model
+		object->setRotationSpeed(rotation);													// Set the rotation speed
 		object->setLightDir({ config.obj.light.lightDir[0] * 10, config.obj.light.lightDir[1] * 10, config.obj.light.lightDir[2] * 10 });
 		object->setLightParam(config.obj.light.ambient, config.obj.light.diffuse, config.obj.light.specular, config.obj.light.shinnines);
-		object->OnObjectUpdate(false, deltaTime, random);								// Rotate the object
-		staticModels[counter] = object->GetModels()[0];									// Save the rotatin object before scaling
-		object->GetModels()[0] = glm::scale(object->GetModels()[0], glm::vec3(scale));	// Scale to the setted up dimension
+		object->OnObjectUpdate(false, deltaTime, random);									// Rotate the object
+		modelMatrices[counter] = object->GetModels()[0];									// Save the rotatin object before scaling
+		object->GetModels()[0] = glm::scale(object->GetModels()[0], glm::vec3(scale));		// Scale to the setted up dimension
 		object->isNotTarget();
 		counter--;
 	}
@@ -176,7 +182,15 @@ void Level::Menu::objectsHeader()
 				if (ImGui::Button("Load objects"))
 				{
 					updateAllObjectSelection(objNames, imgNames, pkgNames);
-					// Reload the objects
+					//TODO:									// Reload the json object with the new files.
+					// Update the view of the new objects:
+						// First we delete the old memory:
+					for (int i = 0; i < worldBuffer.size(); i++)	delete worldBuffer[i];
+					worldBuffer.clear();					// Clear the old object pointers
+					// We load the new objects
+					objectReader.clear();					// We clear the old object arguments 
+					loadObjectFiles();						// Load the files
+					objectReader.buildObjects(worldBuffer);	// Build the actual objects
 
 				}
 				ImGui::Spacing(); ImGui::Spacing();
@@ -209,14 +223,26 @@ void Level::Menu::objectsHeader()
 
 		if (ImGui::TreeNode("Edit objects"))
 		{
+			ImGui::Spacing();
+			ImGui::Spacing();
+			static int positioning = 0;
 			ImGui::Text("Objects rotation speed: ");
 			ImGui::SliderInt("Edit rotation", &config.obj.movement.rotation, -50, 50, "%.2d");
+			ImGui::Spacing();
+			ImGui::Spacing();
 			ImGui::Text("Objects scale:");
 			ImGui::SliderInt(parseString(config.obj.filenames[0], "/").c_str(), &config.obj.scale[0], 0, 600);
 			ImGui::SliderInt(parseString(config.obj.filenames[1], "/").c_str(), &config.obj.scale[1], 0, 600);
 			ImGui::SliderInt(parseString(config.obj.filenames[2], "/").c_str(), &config.obj.scale[2], 0, 600);
 			ImGui::SliderInt(parseString(config.obj.filenames[3], "/").c_str(), &config.obj.scale[3], 0, 600);
 			ImGui::SliderInt(parseString(config.obj.filenames[4], "/").c_str(), &config.obj.scale[4], 0, 600);
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::RadioButton("Dissapear on hit\t", &positioning, 1);
+			ImGui::SameLine();
+			ImGui::RadioButton("Fade on hit", &positioning, 2);
+			ImGui::Spacing();
+			ImGui::Spacing();
 			ImGui::TreePop();
 		}
 
@@ -246,10 +272,15 @@ void Level::Menu::socketsHeader()
 	{
 		if (ImGui::TreeNode("Robot connection"))
 		{
-			// User port
-			ImGui::Text("User port number: ");
+			// User X port
+			ImGui::Text("UserX port number: ");
 			ImGui::SameLine(); 
-			ImGui::InputInt("##edit1", &config.socket.userPort);
+			ImGui::InputInt("##edit1", &config.socket.userXPort);
+
+			// User Y port number
+			ImGui::Text("UserY port number: ");
+			ImGui::SameLine();
+			ImGui::InputInt("##edit3", &config.socket.userYPort);
 
 			// Ai port
 			ImGui::Text("Ai port number: \t");
@@ -267,16 +298,30 @@ void Level::Menu::socketsHeader()
 
 				ImGui::Text("Ai socket is : ");
 				ImGui::SameLine();
-				if (aiInterface.isConnected())	ImGui::Text("connected.");
-				else ImGui::Text("listenning.");
+				if (aiInterface.isConnected())	ImGui::TextColored({0.0f, 1.0f, 0.0f, 1.0f}, "connected.");
+				else ImGui::TextColored({ 0.0f, 1.0f, 1.0f, 1.0f }, "listenning.");
 			}
 
 			ImGui::Spacing();
-			ImGui::Checkbox("Enable remote contols", &config.socket.userEnable);
-			if (config.socket.userEnable)
+			ImGui::Checkbox("Enable remote contol X", &config.socket.userXEnable);
+			if (config.socket.userXEnable)
 			{
-				ImGui::Text("User controls are : listenning.");
+				ImGui::Text("User X controller is : ");
+				ImGui::SameLine();
+				if (rcInterface.isUsrXConnected())	ImGui::TextColored({ 0.0f, 1.0f, 0.0f, 1.0f }, "connected.");
+				else ImGui::TextColored({ 0.0f, 1.0f, 1.0f, 1.0f }, "listenning.");
 			}
+
+			ImGui::Spacing();
+			ImGui::Checkbox("Enable remote contol Y", &config.socket.userYEnable);
+			if (config.socket.userYEnable)
+			{
+				ImGui::Text("User X controller is : ");
+				ImGui::SameLine();
+				if (rcInterface.isUsrYConnected())	ImGui::TextColored({ 0.0f, 1.0f, 0.0f, 1.0f }, "connected.");
+				else ImGui::TextColored({ 0.0f, 1.0f, 1.0f, 1.0f }, "listenning.");
+			}
+
 			ImGui::TreePop();
 		}
 	}
@@ -467,7 +512,8 @@ void Level::Menu::loadConfigButton(const std::string& filename, bool* p_open)
 	for (int i = 0; i < worldBuffer.size(); i++)	delete worldBuffer[i];
 	worldBuffer.clear();
 		// We load the new objects
-	objectReader.clear();
+	resetModelMatrices(modelMatrices);	// Reset the model matrices (to avoid rotating possible 2D objects on load)
+	objectReader.clear();				// We clear the old object arguments 
 	loadObjectFiles();
 	objectReader.buildObjects(worldBuffer);
 
@@ -498,16 +544,18 @@ void Level::Menu::updateObjectSelection(std::string*& it, const str_vector_pair&
 
 void Level::Menu::loadObjectFiles()
 {
-	Slot slot;
 	Object::init();   //Reset the counter of objects to 0, in order to propoerly set the object ids
 //We define the objects that we want to load:
 	// TODO: We need to check lenght of filenames
+
+	resetModelMatrices(modelMatrices);			// Reset the static model matrices. To avoid rotating 2D objects on load.
+
 	std::vector<ObjectArguments> objectArguments = {
-		{config.obj.filenames[0], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[0]), slot[4][5], 1.0f, {1.0f, 0.0f, 0.0f, 1.0f}},
-		{config.obj.filenames[1], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[1]), slot[3][5], 1.0f, {1.0f, 1.0f, 1.0f, 1.0f}},
-		{config.obj.filenames[2], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[2]), slot[2][5], 1.0f, {0.0f, 0.0f, 1.0f, 1.0f}},
-		{config.obj.filenames[3], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[3]), slot[1][5], 1.0f, {1.0f, 1.0f, 0.0f, 1.0f}},
-		{config.obj.filenames[4], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[4]), slot[0][5], 1.0f, {0.0f, 1.0f, 0.0f, 1.0f}}
+		{config.obj.filenames[0], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[0]), modelMatrices[4], 1.0f, {1.0f, 0.0f, 0.0f, 1.0f}},
+		{config.obj.filenames[1], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[1]), modelMatrices[3], 1.0f, {1.0f, 1.0f, 1.0f, 1.0f}},
+		{config.obj.filenames[2], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[2]), modelMatrices[2], 1.0f, {0.0f, 0.0f, 1.0f, 1.0f}},
+		{config.obj.filenames[3], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[3]), modelMatrices[1], 1.0f, {1.0f, 1.0f, 0.0f, 1.0f}},
+		{config.obj.filenames[4], ObjectArguments::getObjectTypeFromFile(config.obj.filenames[4]), modelMatrices[0], 1.0f, {0.0f, 1.0f, 0.0f, 1.0f}}
 	};
 	objectReader.loadObjectFiles(objectArguments);
 }
@@ -608,4 +656,15 @@ static void createObjectsSelectionTab(std::vector<std::pair<std::string, bool>>&
 			}
 		}
 	}
+}
+
+/// <summary>
+/// It resets the model matrices of the level. In order reset the object positions every time new objects are loaded.
+/// </summary>
+/// <param name="models"></param>
+static void resetModelMatrices(std::vector<glm::mat4>& models)
+{
+	static Slot slot;
+	models.clear();
+	for (int i = 0; i < 5; i++)	models.emplace_back(slot[i][5]);
 }

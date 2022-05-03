@@ -175,6 +175,7 @@
     <ClCompile Include="ObjectReader.cpp" />
     <ClCompile Include="ObjParser.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
+    <ClCompile Include="rcInterface.cpp" />
     <ClCompile Include="res\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui_demo.cpp" />
@@ -191,7 +192,6 @@
     <ClCompile Include="SquareObject.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureObject.cpp" />
-    <ClCompile Include="UsrInterface.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
@@ -226,6 +226,7 @@
     <ClInclude Include="HardTest.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="RandomGenerator.h" />
+    <ClInclude Include="rcInterface.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="res\vendor\glm\common.hpp" />
     <ClInclude Include="res\vendor\glm\detail\compute_common.hpp" />
@@ -531,7 +532,6 @@
     <ClInclude Include="SquareObject.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureObject.h" />
-    <ClInclude Include="UsrInterface.h" />
     <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexArrayLayout.h" />
     <ClInclude Include="VertexBuffer.h" />

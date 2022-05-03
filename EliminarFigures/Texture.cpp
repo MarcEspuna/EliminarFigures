@@ -6,8 +6,7 @@ Texture::Texture(const std::string& filePath)
 	: m_RendererID(0), m_FilePath(filePath), m_LocalBuffer(nullptr), 
 	m_Width(0), m_Height(0), m_BPP(0)
 {
-	stbi_set_flip_vertically_on_load(1);
-
+	stbi_set_flip_vertically_on_load(1);						//In order to have the correct orientation of the textured objects    
 	m_LocalBuffer = stbi_load(filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
 
 	glGenTextures(1, &m_RendererID);

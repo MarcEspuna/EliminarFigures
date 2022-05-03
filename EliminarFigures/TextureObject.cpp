@@ -1,6 +1,6 @@
 #include "TextureObject.h"
 
-static std::vector<float> create3DPositions(float positions[16]);
+static std::vector<float> create3DPositions(const float positions[16]);
 
 // Not currently used
 TextureObject::TextureObject(const std::string& pathTexture)
@@ -94,7 +94,7 @@ void TextureObject::checkExistance(size_t modelIndex)
 }
 
 //STATIC METHODS OF THE MODULE
-static std::vector<float> create3DPositions(float positions[16])
+static std::vector<float> create3DPositions(const float positions[16])
 {
 	std::vector<float> positions3D =
 	{

@@ -18,14 +18,17 @@ namespace Config
 	struct Sockets
 	{
 		int	aiPort;
-		int	userPort;
+		int	userXPort;
+		int	userYPort;
 		bool aiEnable;
-		bool userEnable;
+		bool userXEnable;
+		bool userYEnable;
 	};
 
 	struct Obj
 	{
 		std::string filenames[5];
+		std::string description[5];
 		int scale[5];
 		Lighting light;
 		Movement movement;
@@ -64,6 +67,7 @@ namespace Config
 	static void from_json(const nlohmann::json& j, Obj& p)
 	{
 		j.at("filenames").get_to(p.filenames);			// Carefull to not exceed 5 objects in the json file
+		j.at("descriptions").get_to(p.description);		// Carefull to not exceed 5 objects in the json file
 		j.at("scale").get_to(p.scale);					// Carefull to not exceed 5 objects in the json file
 		j.at("lighting").get_to(p.light);
 		j.at("movement").get_to(p.movement);
@@ -73,8 +77,10 @@ namespace Config
 	{
 		j.at("aiPort").get_to(p.aiPort);
 		j.at("aiEnable").get_to(p.aiEnable);
-		j.at("userPort").get_to(p.userPort);
-		j.at("userEnable").get_to(p.userEnable);
+		j.at("userXPort").get_to(p.userXPort);
+		j.at("userYPort").get_to(p.userYPort);
+		j.at("userXEnable").get_to(p.userXEnable);
+		j.at("userYEnable").get_to(p.userYEnable);
 	}
 
 	// Method is called every time we convert from json -> object

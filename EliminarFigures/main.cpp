@@ -57,7 +57,7 @@ int main(void)
     float deltaTime = 0;
     bool testExit = false;
 
-    glfwSwapInterval(0);                                                                                    //Remove the FPS cap
+    glfwSwapInterval(0);                                                    //Remove the FPS cap                                                      
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

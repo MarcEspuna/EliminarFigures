@@ -15,6 +15,8 @@
 #include <numeric>
 #include <thread>
 
+// #define REMOTE_CONTROL                       // Uncoment this if you want external control through sockets
+
 namespace Level {
 
 	struct Cursor

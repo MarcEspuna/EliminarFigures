@@ -132,7 +132,7 @@
     <ClCompile Include="AiInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UsrInterface.cpp">
+    <ClCompile Include="rcInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1145,13 +1145,13 @@
     <ClInclude Include="AiInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UsrInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dependencies\Json\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rcInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

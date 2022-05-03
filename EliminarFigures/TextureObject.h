@@ -29,7 +29,7 @@ private:
 
 	Texture texture;
 
-	float positions[16] =
+	const float positions[16] =
 	{
 		-DEFAULT_WIDTH,  DEFAULT_HIGHT,  0.0f,  1.0f,				//0
 		 DEFAULT_WIDTH,  DEFAULT_HIGHT,  1.0f,  1.0f,				//1
@@ -37,7 +37,7 @@ private:
 		 DEFAULT_WIDTH, -DEFAULT_HIGHT,  1.0f,  0.0f				//3
 	};
 
-	unsigned int indexes[6] =
+	const unsigned int indexes[6] =
 	{
 		0, 1, 3,
 		2, 3, 0

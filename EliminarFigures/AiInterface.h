@@ -5,7 +5,7 @@
 #include "Server.h"
 #include <thread>
 #include <mutex>
-
+#include <string>
 
 class AiInterface
 {
@@ -15,10 +15,12 @@ public:
 
 	void setCursor(const Object* object);
 	void setObjects(const std::vector<Object*> objects);
+	void gameStart(const std::string desc[5]);
+	void gameEnd();
 	std::string getAiInput();
 	void setUserPressedKey(const bool* userKey);
 	void setUserSelectKey(const bool* userSelect);
-	void transmitStatus();
+	void transmitStatus();									// Sends the current data through the socket
 	void init(unsigned int port);
 	void fini();
 	void clear();

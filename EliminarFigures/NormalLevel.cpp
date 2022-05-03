@@ -19,12 +19,6 @@
 #include <tuple>
 #include "Slot.h"
 #include <condition_variable>
-#include "UsrInterface.h"
-
-static std::mutex s_XuserMutex;
-static std::mutex s_YuserMutex;
-static std::condition_variable s_Xcv;
-static std::condition_variable s_Ycv;
 
 AiInterface Level::Level::aiInterface;
 
@@ -44,12 +38,12 @@ Level::NormalLevel::NormalLevel(const Config::Config& config)
     BuildObjects();
     LoadConfig();
     loadCommunications();
-    loadThread();
     std::cout << "[NORMAL LEVEL]: Default Level created. " << std::endl;
 }
 
 Level::NormalLevel::~NormalLevel()
 {
+    aiInterface.clear();
     levelActive = false;
     for (int i = 0; i < worldBuffer.size(); i++)
     {
@@ -62,7 +56,7 @@ Level::NormalLevel::~NormalLevel()
     cursorUpdaterY->join();
     delete cursorUpdaterX;
     delete cursorUpdaterY;
-    aiInterface.clear();
+    aiInterface.gameEnd();
     //aiInterface.transmitStatus();                                           // We notify that there are no more objects
     std::cout << "[NORMAL LEVEL]: Default Level destoyed. " << std::endl;
     glDisable(GL_DEPTH_TEST);
@@ -120,8 +114,8 @@ void Level::NormalLevel::OnImGuiRender(GLFWwindow* window)
 void Level::NormalLevel::SaveWindow(GLFWwindow* window)
 {
     ptr_window = window;
-    s_Xcv.notify_one();     //We notify the waiting threads to check it's waiting condition
-    s_Ycv.notify_one();     //We notify the waiting threads to check it's waiting condition
+    rcInterface.setWindow(window);
+    loadThread();               // Loads the controls threads based on players selection
 }
 
 
@@ -189,6 +183,44 @@ void Level::NormalLevel::LoadConfig()
 }
 
 
+
+
+void Level::NormalLevel::loadCommunications()
+{
+    aiInterface.setUserPressedKey(&userPressedKey);
+    aiInterface.setUserSelectKey(&userSelectKeyX);
+    aiInterface.setObjects(worldBuffer);
+    aiInterface.setCursor(cursor.CQuad);
+    aiInterface.gameStart(configuration.obj.description);
+}
+
+void Level::NormalLevel::loadThread()
+{
+    if (x_AiEnabled)
+        cursorUpdaterX = new std::thread(&NormalLevel::doAiXInput, this);
+    else
+        cursorUpdaterX = new std::thread(&NormalLevel::doUserXInput, this);
+    if (y_AiEnabled)
+        cursorUpdaterY = new std::thread(&NormalLevel::doAiYInput, this);
+    else
+        cursorUpdaterY = new std::thread(&NormalLevel::doUserYInput, this);
+}
+
+bool Level::NormalLevel::usrExitKey()
+{
+    int state2 = glfwGetKey(ptr_window, GLFW_KEY_ESCAPE);
+    return state2 == GLFW_PRESS;
+}
+
+void Level::NormalLevel::updateTarget()
+{
+    for (const auto& object : worldBuffer)
+    {
+        if (userSelectKeyX && object->inLineXWith(*cursor.CQuad)) targetObjectId = object->getId();
+        if (userSelectKeyY && object->inLineYWith(*cursor.CQuad)) targetObjectId = object->getId();
+    }
+}
+
 void Level::NormalLevel::doAiXInput()
 {
     float deltaTime = 0;
@@ -208,7 +240,6 @@ void Level::NormalLevel::doAiXInput()
             cursor.VLine->moveLeft(deltaTime, 6.0f);
         }
         if (aiInterface.isConnected())  targetObjectId = aiInput[3] - '0';      // If the ai is connected we update the targetid
-        std::cout << "interface is: " << aiInterface.isConnected() << " and target id: " << (aiInput[3] - '0') << std::endl;
     }
 }
 
@@ -216,9 +247,6 @@ void Level::NormalLevel::doAiXInput()
 void Level::NormalLevel::doAiYInput()
 {
     float deltaTime = 0;
-    //We need to wait for the window to be passed in before calling the opengl functions
-    std::unique_lock<std::mutex> lk(s_YuserMutex);
-    s_Ycv.wait(lk, [&] { return ptr_window; });
     while (levelActive)
     {
         Timer time(deltaTime);
@@ -243,14 +271,12 @@ void Level::NormalLevel::doAiYInput()
     }
 }
 
+#define REMOTE_CONTROL
+#ifndef REMOTE_CONTROL
 
 void Level::NormalLevel::doUserXInput()
 {
     float deltaTime = 0;
-    std::unique_lock<std::mutex> lk(s_XuserMutex);
-    s_Xcv.wait(lk, [&] { return ptr_window; });
-    //UsrInterface usrCommands;
-    //glm::vec3 usrInput = usrCommands.getUsrInput();
     while (levelActive)
     {
         Timer time(deltaTime);
@@ -289,8 +315,6 @@ void Level::NormalLevel::doUserXInput()
 void Level::NormalLevel::doUserYInput()
 {
     float deltaTime = 0;
-    std::unique_lock<std::mutex> lk(s_YuserMutex);
-    s_Ycv.wait(lk, [&] {return ptr_window; });
     while (levelActive)
     {
         Timer time(deltaTime);
@@ -318,41 +342,70 @@ void Level::NormalLevel::doUserYInput()
     }
 }
 
-void Level::NormalLevel::loadCommunications()
-{
-    aiInterface.setUserPressedKey(&userPressedKey);
-    aiInterface.setUserSelectKey(&userSelectKeyX);
-    aiInterface.setObjects(worldBuffer);
-    aiInterface.setCursor(cursor.CQuad);
-}
+#else
 
-void Level::NormalLevel::loadThread()
+void Level::NormalLevel::doUserXInput()
 {
-    if (x_AiEnabled)
-        cursorUpdaterX = new std::thread(&NormalLevel::doAiXInput, this);
-    else
-        cursorUpdaterX = new std::thread(&NormalLevel::doUserXInput, this);
-    if (y_AiEnabled)
-        cursorUpdaterY = new std::thread(&NormalLevel::doAiYInput, this);
-    else
-        cursorUpdaterY = new std::thread(&NormalLevel::doUserYInput, this);
-}
-
-bool Level::NormalLevel::usrExitKey()
-{
-    int state2 = glfwGetKey(ptr_window, GLFW_KEY_ESCAPE);
-    return state2 == GLFW_PRESS;
-}
-
-void Level::NormalLevel::updateTarget()
-{
-    for (const auto& object : worldBuffer)
+    float deltaTime = 0;
+    //We need to wait for the window to be passed int before calling the opengl functions
+    while (levelActive)
     {
-        if (userSelectKeyX && object->inLineXWith(*cursor.CQuad)) targetObjectId = object->getId();
-        if (userSelectKeyY && object->inLineYWith(*cursor.CQuad)) targetObjectId = object->getId();
+        Timer time(deltaTime);
+        std::string rcInput = rcInterface.getUsrXInput();
+        if (rcInput[1] == 'R')
+        {
+            cursor.CQuad->moveRight(deltaTime, 6.0f);
+            cursor.VLine->moveRight(deltaTime, 6.0f);
+        }
+        else if (rcInput[1] == 'L')
+        {
+            cursor.CQuad->moveLeft(deltaTime, 6.0f);
+            cursor.VLine->moveLeft(deltaTime, 6.0f);
+        }
+        // Delete and select keys
+        if (rcInput[0] == 'Y') userPressedKey = true;           // TODO: Split into X and Y
+        else                   userPressedKey = false;
+        if (rcInput[2] == 'Y') userSelectKeyX = true;
+        else                   userSelectKeyX = false;
     }
 }
 
+
+void Level::NormalLevel::doUserYInput()
+{
+    float deltaTime = 0;
+    while (levelActive)
+    {
+        Timer time(deltaTime);
+        std::string rcInput = rcInterface.getUsrYInput();           /* AI input: <x movement, y movement, hit, target id >*/
+        if (rcInput[1] == 'U')
+        {
+            cursor.CQuad->moveUP(deltaTime, 6.0f);
+            cursor.HLine->moveUP(deltaTime, 6.0f);
+            //dataLink.cursorUp();
+        }
+        else if (rcInput[1] == 'D')
+        {
+            cursor.CQuad->moveDown(deltaTime, 6.0f);
+            cursor.HLine->moveDown(deltaTime, 6.0f);
+            //dataLink.cursorDown();
+        }
+        else
+        {
+            //dataLink.aiCursorStoped();
+        }
+        // Delete and select keys
+        if (rcInput[0] == 'Y') userPressedKey = true;
+        else                   userPressedKey = false;
+        if (rcInput[2] == 'Y') userSelectKeyY = true;
+        else                   userSelectKeyY = false;
+
+    }
+}
+
+
+
+#endif // !REMOTE_CONTROL
 
 
 
