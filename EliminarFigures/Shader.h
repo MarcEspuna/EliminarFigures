@@ -17,6 +17,10 @@ public:
 	void SetUniform4f(std::string uniformName, const glm::vec4& values);
 	void SetUniform1i(std::string uniformName, int value);
 	void SetUniform4Mat(std::string uniformName, glm::mat4 u_MVP);
+	void SetUniform3f(std::string uniformName, const glm::vec3& values);
+	void SetUniform1f(std::string uniformName, const float& value);
+	//TESTING:
+	inline unsigned int getID() const { return m_RendererID; }
 
 private:
 	unsigned int m_RendererID;

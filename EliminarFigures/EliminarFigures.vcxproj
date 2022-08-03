@@ -24,31 +24,32 @@
     <ProjectGuid>{1bc153e8-b056-4919-a399-046f8f0e67e5}</ProjectGuid>
     <RootNamespace>EliminarFigures</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>KASPAR</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -120,9 +121,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)EliminarFigures/dependencies;$(SolutionDir)EliminarFigures/res/vendor</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,29 +139,43 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)EliminarFigures/dependencies;$(SolutionDir)EliminarFigures/res/vendor</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;Opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)EliminarFigures/dependencies/libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AiInterface.cpp" />
+    <ClCompile Include="AiPlayer.cpp" />
+    <ClCompile Include="BasicObject.cpp" />
+    <ClCompile Include="CircleObject.cpp" />
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="CollisionDetector.cpp" />
+    <ClCompile Include="DataLink.cpp" />
     <ClCompile Include="EasyTest.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="HardTest.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MediumTest.cpp" />
+    <ClCompile Include="NormalLevel.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjectLight.cpp" />
+    <ClCompile Include="ObjectMovement.cpp" />
+    <ClCompile Include="ObjectReader.cpp" />
     <ClCompile Include="ObjParser.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
+    <ClCompile Include="rcInterface.cpp" />
     <ClCompile Include="res\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui_demo.cpp" />
@@ -169,18 +185,36 @@
     <ClCompile Include="res\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="res\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="res\vendor\stb_image\stb_image.cpp" />
+    <ClCompile Include="Server.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="SquareCollider.cpp" />
+    <ClCompile Include="SquareObject.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AiInterface.h" />
+    <ClInclude Include="AiPlayer.h" />
+    <ClInclude Include="BasicObject.h" />
+    <ClInclude Include="CircleObject.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="CollisionDetector.h" />
+    <ClInclude Include="Config.h" />
+    <ClInclude Include="DataLink.h" />
+    <ClInclude Include="dependencies\Json\json.hpp" />
     <ClInclude Include="EasyTest.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="ImguiVariables.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="MediumTest.h" />
+    <ClInclude Include="NormalLevel.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectLight.h" />
+    <ClInclude Include="ObjectMovement.h" />
+    <ClInclude Include="ObjectReader.h" />
     <ClInclude Include="ObjParser.h" />
     <ClInclude Include="PositionsBuffers.h" />
     <ClInclude Include="dependencies\GLFW\glfw3.h" />
@@ -192,6 +226,7 @@
     <ClInclude Include="HardTest.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="RandomGenerator.h" />
+    <ClInclude Include="rcInterface.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="res\vendor\glm\common.hpp" />
     <ClInclude Include="res\vendor\glm\detail\compute_common.hpp" />
@@ -487,9 +522,14 @@
     <ClInclude Include="res\vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="res\vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="res\vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="res\vendor\obj_loader\tiny_obj_loader.h" />
     <ClInclude Include="res\vendor\stb_image\stb_image.h" />
+    <ClInclude Include="Server.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Test.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="Slot.h" />
+    <ClInclude Include="SquareCollider.h" />
+    <ClInclude Include="SquareObject.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="VertexArray.h" />
@@ -497,7 +537,11 @@
     <ClInclude Include="VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="imgui.ini" />
     <None Include="res\Basic.shader" />
+    <None Include="res\BasicLight.shader" />
+    <None Include="res\Circle.shader" />
+    <None Include="res\Square.shader" />
     <None Include="res\TexBasic.shader" />
     <None Include="res\vendor\glm\detail\func_common.inl" />
     <None Include="res\vendor\glm\detail\func_common_simd.inl" />

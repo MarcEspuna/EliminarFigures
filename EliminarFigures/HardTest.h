@@ -1,8 +1,9 @@
-#include "Test.h"
+#pragma once
+#include "Level.h"
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
-#include "Object.h"
+#include "BasicObject.h"
 #include "TextureObject.h"
 #include <unordered_map>
 #include <future>
@@ -11,19 +12,19 @@
 #include <numeric>
 
 
-namespace Test {
+namespace Level {
 
-	class HardTest : public Test
+	class HardTest : public Level
 
 	{
 	public:
-		HardTest();
+		HardTest(const Config::Config& config);
 		~HardTest();
 
 
 		void OnUpdate(float deltaTime, bool& testExit) override;
 		void OnRender() override;
-		void OnImGuiRender() override;
+		void OnImGuiRender(GLFWwindow* window) override;
 		void SaveWindow(GLFWwindow* window) override
 		{
 			ptr_window = window;
@@ -31,15 +32,14 @@ namespace Test {
 
 
 	private:
-
-		Object Horse;
-		Object HLine;
-		Object VLine;
-		Object CQuad;
-		Object Star;
-		Object Rings;
-		Object Covid;
-		Object Satellite;
+		BasicObject Horse;
+		BasicObject HLine;
+		BasicObject VLine;
+		BasicObject CQuad;
+		BasicObject Star;
+		BasicObject Rings;
+		BasicObject Covid;
+		BasicObject Satellite;
 
 
 		TextureObject tex_GameOver;
@@ -73,7 +73,6 @@ namespace Test {
 
 		std::unordered_map<unsigned int, bool> newObjectsSelector = { {0, true}, {1, true},{2, true},{3, true},{4, true},{5, true}, {6, true}};
 		WinOrLose winOrLose = WinOrLose::LOST;
-
 		RandomGenerator random;
 
 	};

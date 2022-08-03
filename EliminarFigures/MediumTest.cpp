@@ -1,4 +1,4 @@
-#include "Test.h"
+#include "Level.h"
 #include "MediumTest.h"
 
 #include <GL/glew.h>
@@ -16,7 +16,7 @@
 
 #include "Texture.h"
 
-Test::MediumTest::MediumTest()
+Level::MediumTest::MediumTest(const Config::Config& config)
     : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 40.0f),
     HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.65f, 1.0f) ),
     VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.65f, 1.0f, 1.0f)),
@@ -90,12 +90,12 @@ static void ayncObjectUpdate(Object* object, float deltaTime, bool CatchingObjec
     object->OnObjectUpdate(CatchingObject, deltaTime, *imguiVar);
 }
 
-Test::MediumTest::~MediumTest()
+Level::MediumTest::~MediumTest()
 {
 	std::cout << "Medium test destroyed\n";
 }
 
-void Test::MediumTest::OnUpdate(float deltaTime, bool& testExit)
+void Level::MediumTest::OnUpdate(float deltaTime, bool& testExit)
 {
     Time += deltaTime / 20;                                                                                  //We keep track of the time passed during this test                             
     TimeLeft -= deltaTime / 20;
@@ -142,7 +142,8 @@ void Test::MediumTest::OnUpdate(float deltaTime, bool& testExit)
     }
 
     int state4 = glfwGetKey(ptr_window, GLFW_KEY_SPACE);
-    if (state4 == GLFW_PRESS)
+    int state5 = glfwGetKey(ptr_window, GLFW_KEY_ENTER);
+    if (state4 == GLFW_PRESS && state5 == GLFW_PRESS)
     {
         CatchingObject = true;
     }
@@ -192,9 +193,8 @@ void Test::MediumTest::OnUpdate(float deltaTime, bool& testExit)
     }
 }
 
-void Test::MediumTest::OnRender()
+void Level::MediumTest::OnRender()
 {
-    renderer.Clear();
     //A for loop for rendering the texture objects:
 
     for (auto& object : WorldBuffer)
@@ -225,7 +225,7 @@ void Test::MediumTest::OnRender()
 
 }
 
-void Test::MediumTest::OnImGuiRender()
+void Level::MediumTest::OnImGuiRender(GLFWwindow* window)
 {
 
    ImGui::Begin("Statistics Window!");                         // Create a window called "Hello, world!" and append into it.
@@ -240,7 +240,7 @@ void Test::MediumTest::OnImGuiRender()
    ImGui::End();
 }
 
-void Test::MediumTest::LoadObjectUpdateFuntions()
+void Level::MediumTest::LoadObjectUpdateFuntions()
 {
 
 
@@ -308,19 +308,19 @@ void Test::MediumTest::LoadObjectUpdateFuntions()
 
 }
 
-void Test::MediumTest::RegisterObject(Object* object)
+void Level::MediumTest::RegisterObject(Object* object)
 {
     WorldBuffer.push_back(object);
 }
 
 
 
-void Test::MediumTest::RegisterTexture(TextureObject* Texture)
+void Level::MediumTest::RegisterTexture(TextureObject* Texture)
 {
     TextureBuffer.push_back(Texture);
 }
 
-void Test::MediumTest::LoadNewObjects(const float& TimeLeft)
+void Level::MediumTest::LoadNewObjects(const float& TimeLeft)
 {
     if (TimeLeft < 55.0f && newObjectsSelector[0])
     {

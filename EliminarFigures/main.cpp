@@ -3,6 +3,7 @@
 #include "HardTest.h"
 #include "EasyTest.h"
 #include "MediumTest.h"
+#include "NormalLevel.h"
 
 
 int main(void)
@@ -39,41 +40,46 @@ int main(void)
 
     std::cout << "[GLEW]: Context succesfully created" << std::endl;
 
-    Test::Test* currentTest = nullptr;
-    Test::TestMenu* menu = new Test::TestMenu(currentTest);
+    Level::Level* currentTest = nullptr;
+    Level::Menu* menu = new Level::Menu(currentTest);
     currentTest = menu; 
 
-    menu->RegisterTest<Test::HardTest>("Hard Difficulty");
-    menu->RegisterTest<Test::MediumTest>("Medium Difficulty");
-    menu->RegisterTest<Test::EasyTest>("Easy Difficulty");
+    menu->RegisterTest<Level::HardTest>("Hard Difficulty");
+    menu->RegisterTest<Level::MediumTest>("Medium Difficulty");
+    menu->RegisterTest<Level::EasyTest>("Easy Difficulty");
+    menu->RegisterTest<Level::NormalLevel>("KASPAR");
+
+    io.Fonts->AddFontFromFileTTF("res/fonts/Roboto-Medium.ttf", 16.0f);      // Default font for the text UI of the app
+
+    //La idea sera seleccionar la AI en una casella (un tic)
+    //També seleccionarem l'eix al qual la AI es moura
 
     float deltaTime = 0;
     bool testExit = false;
 
-    glfwSwapInterval(0);                                                                                    //Remove the FPS cap
+    glfwSwapInterval(0);                                                    //Remove the FPS cap                                                      
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        renderer.ClearColor();
         Timer dTime(deltaTime);
-        renderer.Clear();
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        currentTest->SaveWindow(window);
-        currentTest->OnUpdate(deltaTime, testExit);
-        currentTest->OnRender();
-        ImGui::Begin("DIFFICULTY");
-        if ((currentTest != menu && ImGui::Button("<-")) || (currentTest != menu && testExit))
+        if (currentTest != menu && testExit)
         {
            delete currentTest;
            currentTest = menu;
            testExit = false;
         }
-        currentTest->OnImGuiRender();
-        ImGui::End();
+
+        currentTest->OnUpdate(deltaTime, testExit);
+        currentTest->OnRender();
+
+        currentTest->OnImGuiRender(window);
         
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -10,7 +10,7 @@ RandomGenerator::~RandomGenerator()
 {
 }
 
-int RandomGenerator::GetValue(int lowValue, int highValue)
+int RandomGenerator::GetValue(int lowValue, int highValue) const
 {
 	int randomNumber = rand() % (highValue - lowValue) + lowValue;
 	int sign = rand() % 2;
@@ -18,7 +18,7 @@ int RandomGenerator::GetValue(int lowValue, int highValue)
 	return randomNumber * sign;
 }
 
-void RandomGenerator::Randomize()
+void RandomGenerator::Randomize() const
 {
 	srand(time(NULL));
 }

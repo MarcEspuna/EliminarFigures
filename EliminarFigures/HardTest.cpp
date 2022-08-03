@@ -1,4 +1,4 @@
-#include "Test.h"
+#include "Level.h"
 #include "HardTest.h"
 
 #include <GL/glew.h>
@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Object.h"
 #include "Shader.h"
 #include "VertexArrayLayout.h"
 
@@ -16,7 +15,7 @@
 
 #include "Texture.h"
 
-Test::HardTest::HardTest()
+Level::HardTest::HardTest(const Config::Config& config)
     : Horse("res/obj/donut.obj", {0.8, 0.3, 0.6, 1.0f}, 20.0f),
     HLine("res/obj/HLine.obj", { 0.7, 0.1, 0.1, 1.0f }, glm::vec3(1.0f, 0.4f, 1.0f) ),
     VLine("res/obj/VLine.obj", { 0.1, 0.2, 0.7, 1.0f }, glm::vec3(0.4f, 1.0f, 1.0f)),
@@ -84,12 +83,12 @@ static void ayncObjectUpdate(Object* object, float deltaTime, bool CatchingObjec
     object->OnObjectUpdate(CatchingObject, deltaTime, *imguiVar);
 }
 
-Test::HardTest::~HardTest()
+Level::HardTest::~HardTest()
 {
 	std::cout << "Hard test destroyed\n";
 }
 
-void Test::HardTest::OnUpdate(float deltaTime, bool& testExit)
+void Level::HardTest::OnUpdate(float deltaTime, bool& testExit)
 {
     Time += deltaTime / 20;                                                                                  //We keep track of the time passed during this test                             
     TimeLeft -= deltaTime / 20;
@@ -136,7 +135,8 @@ void Test::HardTest::OnUpdate(float deltaTime, bool& testExit)
     }
 
     int state4 = glfwGetKey(ptr_window, GLFW_KEY_SPACE);
-    if (state4 == GLFW_PRESS)
+    int state5 = glfwGetKey(ptr_window, GLFW_KEY_ENTER);
+    if (state4 == GLFW_PRESS && state5 == GLFW_PRESS)
     {
         CatchingObject = true;
     }
@@ -178,9 +178,8 @@ void Test::HardTest::OnUpdate(float deltaTime, bool& testExit)
     }
 }
 
-void Test::HardTest::OnRender()
+void Level::HardTest::OnRender()
 {
-    renderer.Clear();
     //A for loop for rendering the texture objects:
 
     for (auto& object : WorldBuffer)
@@ -211,7 +210,7 @@ void Test::HardTest::OnRender()
 
 }
 
-void Test::HardTest::OnImGuiRender()
+void Level::HardTest::OnImGuiRender(GLFWwindow* window)
 {
 
     ImGui::Begin("Statistics Window!");                         // Create a window called "Hello, world!" and append into it.
@@ -228,7 +227,7 @@ void Test::HardTest::OnImGuiRender()
 
 }
 
-void Test::HardTest::LoadObjectUpdateFuntions()
+void Level::HardTest::LoadObjectUpdateFuntions()
 {
 
 
@@ -325,19 +324,19 @@ void Test::HardTest::LoadObjectUpdateFuntions()
 
 }
 
-void Test::HardTest::RegisterObject(Object* object)
+void Level::HardTest::RegisterObject(Object* object)
 {
     WorldBuffer.push_back(object);
 }
 
 
 
-void Test::HardTest::RegisterTexture(TextureObject* Texture)
+void Level::HardTest::RegisterTexture(TextureObject* Texture)
 {
     TextureBuffer.push_back(Texture);
 }
 
-void Test::HardTest::LoadNewObjects(const float& TimeLeft)
+void Level::HardTest::LoadNewObjects(const float& TimeLeft)
 {
     if (TimeLeft < 65.0f && newObjectsSelector[0])
     {

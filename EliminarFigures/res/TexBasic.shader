@@ -6,11 +6,13 @@ layout(location = 1) in vec2 texCoord;
 
 out vec2 v_TexCoord;							//This is a varing (we pass the texture coord to the fragment shader)
 
-uniform mat4 u_MVP;								//Model View ProjectionMatrix
+uniform mat4 u_Model;
+uniform mat4 u_View;
+uniform mat4 u_Proj;
 
 void main()
 {
-	gl_Position = u_MVP * position;
+	gl_Position = u_Proj * u_View * u_Model * position;
 	v_TexCoord = texCoord;
 };
 

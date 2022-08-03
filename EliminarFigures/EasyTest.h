@@ -1,8 +1,9 @@
-#include "Test.h"
+#pragma once
+#include "Level.h"
 #include "Shader.h"
 #include "Renderer.h"
 #include "ObjParser.h"
-#include "Object.h"
+#include "BasicObject.h"
 #include "TextureObject.h"
 #include <unordered_map>
 #include <future>
@@ -11,20 +12,20 @@
 #include <numeric>
 
 
-namespace Test {
+namespace Level {
 
 
-	class EasyTest : public Test
+	class EasyTest : public Level
 
 	{
 	public:
-		EasyTest();
+		EasyTest(const Config::Config& config);
 		~EasyTest();
 
 
 		void OnUpdate(float deltaTime, bool& testExit) override;
 		void OnRender() override;
-		void OnImGuiRender() override;
+		void OnImGuiRender(GLFWwindow* window) override;
 		void SaveWindow(GLFWwindow* window) override
 		{
 			ptr_window = window;
@@ -32,15 +33,14 @@ namespace Test {
 
 
 	private:
-
-		Object Horse;
-		Object HLine;
-		Object VLine;
-		Object CQuad;
-		Object Star;
-		Object Rings;
-		Object Satellite;
-		Object Covid;
+		BasicObject Horse;
+		BasicObject HLine;
+		BasicObject VLine;
+		BasicObject CQuad;
+		BasicObject Star;
+		BasicObject Rings;
+		BasicObject Satellite;
+		BasicObject Covid;
 
 		TextureObject tex_GameOver;
 		TextureObject tex_YouLose;

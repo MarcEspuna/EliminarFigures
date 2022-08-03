@@ -9,7 +9,7 @@ public:
 	~Texture();
 
 
-	void Bind(unsigned int slot = 0);
+	void Bind(unsigned int slot = 0) const;
 	void Unbind();
 
 	inline int GetWidth() { return m_Width; }
@@ -22,8 +22,6 @@ private:
 	std::string m_FilePath;
 	unsigned char* m_LocalBuffer;
 	int m_Width, m_Height, m_BPP;
-
-
 
 };
 

@@ -23,7 +23,9 @@ ObjParser::ObjParser(const char* filePath)
             {
                 glm::vec3 vertex;
                 fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-                temp_vertices.push_back(vertex);
+                temp_vertices.push_back(vertex.x);
+                temp_vertices.push_back(vertex.y);
+                temp_vertices.push_back(vertex.z);
                 vertex2D.push_back(vertex.x);
                 vertex2D.push_back(vertex.y);
             }
@@ -37,7 +39,9 @@ ObjParser::ObjParser(const char* filePath)
             {
                 glm::vec3 normal;
                 fscanf_s(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-                temp_normals.push_back(normal);
+                temp_normals.push_back(normal.x);
+                temp_normals.push_back(normal.y);
+                temp_normals.push_back(normal.z);
             }
             else if (strcmp(lineHeader, "f") == 0)
             {
@@ -70,6 +74,45 @@ ObjParser::ObjParser(const char* filePath)
     }
 }
 
+const std::vector<float> ObjParser::GetVerticesAndNormals()
+{
+    std::vector<float> verticesAndNormals(temp_vertices.size() + temp_normals.size());
+    for (size_t i = 0; i < temp_vertices.size() - 2; i+=3)
+    {
+        verticesAndNormals.push_back(temp_vertices[i]);
+        verticesAndNormals.push_back(temp_vertices[i+1]);
+        verticesAndNormals.push_back(temp_vertices[i+2]);
+        verticesAndNormals.push_back(temp_normals[i]);
+        verticesAndNormals.push_back(temp_normals[i + 1]);
+        verticesAndNormals.push_back(temp_normals[i + 2]);
+    }
+    /*
+    for (size_t i = 0; i < temp_normals.size() - 2; i += 3)
+    {
+
+    }
+    */
+    return verticesAndNormals;
+}
+
+const std::vector<unsigned int> ObjParser::GetVerticesAndNormalsIndexes()
+{
+    std::vector<unsigned int> verticesAndNormalIndexes(vertexIndices.size() + normalIndices.size());
+    for (size_t i = 0; i < vertexIndices.size() - 2; i += 3)
+    {
+        verticesAndNormalIndexes.push_back(vertexIndices[i]);
+        verticesAndNormalIndexes.push_back(vertexIndices[i + 1]);
+        verticesAndNormalIndexes.push_back(vertexIndices[i + 2]);
+    }
+    for (size_t i = 0; i < normalIndices.size() - 2; i += 3)
+    {
+        verticesAndNormalIndexes.push_back(normalIndices[i]);
+        verticesAndNormalIndexes.push_back(normalIndices[i + 1]);
+        verticesAndNormalIndexes.push_back(normalIndices[i + 2]);
+    }
+    return verticesAndNormalIndexes;
+}
+
 void ObjParser::SetVertexScale(glm::vec3 scale)
 {
     for (size_t i = 0; i < vertex2D.size()-1; i++)
@@ -79,10 +122,13 @@ void ObjParser::SetVertexScale(glm::vec3 scale)
         i++;
     }
 
-    for (auto& value : temp_vertices)
+    for (size_t i = 0; i < temp_vertices.size() - 2; i++)
     {
-        value.x = value.x * scale.x;
-        value.y = value.y * scale.y;
+        temp_vertices[i] = temp_vertices[i] * scale.x;
+        temp_vertices[i + 1] = temp_vertices[i + 1] * scale.y;
+        temp_vertices[i + 2] = temp_vertices[i + 2] * scale.z;
+        i++;
+        i++;
     }
 
 }
