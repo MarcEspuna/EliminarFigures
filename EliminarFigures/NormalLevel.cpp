@@ -31,6 +31,8 @@ Level::NormalLevel::NormalLevel(const Config::Config& config)
                cursorUpdaterX(nullptr),
                cursorUpdaterY(nullptr),
                levelActive(true),
+               pressedKeyX(false),
+               pressedKeyY(false),
                targetObjectId(0)            // Starting with no target
 {
     //Loading the objects of the current level:
@@ -63,6 +65,7 @@ Level::NormalLevel::~NormalLevel()
     glDisable(GL_BLEND);
 }
 
+
 void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
 {
     ImguiVariables random;
@@ -73,7 +76,7 @@ void Level::NormalLevel::OnUpdate(float deltaTime, bool& testExit)
     for (auto& object : worldBuffer)
     {
         float distance = object->UpdateCollisionWith(cursor.CQuad);
-        object->OnObjectUpdate(userHitKey(), deltaTime, random);
+        object->OnObjectUpdate(pressedKeyX && pressedKeyY, deltaTime, random);
         newLevel += object->size();
 
         if (object->getId() == targetObjectId)
@@ -145,25 +148,6 @@ void Level::NormalLevel::BuildObjects()
     }
 }
 
-bool Level::NormalLevel::userHitKey()
-{
-    bool userX = false;
-    bool userY = false;
-
-    int state1 = glfwGetKey(ptr_window, GLFW_KEY_ENTER);
-    if (state1 == GLFW_PRESS)
-    {
-        userX = true;
-    } 
-
-    int state2 = glfwGetKey(ptr_window, GLFW_KEY_SPACE);
-    if (state2 == GLFW_PRESS)
-    {
-        userY = true;
-    }
-    userPressedKey = (x_AiEnabled && y_AiEnabled) || (y_AiEnabled && userX) || (x_AiEnabled && userY) || (userX && userY);
-    return userPressedKey;
-}
 
 void Level::NormalLevel::createNewLevel()
 {
@@ -183,11 +167,9 @@ void Level::NormalLevel::LoadConfig()
 }
 
 
-
-
 void Level::NormalLevel::loadCommunications()
 {
-    aiInterface.setUserPressedKey(&userPressedKey);
+    aiInterface.setUserPressedKey(&pressedKeyX);
     aiInterface.setUserSelectKey(&userSelectKeyX);
     aiInterface.setObjects(worldBuffer);
     aiInterface.setCursor(cursor.CQuad);
@@ -240,6 +222,7 @@ void Level::NormalLevel::doAiXInput()
             cursor.VLine->moveLeft(deltaTime, 6.0f);
         }
         if (aiInterface.isConnected())  targetObjectId = aiInput[3] - '0';      // If the ai is connected we update the targetid
+        if (aiInput[2] == 'Y') pressedKeyX = true;
     }
 }
 
@@ -268,81 +251,9 @@ void Level::NormalLevel::doAiYInput()
             //dataLink.aiCursorStoped();
         }
         if (aiInterface.isConnected())  targetObjectId = aiInput[3] - '0';      // If the ai is connected we update the targetid
+        if (aiInput[2] == 'Y') pressedKeyY = true;
     }
-}
-
-#define REMOTE_CONTROL
-#ifndef REMOTE_CONTROL
-
-void Level::NormalLevel::doUserXInput()
-{
-    float deltaTime = 0;
-    while (levelActive)
-    {
-        Timer time(deltaTime);
-        int state2 = glfwGetKey(ptr_window, GLFW_KEY_RIGHT);
-        if (state2 == GLFW_PRESS)
-        {
-            cursor.CQuad->moveRight(deltaTime, 6.0f);
-            cursor.VLine->moveRight(deltaTime, 6.0f);
-            //dataLink.cursorRight();
-        }
-
-        int state3 = glfwGetKey(ptr_window, GLFW_KEY_LEFT);
-        if (state3 == GLFW_PRESS)
-        {
-            cursor.CQuad->moveLeft(deltaTime, 6.0f);
-            cursor.VLine->moveLeft(deltaTime, 6.0f);
-            //dataLink.cursorLeft();
-        }
-
-        if (state2 != GLFW_PRESS && state3 != GLFW_PRESS)
-        {
-            //dataLink.usrCursorStoped();
-        }
-
-        int state4 = glfwGetKey(ptr_window, GLFW_KEY_T);             //Select key
-        if (state4 == GLFW_PRESS) {
-            userSelectKeyX = true;
-        }
-        else {
-            userSelectKeyX = false;
-        }
-    }
-}
-
-
-void Level::NormalLevel::doUserYInput()
-{
-    float deltaTime = 0;
-    while (levelActive)
-    {
-        Timer time(deltaTime);
-        int state = glfwGetKey(ptr_window, GLFW_KEY_W);
-        if (state == GLFW_PRESS)
-        {
-            cursor.CQuad->moveUP(deltaTime, 6.0f);
-            cursor.HLine->moveUP(deltaTime, 6.0f);
-        }
-
-        int state1 = glfwGetKey(ptr_window, GLFW_KEY_S);
-        if (state1 == GLFW_PRESS)
-        {
-            cursor.CQuad->moveDown(deltaTime, 6.0f);
-            cursor.HLine->moveDown(deltaTime, 6.0f);
-        }
-
-        int state4 = glfwGetKey(ptr_window, GLFW_KEY_Y);                        // Select key
-        if (state4 == GLFW_PRESS) {
-            userSelectKeyY = true;
-        }
-        else {
-            userSelectKeyY = false;
-        }
-    }
-}
-
-#else
+} 
 
 void Level::NormalLevel::doUserXInput()
 {
@@ -363,8 +274,8 @@ void Level::NormalLevel::doUserXInput()
             cursor.VLine->moveLeft(deltaTime, 6.0f);
         }
         // Delete and select keys
-        if (rcInput[0] == 'Y') userPressedKey = true;           // TODO: Split into X and Y
-        else                   userPressedKey = false;
+        if (rcInput[0] == 'Y') pressedKeyX = true;           // TODO: Split into X and Y
+        else                   pressedKeyX = false;
         if (rcInput[2] == 'Y') userSelectKeyX = true;
         else                   userSelectKeyX = false;
     }
@@ -395,17 +306,14 @@ void Level::NormalLevel::doUserYInput()
             //dataLink.aiCursorStoped();
         }
         // Delete and select keys
-        if (rcInput[0] == 'Y') userPressedKey = true;
-        else                   userPressedKey = false;
+        if (rcInput[0] == 'Y') pressedKeyY = true;
+        else                   pressedKeyY = false;
         if (rcInput[2] == 'Y') userSelectKeyY = true;
         else                   userSelectKeyY = false;
 
     }
 }
 
-
-
-#endif // !REMOTE_CONTROL
 
 
 

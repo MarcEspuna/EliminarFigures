@@ -51,12 +51,17 @@ public:
 
 	void ClearColor()
 	{
+		//glClearColor()
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void ClearDepth()
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+
+	void setBackgroundColor(float red, float green, float blue) {
+		glClearColor(red, green, blue, 0.0);
 	}
 
 

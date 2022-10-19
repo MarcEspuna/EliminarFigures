@@ -52,7 +52,8 @@ namespace Level {
 
 		bool x_AiEnabled;
 		bool y_AiEnabled;
-		bool userPressedKey;
+		bool pressedKeyX;
+		bool pressedKeyY;
 		bool userSelectKeyX;
 		bool userSelectKeyY;
 
@@ -66,7 +67,6 @@ namespace Level {
 		void BuildObjects();
 		void LoadObjectFiles();
 		//void updateCursor(const float& deltaTime);
-		bool userHitKey();
 		void createNewLevel();
 		void LoadConfig();
 		void doAiXInput();
