@@ -8,12 +8,12 @@ RcInterface::RcInterface()
 	: receiveX(nullptr), receiveY(nullptr), x_connected(false), y_connected(false), window(nullptr)
 {
 	dataX[HIT] =  'N';	// No hit key
-	dataX[MOVE] = 'S'; // Static movement
+	dataX[MOVE] = 'S';	// Static movement
 	dataX[SEL] =  'N';	// No select key
 
-	dataY[HIT] =  'N'; // No hit key
-	dataY[MOVE] = 'S'; // Static movement
-	dataY[SEL] =  'N'; // No select key
+	dataY[HIT] =  'N';	// No hit key
+	dataY[MOVE] = 'S';	// Static movement
+	dataY[SEL] =  'N';	// No select key
 }
 
 RcInterface::~RcInterface()
@@ -96,7 +96,6 @@ void RcInterface::receptionX()
 {
 	while (serverX.isActive())
 	{
-		std::cout << "is active\n";
 		char datum = '0';
 		if (serverX.recieveBuffer(&datum))	processByteX(datum);
 		else break;			// If client dosen't send bytes within the timout we consider a disconnected client
@@ -117,25 +116,36 @@ void RcInterface::receptionY()
 
 void RcInterface::processByteX(char datum)
 {
-	std::cout << datum << std::endl;
 	// dataX format: <hit key, movement, select key>
 	switch (datum)
 	{
+	
+
 	case 'R':			// Right
-		dataX[1] = 'R';
+		std::cout << "Right\n";
+		dataX[MOVE] = 'R';
+		dataX[SEL] = 'N';
+		dataX[HIT] = 'N';
 		break;
 	case 'L':			// Left
-		dataX[1] = 'L';
+		dataX[MOVE] = 'L';
+		dataX[SEL] = 'N';
+		dataX[HIT] = 'N';
 		break;
 	case 'S':			// Static
-		dataX[1] = 'S';
+		dataX[MOVE] = 'S';
+		dataX[SEL] = 'N';
+		dataX[HIT] = 'N';
 		break;
 	case 'T':			// Select taget key
-		dataX[2] = 'Y'; 
+		dataX[SEL] = 'Y'; 
+		dataX[HIT] = 'N';
 		break;
 	case 'E':			// Hit key
-		dataX[0] = 'Y';
+		dataX[HIT] = 'Y';
+		dataX[SEL] = 'N';
 		break;
+
 	default:			// Not matchin character
 		std::cout << "[RC CONTROL X]: Received byte not supported. \n";
 		break;
@@ -145,23 +155,31 @@ void RcInterface::processByteX(char datum)
 void RcInterface::processByteY(char datum)
 {
 	// dataX format: <hit key, movement, select key>
-	std::cout << datum << std::endl;
+	// std::cout << datum << std::endl;
 	switch (datum)
 	{
 	case 'U':			// Up
-		dataY[1] = 'R';
+		dataY[MOVE] = 'U';
+		dataY[SEL] = 'N';
+		dataY[HIT] = 'N';
 		break;
 	case 'D':			// Down
-		dataY[1] = 'L';
+		dataY[MOVE] = 'D';
+		dataY[SEL] = 'N';
+		dataY[HIT] = 'N';
 		break;
 	case 'S':			// Static
 		dataY[1] = 'S';
+		dataY[SEL] = 'N';
+		dataY[HIT] = 'N';
 		break;
 	case 'T':			// Select taget key
 		dataY[2] = 'Y';
+		dataY[HIT] = 'N';
 		break;
 	case 'E':			// Hit key
-		dataY[0] = 'Y';
+		dataY[HIT] = 'Y';
+		dataY[SEL] = 'N';
 		break;
 	default:			// Not matchin character
 		std::cout << "[RC CONTROL Y]: Received byte not supported. \n";
@@ -175,11 +193,12 @@ void RcInterface::updateDataXWithKeyboard()
 	dataX[1] = 'S'; // Static movement
 	dataX[2] = 'N';	// No select key
 
-	int state0 = glfwGetKey(window, GLFW_KEY_A);		// Left key
-	int state1 = glfwGetKey(window, GLFW_KEY_D);		// Right key
-	int state2 = glfwGetKey(window, GLFW_KEY_Y);		// Select key
+	int state0 = glfwGetKey(window, GLFW_KEY_LEFT);			// Left key
+	int state1 = glfwGetKey(window, GLFW_KEY_RIGHT);		// Right key
+	int state2 = glfwGetKey(window, GLFW_KEY_Y);			// Select key
+	int state3 = glfwGetKey(window, GLFW_KEY_ENTER);		// Select key
+
 	// TODO: hit key 
-	
 	// Movement
 	if (state0 == GLFW_PRESS)		dataX[MOVE] = 'L';	// Left
 	else if (state1 == GLFW_PRESS)	dataX[MOVE] = 'R';  // Right
@@ -189,6 +208,9 @@ void RcInterface::updateDataXWithKeyboard()
 	else							dataX[SEL] = 'N';	// Select key off
 
 	// TODO: hit key
+	if (state3 == GLFW_PRESS)		dataX[HIT] = 'Y';
+	else							dataX[HIT] = 'N';
+
 }
 
 void RcInterface::updateDataYWithKeyboard()
@@ -200,6 +222,7 @@ void RcInterface::updateDataYWithKeyboard()
 	int state0 = glfwGetKey(window, GLFW_KEY_W);		// Left key
 	int state1 = glfwGetKey(window, GLFW_KEY_S);		// Right key
 	int state2 = glfwGetKey(window, GLFW_KEY_T);		// Select key
+	int state3 = glfwGetKey(window, GLFW_KEY_SPACE);		// Select key
 	// TODO: hit key 
 
 	// Movement
@@ -211,4 +234,6 @@ void RcInterface::updateDataYWithKeyboard()
 	else							dataY[SEL] = 'N';	// Select key off
 
 	// TODO: hit key
+	if (state3 == GLFW_PRESS)		dataY[HIT] = 'Y';
+	else							dataY[HIT] = 'N';
 }

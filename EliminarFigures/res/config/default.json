@@ -7,7 +7,7 @@
       "res/obj/obj/bunny.obj",
       "res/obj/obj/square.obj",
       "res/obj/obj/Icosphere.obj",
-      "res/obj/images/GameOverTransparent.png"
+      "res/obj/obj/torus.obj"
     ],
     "descriptions": [
       "cafetera roja",
@@ -21,7 +21,7 @@
       500,
       35,
       50,
-      8
+      38
     ],
     "lighting": {
       "ambient": 3,

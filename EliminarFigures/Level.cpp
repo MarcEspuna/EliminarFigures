@@ -29,7 +29,7 @@ RcInterface Level::Level::rcInterface;
 Level::Menu::Menu(Level*& currentTest)
 	:m_CurrentTest(currentTest), playerXAI(false), playerYAI(false)
 {
-	window_flags |= ImGuiWindowFlags_NoResize;
+	//window_flags |= ImGuiWindowFlags_NoResize;
 	
 	initConfig();
 
@@ -99,8 +99,8 @@ void Level::Menu::OnImGuiRender(GLFWwindow* window)
 
 	// MAIN CONFIG PANEL:
 	// We specify the window size and position
-	ImGui::SetNextWindowPos(ImVec2(700,100));			
-	ImGui::SetNextWindowSize(ImVec2(500, 800));
+	//ImGui::SetNextWindowPos(ImVec2(700,100));			
+	//ImGui::SetNextWindowSize(ImVec2(500, 800));
 
 	ImGui::Begin("CONFIG PANEL", nullptr, window_flags);  // Begin the main config panel
 
@@ -202,6 +202,8 @@ void Level::Menu::objectsHeader()
 
 		if (ImGui::TreeNode("Lighting"))
 		{
+			static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f);
+
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGui::SliderFloat("X position", &config.obj.light.lightDir[0], -100.0f, 100.0f, "%.3f");
@@ -218,6 +220,16 @@ void Level::Menu::objectsHeader()
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGui::Checkbox("Highlight on collision", &config.obj.light.highlight);
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Text("Background color display: ");
+			ImGui::ColorEdit4("MyColor##2f", (float*)&color);
+			if (ImGui::Button("APPLY"))
+			{
+				std::cout << color.x << std::endl;
+				renderer.setBackgroundColor(color.x, color.y, color.z);
+			}
+
 			ImGui::TreePop();
 		}
 
