@@ -1,0 +1,3 @@
+[submodule "KASPAR_AiPlayer"]
+	path = KASPAR_AiPlayer
+	url = https://github.com/MarcEspuna/KASPAR_AiPlayer.git
